@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>故障速查手册 · 嵌入式调试</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+    --line:#dde5f4; --line2:#eef2fa;
+    --blue:#1d4ed8; --blue-soft:#eef3ff;
+    --teal:#0f766e; --teal-soft:#e9faf6;
+    --red:#b91c1c; --red-soft:#fef2f2;
+    --amber:#b45309; --amber-soft:#fff8e8;
+    --green:#0b7a5a; --bg:#f5f7fc;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:76px}
+  body{margin:0;color:var(--ink);line-height:1.68;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(900px 460px at 4% -8%,#e4edff 0%,transparent 58%),
+               radial-gradient(800px 400px at 100% 1%,#e5f7f3 0%,transparent 52%),var(--bg);
+    -webkit-font-smoothing:antialiased}
+
+  .wrap{max-width:940px;margin:0 auto;padding:30px 20px 90px}
+
+  .hero{background:linear-gradient(125deg,#0b1e3f 0%,#1d4ed8 58%,#0f766e 132%);
+    border-radius:20px;padding:30px 32px 26px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 24px 54px -30px rgba(9,30,74,.7)}
+  .hero::after{content:"";position:absolute;right:-70px;top:-100px;width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.17),transparent 62%)}
+  .eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.32em;opacity:.66}
+  .hero h1{margin:0;font-size:clamp(21px,3vw,29px);font-weight:800}
+  .hero .lead{margin:10px 0 0;max-width:600px;font-size:13.5px;opacity:.92}
+
+  .search{position:sticky;top:0;z-index:30;background:rgba(245,247,252,.93);backdrop-filter:blur(10px);
+    padding:12px 0;margin:0 -20px;padding-left:20px;padding-right:20px;border-bottom:1px solid var(--line)}
+  .search-in{max-width:940px;margin:0 auto;display:flex;gap:10px;align-items:center}
+  .search input{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;
+    font-size:13px;font-family:inherit;outline:none;transition:.15s;color:var(--ink)}
+  .search input:focus{border-color:#9dbcf7;box-shadow:0 0 0 3px rgba(29,78,216,.09)}
+  .search .cnt{font-size:11.5px;color:var(--ink4);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  .cat{margin-top:30px}
+  .cat-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .cat-h .badge{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#fff;background:var(--blue);
+    border-radius:6px;padding:2px 8px}
+  .cat-h h2{margin:0;font-size:16.5px;font-weight:800}
+  .cat-h .note{font-size:12px;color:var(--ink4)}
+
+  details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;
+    box-shadow:0 6px 18px -24px rgba(15,23,42,.6);overflow:hidden}
+  details[open]{border-color:#c7d8fb}
+  summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:center;gap:11px;
+    font-size:13.6px;font-weight:700;transition:.12s}
+  summary::-webkit-details-marker{display:none}
+  summary:hover{background:#fbfcff}
+  summary .idx{flex:0 0 auto;width:24px;height:24px;border-radius:7px;background:var(--blue-soft);
+    color:var(--blue);font-size:11px;font-weight:800;display:grid;place-items:center}
+  summary .arw{margin-left:auto;color:#b9c6de;font-size:11px;transition:.2s;flex:0 0 auto}
+  details[open] summary .arw{transform:rotate(90deg)}
+  details[open] summary{background:#f8fbff;border-bottom:1px solid var(--line2)}
+
+  .body{padding:14px 16px 16px}
+  .body h4{margin:0 0 6px;font-size:10.5px;letter-spacing:.16em;color:var(--ink4);font-weight:800}
+  .body h4:not(:first-child){margin-top:14px}
+  .body ol,.body ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink2)}
+  .body li{margin-bottom:4.5px;line-height:1.6}
+  .body li b{color:var(--ink);font-weight:700}
+  .body p{margin:0;font-size:13px;color:var(--ink2)}
+
+  .root{margin-top:14px;background:var(--red-soft);border:1px solid #f6d5d5;border-radius:9px;
+    padding:10px 13px;font-size:12.6px;color:#7f1d1d;line-height:1.6}
+  .root b{font-weight:800}
+  .verify{margin-top:8px;background:var(--teal-soft);border:1px solid #cdeee0;border-radius:9px;
+    padding:10px 13px;font-size:12.6px;color:#0b5c46;line-height:1.6}
+  .verify b{font-weight:800}
+
+  .flow{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .flow h3{margin:0 0 10px;font-size:14px;font-weight:800}
+  .steps{display:flex;flex-direction:column;gap:7px}
+  .step{display:flex;gap:10px;font-size:13px;color:var(--ink2);align-items:flex-start}
+  .step .n{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;
+    font-size:10.5px;font-weight:800;display:grid;place-items:center;margin-top:2px}
+  .step b{color:var(--ink)}
+
+  .foot{margin-top:30px;text-align:center;font-size:11.5px;color:var(--ink4)}
+  .back{display:inline-block;margin-bottom:12px;font-size:12px;color:var(--blue);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .hidden{display:none !important}
+
+  @media (max-width:600px){
+    .wrap{padding:18px 13px 70px}
+    .hero{padding:22px 18px}
+    .search{margin:0 -13px;padding-left:13px;padding-right:13px}
+    summary{font-size:13px;padding:11px 13px}
+    .body{padding:12px 13px 14px}
+  }
+  @media print{
+    body{background:#fff}
+    .search{display:none}
+    details{break-inside:avoid;box-shadow:none}
+  }
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="学习总控台.html">← 返回总控台</a>
+
+  <header class="hero">
+    <svg class="hero-art" viewBox="0 0 220 220" fill="none" stroke="#fff"
+         stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <path d="M10 170h200M10 110h200M10 50h200" opacity=".45"/>
+      <path d="M10 140h30V80h30v60h30V80h30v60h30V80h30" stroke-width="2.2"/>
+      <circle cx="210" cy="80" r="3.5"/>
+    </svg>
+    <h1>故障速查手册</h1>
+    <p class="lead">24 个高频故障：先查什么、常见根因、怎么验证。卡住的时候先来这里，比在群里问快得多。</p>
+  </header>
+
+  <div class="search">
+    <div class="search-in">
+      <input type="text" id="q" placeholder="输入现象关键词，例如：乱码 / 不进中断 / 发烫 / HardFault">
+      <span class="cnt" id="cnt"></span>
+    </div>
+  </div>
+
+  <!-- ============ A ============ -->
+  <section class="cat" data-cat>
+    <div class="cat-h"><span class="badge">A</span><h2>编译、下载与启动</h2><span class="note">写代码之前先把程序跑起来</span></div>
+
+    <details>
+      <summary><span class="idx">01</span>下载器连不上（No target connected）<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>换一根<b>确认能传数据</b>的 USB 线（很多线只能充电）</li>
+          <li>看设备管理器：下载器是否被识别、驱动是否装好</li>
+          <li>测目标板 3.3V 是否正常；下载器带不动板子时改用外部供电</li>
+          <li>查 SWD 四根线：SWDIO、SWCLK、GND、3.3V（VREF）</li>
+          <li>把 BOOT0 拉低后重新上电，再连</li>
+          <li>把 SWD 速率降到 1MHz 以下试</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>杜邦线接触不良（占一半以上）、板子没供电、SWD 线序接反、芯片被读保护。</div>
+        <div class="verify"><b>验证：</b>用万用表测 SWDIO 对地电压，静止时应在 3.3V 左右；为 0 说明线断了或芯片没供电。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">02</span>烧录成功但程序不运行<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>确认 <b>BOOT0 = 0</b>（从 Flash 启动）</li>
+          <li>确认复位脚没有被拉低（外部复位电路或按键卡住）</li>
+          <li>启动文件与芯片型号是否匹配（容量、系列）</li>
+          <li>时钟配置是否越界（超频、PLL 参数错）</li>
+          <li>用调试器全速运行，看 PC 停在哪里</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>BOOT0 接错、启动文件拿错型号、时钟初始化死循环。</div>
+        <div class="verify"><b>验证：</b>先烧一个最简单的点灯工程。最简单的不跑，一定是环境问题，不是业务代码问题。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">03</span>HardFault 硬件错误<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>定位方法</h4>
+        <ol>
+          <li>在 HardFault_Handler 里打断点，停下来看 <b>LR 与 PC</b></li>
+          <li>读栈帧：从 SP 取出 R0–R3、R12、LR、PC、xPSR，PC 就是出错指令地址</li>
+          <li>在反汇编窗口跳转到该地址，看是哪条指令</li>
+          <li>对照调用栈，找到出错的函数与行号</li>
+        </ol>
+        <h4>常见根因</h4>
+        <ul>
+          <li>空指针 / 野指针解引用</li>
+          <li>数组越界，踩坏栈或全局区</li>
+          <li>未使能外设时钟就访问寄存器</li>
+          <li>函数指针未初始化就调用</li>
+          <li>栈溢出（中断嵌套太深、大数组放局部变量）</li>
+          <li>非对齐访问（某些内核配置下）</li>
+        </ul>
+        <div class="verify"><b>验证：</b>把大数组改成 static；打开栈溢出检测；逐步注释最近改的代码——HardFault 几乎总是最后一次改动引入的。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">04</span>程序反复复位 / 跑飞<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>在 Reset_Handler 打断点，看是否真的在重启（会连续命中）</li>
+          <li>查看门狗：是否忘记喂狗、喂狗时间是否够</li>
+          <li>查电源：负载突变导致电压跌落触发 BOR</li>
+          <li>查复位脚：是否有干扰、上拉是否正确</li>
+          <li>查中断：是否进了未实现的中断（默认死循环）</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>看门狗没喂、电源纹波太大、中断向量表缺项。</div>
+        <div class="verify"><b>验证：</b>上电后读复位标志寄存器（RCC_CSR），能直接告诉你是看门狗复位、掉电复位还是引脚复位。</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ B ============ -->
+  <section class="cat" data-cat>
+    <div class="cat-h"><span class="badge">B</span><h2>电源与硬件</h2><span class="note">软件查不出来的时候，先量电压</span></div>
+
+    <details>
+      <summary><span class="idx">05</span>板子不亮 / 电压不对<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序测量</h4>
+        <ol>
+          <li>输入端电压（USB 5V 或电池）</li>
+          <li>LDO 输入端与输出端</li>
+          <li>芯片每个 VDD 脚对地电压</li>
+          <li>断电测 VDD 与 GND 是否短路</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>LDO 焊反或虚焊、输入端无电、去耦电容短路、PCB 上电源与地短路。</div>
+        <div class="verify"><b>验证：</b>限流电源（100mA）上电，正常空载电流通常几毫安；突然几百毫安就是短路。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">06</span>芯片发烫<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>立刻断电，测电源对地电阻</li>
+          <li>查电源是否接反、LDO 是否过压输出</li>
+          <li>查 IO 是否直接驱动大电流负载（超过 20mA 就要加驱动）</li>
+          <li>查是否有引脚配置冲突导致两个输出对打</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>电源反接、IO 灌电流、两个推挽输出短接。</div>
+        <div class="verify"><b>验证：</b>限流上电，摸温度同时看电流；手不要直接摸，用测温枪或先断电。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">07</span>晶振不起振<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>确认用的是外部晶振模式，而不是内部 RC</li>
+          <li>负载电容是否按 C = 2×(CL − Cstray) 算对</li>
+          <li>晶振是否虚焊、贴反（无源晶振无方向，有源的要查）</li>
+          <li>用 MCO 引脚把时钟输出到管脚再测，避免探头电容影响</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>负载电容差太多、焊接虚焊、晶振本身损坏。</div>
+        <div class="verify"><b>验证：</b>先把时钟切到内部 RC 看程序能否跑；能跑，说明问题就在晶振回路。</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ C ============ -->
+  <section class="cat" data-cat>
+    <div class="cat-h"><span class="badge">C</span><h2>GPIO 与串口</h2><span class="note">最基础也最容易错的两块</span></div>
+
+    <details>
+      <summary><span class="idx">08</span>GPIO 没有输出<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>外设时钟是否使能（GPIO 端口时钟最容易漏）</li>
+          <li>模式是否配成输出（默认是输入）</li>
+          <li>如果是复用引脚，是否配了复用功能号</li>
+          <li>引脚是否被别的外设占用</li>
+          <li>开漏输出必须外接上拉，否则量不到高电平</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>忘记开端口时钟、复用号填错、开漏没上拉。</div>
+        <div class="verify"><b>验证：</b>直接写 BSRR / BRR 寄存器绕过 HAL；还不动就是硬件或配置问题，与库无关。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">09</span>串口乱码<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>波特率是否两边一致（重点：系统时钟改了但波特率没跟着改）</li>
+          <li>数据位 / 停止位 / 校验位是否一致</li>
+          <li>电平是否匹配（3.3V 与 5V、RS232 与 TTL 不要混）</li>
+          <li>是否共地（不共地必乱码）</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>时钟树配置改了，USART 的实际波特率算错；TIM 或 PLL 参数错误导致外设时钟不对。</div>
+        <div class="verify"><b>验证：</b>逻辑分析仪测一个位的宽度 T；波特率 = 1/T。和设置值一比就知道差多少。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">10</span>串口收不到数据<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>TX/RX 是否交叉连接（自己发自己收要短接 TX-RX）</li>
+          <li>接收中断是否使能、NVIC 是否打开</li>
+          <li>引脚是否配成复用而不是普通 GPIO</li>
+          <li>如果用 DMA，DMA 通道与传输长度是否对</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>TXRX 接反、引脚复用没配、中断没开。</div>
+        <div class="verify"><b>验证：</b>先做回环测试（TX 短接到 RX），能收到说明 MCU 侧没问题，问题在线路或对端。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">11</span>串口偶尔丢数据<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>接收缓冲是否够大（高速率下 256 字节起步）</li>
+          <li>中断优先级是否被更高优先级长时间抢占</li>
+          <li>中断里是否做了耗时操作（打印、延时）</li>
+          <li>是否只处理了"接收完成"而没处理"半传输/溢出"</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>用轮询 + 长延时导致缓冲溢出；中断服务里调 printf。</div>
+        <div class="verify"><b>验证：</b>开溢出错误标志（ORE），一旦置位说明确实丢过数据。</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ D ============ -->
+  <section class="cat" data-cat>
+    <div class="cat-h"><span class="badge">D</span><h2>I2C 与 SPI</h2><span class="note">总线问题，逻辑分析仪是唯一答案</span></div>
+
+    <details>
+      <summary><span class="idx">12</span>I2C 从机不应答（NACK）<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>地址是否正确——注意 7 位地址与 8 位写地址差一位左移</li>
+          <li>SDA/SCL 上拉电阻是否存在（4.7k 起步）</li>
+          <li>从机是否供电、是否在复位状态</li>
+          <li>速率是否超过从机支持（先用 100kHz）</li>
+          <li>总线是否被拉死（SDA 一直被拉低）</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>地址写错（把 0x38 写成 0x70）、上拉缺失、从机没上电。</div>
+        <div class="verify"><b>验证：</b>逻辑分析仪看第一个字节，是 7 位地址左移一位加读写位；对照手册确认。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">13</span>I2C 偶尔通信失败<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>上拉是否偏大（10k 以上在高速下上升沿变缓）</li>
+          <li>线是否太长、是否有干扰源（电机、开关电源）</li>
+          <li>是否有总线恢复机制（失败后发 9 个时钟 + STOP）</li>
+          <li>从机是否在做内部转换（需要等待，读太快会 NACK）</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>传感器转换期间被读、没有超时与重试、上拉电阻过大。</div>
+        <div class="verify"><b>验证：</b>抓失败那一次的波形，重点看 ACK 位和第 9 个时钟。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">14</span>SPI 读回全 0x00 或全 0xFF<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>CPOL/CPHA 四种模式是否与从机一致（最常见）</li>
+          <li>片选 CS 是否在传输期间保持低电平</li>
+          <li>MISO 是否接对、是否被其他器件拉低</li>
+          <li>时钟是否太快（先降到 1MHz 试）</li>
+          <li>从机是否需要上电延时或软复位</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>SPI 模式选错；片选由 GPIO 控制但代码里没拉低。</div>
+        <div class="verify"><b>验证：</b>逻辑分析仪同时抓 SCK、MOSI、MISO、CS 四根线，能直接看出采样沿对不对。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">15</span>SPI 数据错位一位<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>位序是 MSB first 还是 LSB first</li>
+          <li>数据帧长度 8 位还是 16 位</li>
+          <li>DMA 传输宽度与地址对齐</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>位序配反，值看起来像"除以 2 或乘以 2"。</div>
+        <div class="verify"><b>验证：</b>发一个已知字节 0x01，看波形上是最高位先出还是最低位先出。</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ E ============ -->
+  <section class="cat" data-cat>
+    <div class="cat-h"><span class="badge">E</span><h2>ADC、定时器与 DMA</h2><span class="note">数据不对，先怀疑配置</span></div>
+
+    <details>
+      <summary><span class="idx">16</span>ADC 读数一直跳<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>采样时间是否太短（高阻抗信号源要加长）</li>
+          <li>参考电压是否稳定（VDDA 上的噪声会直接进结果）</li>
+          <li>地线是否干净（数字地与模拟地）</li>
+          <li>输入阻抗是否过高，考虑加跟随器</li>
+          <li>是否加了滤波（滑动平均 / 中值）</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>采样时间不够；被测信号本身有噪声。</div>
+        <div class="verify"><b>验证：</b>把输入端直接接地，看读数是否稳定在 0 附近。稳定说明是信号问题，不稳是 ADC 配置问题。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">17</span>ADC 读数固定不变<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>通道号是否选对（引脚与通道的对应关系查手册）</li>
+          <li>引脚是否配成模拟模式（不能是数字输入）</li>
+          <li>是否只启动了一次转换，之后没再触发</li>
+          <li>DMA 模式下是否只搬了一次</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>通道填错、引脚没配模拟模式。</div>
+        <div class="verify"><b>验证：</b>换一个已知通道（比如内部温度传感器或 VREFINT）读一下，能变说明 ADC 本身正常。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">18</span>PWM 没有输出<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>定时器时钟是否使能</li>
+          <li>对应通道是否使能输出（CCxE）</li>
+          <li>比较值是否落在 0 到 ARR 之间</li>
+          <li>引脚是否配成复用推挽</li>
+          <li>是否用了互补输出但主输出没开</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>只配了定时器没开通道输出；比较值大于 ARR 导致恒为低。</div>
+        <div class="verify"><b>验证：</b>用逻辑分析仪看引脚，同时打印 CNT 与 CCR 的值。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">19</span>DMA 不搬运<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>DMA 控制器时钟是否使能</li>
+          <li>通道与外设的对应关系是否选对（每个外设固定通道）</li>
+          <li>传输长度是否大于 0（写 0 就是不动）</li>
+          <li>源/目的地址是否自增配置正确</li>
+          <li>外设是否真的产生了 DMA 请求（比如串口要先使能 DMA 发送）</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>通道选错；外设侧没开 DMA 请求；长度写成 0。</div>
+        <div class="verify"><b>验证：</b>看 DMA 的传输计数寄存器（NDTR）是否在减少；不动就是根本没启动。</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ F ============ -->
+  <section class="cat" data-cat>
+    <div class="cat-h"><span class="badge">F</span><h2>中断与 RTOS</h2><span class="note">时序问题最难查，先确认"有没有进"</span></div>
+
+    <details>
+      <summary><span class="idx">20</span>中断不进<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>外设级中断使能位是否打开（比如 USART_CR1 的 RXNEIE）</li>
+          <li>NVIC 里对应的 IRQ 是否使能</li>
+          <li>优先级分组与优先级数值是否合理</li>
+          <li>中断函数名是否与启动文件里的向量名完全一致</li>
+          <li>全局中断是否被关掉（__disable_irq 之后忘了开）</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>函数名拼错导致进了默认死循环；忘了 NVIC 使能；临界区里出不来。</div>
+        <div class="verify"><b>验证：</b>在中断函数第一行翻转一个 GPIO，用逻辑分析仪看有没有跳变——比打断点可靠。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">21</span>中断只进一次 / 一直进<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>中断标志是否清除（只进一次 = 标志没清）</li>
+          <li>是否清错了标志（清除时机不对导致丢失）</li>
+          <li>一直进 = 标志清得不够早，或者触发电平一直有效</li>
+          <li>中断里是否调用了会阻塞的函数</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>标志位没清；边沿/电平触发选错。</div>
+        <div class="verify"><b>验证：</b>在中断入口计数并在主循环打印；计数不涨说明没进，涨得飞快说明标志没清。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">22</span>RTOS 任务不调度<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>是否调用了启动调度器（vTaskStartScheduler）</li>
+          <li>任务栈是否太小（太小会直接 HardFault 或卡死）</li>
+          <li>任务里是否有死循环且没有阻塞（同优先级会被饿死）</li>
+          <li>是否在中断里调用了非 FromISR 版本的 API</li>
+          <li>中断优先级是否超过 configMAX_SYSCALL_INTERRUPT_PRIORITY</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>中断优先级配置超过内核允许范围（这是最隐蔽的一个）。</div>
+        <div class="verify"><b>验证：</b>用 uxTaskGetStackHighWaterMark 查剩余栈；用调试器看当前在跑哪个任务。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">23</span>任务卡死不响应 / 死锁<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>按顺序排查</h4>
+        <ol>
+          <li>是否有两个任务以相反顺序获取同一组互斥量</li>
+          <li>是否在中断里拿互斥量（中断不能阻塞）</li>
+          <li>是否拿了锁之后提前 return 忘记释放</li>
+          <li>队列是否满了导致发送阻塞</li>
+        </ol>
+        <div class="root"><b>常见根因：</b>加锁顺序不一致；异常分支没解锁。</div>
+        <div class="verify"><b>验证：</b>暂停调试器看每个任务的调用栈，都停在获取锁上就是死锁。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="idx">24</span>高优先级任务反而更慢（优先级反转）<span class="arw">▶</span></summary>
+      <div class="body">
+        <h4>现象</h4>
+        <p>高优先级任务等一个被低优先级任务持有的资源，而中优先级任务抢占了低优先级任务，导致高优先级任务被"间接"拖延。</p>
+        <h4>解决</h4>
+        <ol>
+          <li>用<b>互斥量</b>（带优先级继承）而不是二值信号量做互斥</li>
+          <li>缩短持锁时间，临界区里不做事</li>
+          <li>必要时用优先级天花板协议</li>
+        </ol>
+        <div class="verify"><b>验证：</b>人为构造三个任务复现一次，观察持锁任务的优先级是否被临时提升。</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ G ============ -->
+  <section class="cat" data-cat>
+    <div class="cat-h"><span class="badge">G</span><h2>通用排查法</h2><span class="note">什么现象都对不上时，用这套流程</span></div>
+
+    <div class="flow">
+      <h3>六步定位法</h3>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><span><b>缩小范围：</b>先确认是硬件、驱动还是业务。办法是烧一个最小工程——最小工程都不跑，问题在硬件或环境。</span></div>
+        <div class="step"><span class="n">2</span><span><b>把"看不见"变"看得见"：</b>在关键位置翻转 GPIO，用逻辑分析仪看时序。比 printf 可靠，比打断点快。</span></div>
+        <div class="step"><span class="n">3</span><span><b>二分法：</b>注释掉一半代码，看问题还在不在。反复二分，比逐行看快十倍。</span></div>
+        <div class="step"><span class="n">4</span><span><b>对照手册：</b>不要凭记忆配寄存器。打开 Reference Manual 对应的那一节，逐位核对。</span></div>
+        <div class="step"><span class="n">5</span><span><b>查最后一次改动：</b>90% 的新问题来自最近十分钟改的那几行。</span></div>
+        <div class="step"><span class="n">6</span><span><b>记录：</b>把"现象 → 判断 → 试过什么 → 结论"写进周报。下次遇到同类问题，你有答案。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">故障速查手册 · 24 个高频故障 · 卡住时先看这里</p>
+</div>
+
+<script>
+(function () {
+  var q = document.getElementById('q');
+  var cnt = document.getElementById('cnt');
+  var items = Array.prototype.slice.call(document.querySelectorAll('details'));
+  var cats = Array.prototype.slice.call(document.querySelectorAll('[data-cat]'));
+
+  function filter() {
+    var v = q.value.trim().toLowerCase();
+    var shown = 0;
+    items.forEach(function (d) {
+      var hit = !v || d.textContent.toLowerCase().indexOf(v) > -1;
+      d.classList.toggle('hidden', !hit);
+      if (hit) shown++;
+    });
+    cats.forEach(function (c) {
+      var any = c.querySelectorAll('details:not(.hidden)').length > 0;
+      c.classList.toggle('hidden', !any);
+    });
+    cnt.textContent = v ? shown + ' 条匹配' : items.length + ' 条';
+  }
+  q.addEventListener('input', filter);
+  filter();
+})();
+</script>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

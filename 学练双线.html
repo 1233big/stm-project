@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>学练双线 · 理论一条，实践一条</title>
+<style>
+  :root{
+    --t:#3987e5;          /* 理论 */
+    --p:#199e70;          /* 实践 */
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;line-height:1.68;-webkit-font-smoothing:antialiased}
+
+  .top{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .back{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;text-decoration:none;
+    border-radius:999px;padding:6px 14px;transition:background .18s,color .18s,border-color .18s}
+
+  /* ---------- hero 附加数据条 ---------- */
+  .hero-stats{display:flex;gap:46px;flex-wrap:wrap;margin-top:26px;padding-top:22px;
+    border-top:1px solid rgba(255,255,255,.08)}
+  .hero-stats div{display:flex;flex-direction:column;gap:3px}
+  .hero-stats b{font-size:clamp(26px,2.6vw,34px);line-height:1;font-weight:800;
+    letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .hero-stats span{font-size:11.5px;color:var(--ink4);letter-spacing:.04em}
+
+  /* ---------- 01 两个判据 ---------- */
+  .crit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .crit-card{padding:26px 28px 24px}
+  .crit-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .crit-h h3{margin:0;font-size:17px}
+  .sw{display:inline-block;width:9px;height:9px;border-radius:2px;flex:0 0 auto}
+  .sw.t{background:var(--t)}
+  .sw.p{background:var(--p)}
+  .crit-card > p{font-size:13.4px;color:var(--ink2);margin:0 0 4px}
+  .say{margin:15px 0;padding:13px 15px;border-radius:12px;font-size:13.4px;color:var(--ink);
+    background:rgba(57,135,229,.10);border:1px solid rgba(57,135,229,.22);line-height:1.62}
+  .say.p{background:rgba(25,158,112,.10);border-color:rgba(25,158,112,.24)}
+  .say em{font-style:normal;color:var(--ink4);font-size:12px;display:block;margin-top:7px}
+  .small{font-size:12.4px;color:var(--ink3);margin:0}
+
+  .nopes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  .nope{padding:16px 18px;border-radius:14px;border:1px solid rgba(255,255,255,.09);
+    background:rgba(255,255,255,.026)}
+  .nope b{display:block;font-size:13.2px;color:var(--ink);margin-bottom:5px}
+  .nope span{font-size:12.2px;color:var(--ink3);line-height:1.6}
+
+  /* ---------- 02 双螺旋 ---------- */
+  .hlegend{display:flex;gap:24px;flex-wrap:wrap;font-size:12.2px;color:var(--ink3);margin:0 0 4px}
+  .hlegend span{display:inline-flex;align-items:center;gap:8px}
+  .helix{margin:2px 0 6px;padding:6px 4px 0}
+  .helix svg{width:100%;height:auto;display:block}
+  .hsteps{position:relative;height:20px;margin:0 0 16px}
+  .hsteps div{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap;
+    font-size:12.2px;color:var(--ink3);letter-spacing:.02em}
+  .hsteps div:nth-child(1){left:30.8%}
+  .hsteps div:nth-child(2){left:56.4%}
+  .hsteps div:nth-child(3){left:82.1%}
+  .hsteps span{color:var(--ink4);font-size:11px;margin-right:5px}
+  .rules3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .r3{padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.09);
+    background:rgba(255,255,255,.028);display:flex;flex-direction:column;gap:6px}
+  .r3 .n{font-family:var(--mono);font-size:11px;color:var(--ink4);letter-spacing:.1em}
+  .r3 b{font-size:13.6px;color:var(--ink)}
+  .r3 span{font-size:12.3px;color:var(--ink3);line-height:1.62}
+
+  /* ---------- 03 理论链 ---------- */
+  .chain{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tcard{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;align-items:start;
+    padding:22px 24px;border-radius:16px;border:1px solid rgba(255,255,255,.085);
+    background:rgba(255,255,255,.028);transition:border-color .2s,background .2s,transform .2s}
+  .tcard:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.045);
+    transform:translateY(-4px)}
+  .tcard .id{font-family:var(--mono);font-size:12px;color:var(--t);letter-spacing:.1em;padding-top:4px}
+  .tcard h3{margin:0 0 11px;font-size:15.2px;letter-spacing:-.01em}
+  .tcard ul{list-style:none;padding:0;margin:0;display:grid;gap:5px}
+  .tcard ul li{font-size:12.7px;color:var(--ink2);line-height:1.6;padding-left:15px;position:relative}
+  .tcard ul li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:1px;
+    background:rgba(255,255,255,.28)}
+  .tcard .stop{grid-column:1 / -1;border-top:1px solid rgba(255,255,255,.09);
+    padding-top:14px;margin-top:5px;display:grid;grid-template-columns:1fr 1fr;gap:2px 22px}
+  .tcard .stop .lbl{grid-column:1 / -1;font-family:var(--mono);font-size:10.3px;color:var(--ink4);
+    letter-spacing:.1em;display:block;margin-bottom:6px}
+  .tcard .stop p{margin:0;font-size:12.2px;color:var(--ink3);line-height:1.62}
+  .tcard .stop p b{color:var(--ink2);font-weight:700}
+
+  /* ---------- 04 实践三层 ---------- */
+  .tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .tier{padding:22px 22px 20px;border-radius:16px;border:1px solid rgba(255,255,255,.085);
+    background:rgba(255,255,255,.028);display:flex;flex-direction:column;
+    transition:border-color .2s,background .2s,transform .2s}
+  .tier:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.045);
+    transform:translateY(-4px)}
+  .tier .tl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--p)}
+  .tier h3{margin:8px 0 9px;font-size:15px}
+  .tier p{margin:0 0 10px;font-size:12.6px;color:var(--ink2);line-height:1.62}
+  .tier .ex{font-size:12.2px;color:var(--ink3);border-top:1px solid rgba(255,255,255,.08);
+    padding-top:11px;margin-top:auto;line-height:1.6}
+  .tier .ex b{color:var(--ink2);font-weight:700}
+
+  /* ---------- 05 预测卡 ---------- */
+  .pcard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-radius:18px;overflow:hidden;
+    border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03)}
+  .pcard > div{padding:20px 18px 22px;border-right:1px solid rgba(255,255,255,.07)}
+  .pcard > div:last-child{border-right:0}
+  .pcard .cn{font-family:var(--mono);font-size:10.5px;color:var(--ink4);letter-spacing:.12em}
+  .pcard b{display:block;font-size:13.4px;margin:7px 0 6px;color:var(--ink)}
+  .pcard .hint{font-size:12.2px;color:var(--ink3);line-height:1.6}
+  .pcard .fill{margin-top:12px;height:30px;border-radius:7px;border:1px dashed rgba(255,255,255,.16);
+    background:rgba(0,0,0,.16)}
+  .pcard > div.attr{border-right:0;background:rgba(57,135,229,.06)}
+
+  .mismatch{margin-top:14px}
+  .mm{display:grid;grid-template-columns:190px minmax(0,1fr);gap:18px;align-items:baseline;
+    padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.06);font-size:12.8px}
+  .mm:last-child{border-bottom:0}
+  .mm .c{color:var(--ink);font-weight:700;font-size:13px}
+  .mm .a{color:var(--ink3)}
+  .mm .a b{color:var(--p);font-weight:700}
+
+  /* ---------- 06 时间 ---------- */
+  .ratio{display:flex;height:13px;border-radius:999px;overflow:hidden;margin:4px 0 8px;
+    border:1px solid rgba(255,255,255,.10)}
+  .ratio i{display:block;height:100%}
+  .ratio .rt{background:var(--t);width:40%}
+  .ratio .rp{background:var(--p);width:60%}
+  .rlab{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink4);
+    font-family:var(--mono);margin-bottom:20px}
+
+  .wk{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+  .wk th{text-align:left;font-size:11.3px;letter-spacing:.08em;color:var(--ink4);font-weight:700;
+    padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.10)}
+  .wk td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.055);color:var(--ink2);
+    vertical-align:top;font-size:12.9px}
+  .wk tr:last-child td{border-bottom:0}
+  .wk .d{color:var(--ink);font-weight:700;white-space:nowrap}
+  .wk .h{font-family:var(--mono);font-size:12.2px;color:var(--ink3);white-space:nowrap}
+  .mk{display:inline-block;font-size:10.5px;font-family:var(--mono);letter-spacing:.06em;
+    padding:2px 7px;border-radius:5px;margin-right:7px;vertical-align:1px}
+  .mk.t{color:#9dc2ff;background:rgba(57,135,229,.16);border:1px solid rgba(57,135,229,.28)}
+  .mk.p{color:#5fd8a6;background:rgba(25,158,112,.16);border:1px solid rgba(25,158,112,.30)}
+  .mk.m{color:var(--ink3);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+
+  .day3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .d3{padding:17px 19px;border-radius:14px;border:1px solid rgba(255,255,255,.085);
+    background:rgba(255,255,255,.028)}
+  .d3 .t3{font-family:var(--mono);font-size:11px;color:var(--ink4);letter-spacing:.08em}
+  .d3 b{display:block;margin:6px 0 5px;font-size:14px}
+  .d3 span{font-size:12.3px;color:var(--ink3)}
+
+  /* ---------- 07 对照表 ---------- */
+  .tw{overflow-x:auto;border:1px solid rgba(255,255,255,.10);border-radius:18px;
+    background:rgba(255,255,255,.022)}
+  .maptbl{width:100%;min-width:920px;border-collapse:separate;border-spacing:0;font-size:12.8px}
+  .maptbl th{position:sticky;top:0;z-index:2;text-align:left;font-size:11.2px;letter-spacing:.08em;
+    color:var(--ink4);font-weight:700;padding:13px 15px;background:#0b1222;
+    border-bottom:1px solid rgba(255,255,255,.12)}
+  .maptbl td{padding:15px;vertical-align:top;border-bottom:1px solid rgba(255,255,255,.06)}
+  .maptbl tr:last-child td{border-bottom:0}
+  .maptbl tbody tr{transition:background .18s}
+  .maptbl tbody tr:hover{background:rgba(255,255,255,.035)}
+  .maptbl .mn{font-family:var(--mono);font-size:10.5px;color:var(--ink4);letter-spacing:.08em}
+  .maptbl .mh{display:block;font-weight:700;color:var(--ink);font-size:13px;margin-top:2px;
+    line-height:1.4}
+  .maptbl .hr{display:block;font-family:var(--mono);font-size:11.3px;color:var(--ink3);
+    margin-top:6px;white-space:nowrap}
+  .maptbl ul{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+  .maptbl li{color:var(--ink2);line-height:1.55;padding-left:13px;position:relative}
+  .maptbl li::before{content:"";position:absolute;left:0;top:.66em;width:5px;height:1px;
+    background:rgba(255,255,255,.26)}
+  .maptbl .bt{border-left:2px solid rgba(57,135,229,.55);padding-left:11px}
+  .maptbl .bind{font-size:12.4px;color:var(--ink);line-height:1.6}
+  .maptbl .bind em{font-style:normal;display:block;color:var(--ink4);font-size:11.4px;margin-top:6px}
+
+  /* ---------- 08 刹车 ---------- */
+  .brake{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+  .bk{padding:21px 23px;border-radius:16px;border:1px solid rgba(255,255,255,.085);
+    background:rgba(255,255,255,.028)}
+  .bk h4{margin:0 0 9px;font-size:14.4px;display:flex;align-items:center;gap:9px}
+  .bk p{margin:0 0 9px;font-size:12.6px;color:var(--ink2);line-height:1.62}
+  .bk p:last-child{margin-bottom:0}
+  .bk .sym{font-size:12.3px;color:var(--ink3);padding:10px 13px;border-radius:10px;
+    background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.06);line-height:1.6}
+  .bk .sym b{color:var(--ink2);font-weight:700}
+
+  /* ---------- 09 每日闭环 ---------- */
+  .steps5{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+  .st5{padding:18px 18px 17px;border-radius:14px;border:1px solid rgba(255,255,255,.085);
+    background:rgba(255,255,255,.028);transition:border-color .2s,background .2s,transform .2s}
+  .st5:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.045);
+    transform:translateY(-4px)}
+  .st5 .n{font-family:var(--mono);font-size:10.5px;color:var(--ink4);letter-spacing:.1em}
+  .st5 b{display:block;margin:7px 0 6px;font-size:13.4px}
+  .st5 span{font-size:12.2px;color:var(--ink3);line-height:1.6}
+
+  .loop{margin-top:15px;max-width:880px;padding:22px 24px;border-radius:16px;color:var(--ink);
+    font-size:13.4px;line-height:1.78;border:1px solid rgba(255,255,255,.13);
+    background:linear-gradient(135deg,rgba(57,135,229,.13),rgba(25,158,112,.10))}
+  .loop b{color:#fff}
+
+  /* ---------- 10 自检 ---------- */
+  .chks{display:grid;gap:8px;max-width:960px}
+  .chk{display:flex;gap:12px;align-items:flex-start;padding:13px 17px;border-radius:12px;
+    border:1px solid rgba(255,255,255,.075);background:rgba(255,255,255,.024);cursor:pointer;
+    font-size:13.2px;color:var(--ink2);line-height:1.6;
+    transition:border-color .18s,background .18s,transform .18s}
+  .chk:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.05);
+    transform:translateY(-2px)}
+  .chk input{margin:3px 0 0;flex:0 0 auto;width:15px;height:15px;accent-color:var(--p);cursor:pointer}
+  .chk:has(input:checked){border-color:rgba(25,158,112,.34);background:rgba(25,158,112,.07)}
+  .chk:has(input:checked) span{color:var(--ink3);text-decoration:line-through;
+    text-decoration-color:rgba(255,255,255,.28)}
+  .cnt{font-family:var(--mono);font-size:12px;color:var(--ink3);margin-bottom:12px}
+
+  /* ---------- 配套课程 ---------- */
+  .courses{margin-top:26px}
+  .courses-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:13px}
+  .courses-h h3{margin:0;font-size:16.5px;letter-spacing:-.01em}
+  .courses-h p{margin:0;font-size:12.4px;color:var(--ink3)}
+  .cgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+  .cc{display:flex;flex-direction:column;gap:7px;padding:17px 19px 16px;border-radius:14px;
+    border:1px solid rgba(255,255,255,.085);background:rgba(255,255,255,.028);
+    text-decoration:none;transition:border-color .2s,background .2s,transform .2s}
+  .cc:hover{border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.05);
+    transform:translateY(-4px)}
+  .cc .ct{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--t)}
+  .cc b{font-size:13.5px;color:var(--ink);line-height:1.45;font-weight:700}
+  .cc .cm{font-size:12.2px;color:var(--ink2);line-height:1.62}
+  .cc .cd{font-size:11.5px;color:var(--ink4);margin-top:auto;padding-top:4px;
+    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .cc .cd em{font-style:normal;color:var(--ink3);font-family:var(--mono);font-size:11px}
+  .crules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:13px}
+  .crules div{padding:13px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.025);font-size:12.5px;color:var(--ink2);line-height:1.62}
+  .crules b{color:var(--t);font-family:var(--mono);margin-right:8px;font-weight:700}
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width:1060px){
+    .chain{grid-template-columns:1fr}
+  }
+  @media (max-width:760px){
+    .tcard{grid-template-columns:minmax(0,1fr);gap:8px}
+    .tcard .stop{grid-template-columns:1fr;gap:8px}
+  }
+  @media (max-width:900px){
+    .steps5{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .pcard{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .pcard > div{border-bottom:1px solid rgba(255,255,255,.07)}
+    .pcard > div:nth-child(2n){border-right:0}
+  }
+  @media (max-width:820px){
+    .crit,.tiers,.brake,.rules3,.nopes,.cgrid,.crules{grid-template-columns:1fr}
+    .day3{grid-template-columns:1fr}
+    .mm{grid-template-columns:1fr;gap:4px}
+    .mm .a{padding-left:0}
+
+    /* 宽表 -> 卡片 */
+    .tw{overflow:visible;border:0;background:none;border-radius:0}
+    .maptbl{min-width:0}
+    .maptbl thead{display:none}
+    .maptbl tbody tr{display:block;border:1px solid rgba(255,255,255,.10);border-radius:16px;
+      background:rgba(255,255,255,.028);padding:17px 18px;margin-bottom:10px}
+    .maptbl tbody tr:hover{background:rgba(255,255,255,.028)}
+    .maptbl td{display:block;border:0;padding:0 0 13px}
+    .maptbl td:last-child{padding-bottom:0}
+    .maptbl td[data-h]::before{content:attr(data-h);display:block;font-family:var(--mono);
+      font-size:10.2px;letter-spacing:.1em;color:var(--ink4);margin-bottom:7px}
+  }
+  @media (max-width:620px){
+    .steps5,.pcard{grid-template-columns:1fr}
+    .pcard > div{border-right:0}
+    .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px 18px}
+
+    /* 周表 -> 堆叠 */
+    .wk thead{display:none}
+    .wk tr{display:block;padding:15px 17px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .wk tr:last-child{border-bottom:0}
+    .wk td{display:block;padding:0;border:0}
+    .wk td.d{font-size:14.5px;margin-bottom:3px}
+    .wk td.h{font-size:11.3px;color:var(--ink4);margin-bottom:7px}
+    .wk td:nth-child(3){margin-bottom:9px;font-size:12.8px;line-height:1.65}
+  }
+  @media print{
+    .top,.ratio,.pcard .fill{display:none}
+  }
+</style>
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="学习总控台.html">← 总控台</a>
+    <a class="back" href="嵌入式软硬件全栈学习计划.html">全栈计划</a>
+    <a class="back" href="105天逐日任务表.html">105 天逐日表</a>
+    <a class="back" href="故障速查手册.html">故障速查</a>
+  </div>
+
+  <header class="hero">
+    <svg class="hero-art" viewBox="0 0 220 220" fill="none" stroke="#fff"
+         stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <path d="M50 26c0 58 78 58 78 84s-78 26-78 84"/>
+      <path d="M128 26c0 58-78 58-78 84s78 26 78 84"/>
+      <path d="M55 54h68M52 82h74M52 138h74M55 166h68"/>
+    </svg>
+    <h1>理论一条线，实践一条线</h1>
+    <p class="lead">
+      现在的计划把两件事压在同一天里：上午看原理，下午照教程敲。结果原理记成了名词，代码抄完改不动。
+      这一页把它们彻底拆开——理论只回答"为什么"，实践只产"证据"——再用一张预测卡把两条线焊死。
+    </p>
+    <div class="hero-stats">
+      <div><b>40</b><span>理论占比 %</span></div>
+      <div><b>60</b><span>实践占比 %</span></div>
+      <div><b>1</b><span>理论允许领先的单元数</span></div>
+      <div><b>4</b><span>失配类型</span></div>
+    </div>
+  </header>
+
+  <!-- ============ 01 ============ -->
+  <section id="crit">
+    <div class="sec"><span class="no">01</span><h2>先分清：什么算理论，什么算实践</h2>
+      <p>两个判据都能被打脸，所以它们才有效</p></div>
+
+    <div class="crit">
+      <article class="card crit-card">
+        <div class="crit-h"><i class="sw t"></i><h3>理论 · 能预测</h3></div>
+        <p>给你一个没做过的实验，你能先说结果。说不出数字，就说明还没懂。</p>
+        <div class="say">"4.7k 上拉换成 10k，上升沿会变慢，大概从 12ns 拖到 40ns 量级。"<em>—— 这是理论。它可被证伪。</em></div>
+        <p class="small">理论的价值不在"知道这个词"，而在"能对未见过的情形下判断"。背下来的定义做不到这件事。</p>
+      </article>
+
+      <article class="card crit-card">
+        <div class="crit-h"><i class="sw p"></i><h3>实践 · 能复现</h3></div>
+        <p>同样的器材，没人指导，你能再做一遍，并且拿得出证据。</p>
+        <div class="say p">"换完电阻抓一次波形，量出 10%→90% 是 38ns，比预测的 40ns 差 5%。"<em>—— 这是实践。它有可核对的产物。</em></div>
+        <p class="small">证据是波形截图、电压读数、日志时间戳、温升照片。没有证据的"我做过了"，在面试里等于没做。</p>
+      </article>
+    </div>
+
+    <div class="nopes">
+      <div class="nope"><b>看懂了视频</b><span>既不是理论也不是实践。没有预测，也没有证据——最危险的状态，因为它感觉像学习。</span></div>
+      <div class="nope"><b>背下"上拉电阻的作用"</b><span>理论的一半。能复述，不能预测。考试能用，改板子时用不上。</span></div>
+      <div class="nope"><b>照教程点亮了灯</b><span>实践的一半。能跑通，但改一个参数就崩，因为不知道参数为什么是那个值。</span></div>
+    </div>
+
+    <div class="loop">
+      <b>和"先跑通，再搞懂"冲突吗？</b>不冲突，是分轮次的——
+      <b>第一次碰一个新外设</b>，先让 demo 出结果，建立"它大概长什么样"的锚点。这时候写不出预测是正常的，硬写只是瞎猜。
+      <b>从第二次起</b>，同类问题必须写预测，因为"跑通"本身已经不能再给你新信息了。
+      这一页管的是第二轮之后的部分。
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="helix">
+    <div class="sec"><span class="no">02</span><h2>双螺旋：为什么不能"先学完再做"</h2>
+      <p>两条线交替前进，交点是预测卡</p></div>
+
+    <div class="hlegend">
+      <span><i class="sw t"></i>理论线 · 回答"为什么"</span>
+      <span><i class="sw p"></i>实践线 · 拿出"证据"</span>
+    </div>
+
+    <div class="helix">
+      <svg viewBox="0 0 780 180" fill="none" role="img"
+           aria-label="理论线与实践线交替前进，三个交点是写预测、看实测、归因">
+        <defs>
+          <linearGradient id="gt" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#3987e5" stop-opacity=".20"/>
+            <stop offset=".5" stop-color="#3987e5" stop-opacity=".90"/>
+            <stop offset="1" stop-color="#3987e5" stop-opacity=".20"/>
+          </linearGradient>
+          <linearGradient id="gp" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#199e70" stop-opacity=".20"/>
+            <stop offset=".5" stop-color="#199e70" stop-opacity=".90"/>
+            <stop offset="1" stop-color="#199e70" stop-opacity=".20"/>
+          </linearGradient>
+        </defs>
+        <path d="M40 105C73 45 107 45 140 105C173 165 207 165 240 105C273 45 307 45 340 105C373 165 407 165 440 105C473 45 507 45 540 105C573 165 607 165 640 105C673 45 707 45 740 105"
+              stroke="url(#gt)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M40 105C73 165 107 165 140 105C173 45 207 45 240 105C273 165 307 165 340 105C373 45 407 45 440 105C473 165 507 165 540 105C573 45 607 45 640 105C673 165 707 165 740 105"
+              stroke="url(#gp)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="40" y1="105" x2="740" y2="105" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+        <circle cx="240" cy="105" r="4.5" fill="#0a1220" stroke="#8fb7ff" stroke-width="1.6"/>
+        <circle cx="440" cy="105" r="4.5" fill="#0a1220" stroke="#8fb7ff" stroke-width="1.6"/>
+        <circle cx="640" cy="105" r="4.5" fill="#0a1220" stroke="#8fb7ff" stroke-width="1.6"/>
+      </svg>
+    </div>
+
+    <div class="hsteps">
+      <div><span>①</span>写预测</div>
+      <div><span>②</span>看实测</div>
+      <div><span>③</span>归因</div>
+    </div>
+
+    <div class="rules3">
+      <div class="r3"><span class="n">RULE 1</span><b>理论领先不超过 1 个单元</b>
+        <span>学完立刻用手。隔了三个单元还没动过，那段理论就开始降解成名词。</span></div>
+      <div class="r3"><span class="n">RULE 2</span><b>实践不得超前理论 2 格</b>
+        <span>超了就只能抄。抄来的代码改不动参数，也答不出"为什么用这个值"。</span></div>
+      <div class="r3"><span class="n">RULE 3</span><b>模块以验收收口</b>
+        <span>不以"看完了"收口，只以"能拿出证据"收口。看完不算完成。</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="theory">
+    <div class="sec"><span class="no">03</span><h2>理论线：七条链，每条都有停止条件</h2>
+      <p>理论会无限膨胀，所以每条链都必须写清"学到哪就停"</p></div>
+
+    <div class="chain">
+
+      <article class="tcard">
+        <div class="id">T1</div>
+        <div>
+          <h3>器件与电路 · 对应 M1</h3>
+          <ul>
+            <li>分压与限流：三个以上电阻的分支怎么算</li>
+            <li>二极管 Vf 随电流与温度怎么变</li>
+            <li>MOSFET 的 Vgs(th)、Rds(on)、Qg 三者互相牵制</li>
+            <li>去耦电容为什么必须贴在引脚旁（回路面积）</li>
+            <li>上拉阻值 → RC → 上升沿时间</li>
+          </ul>
+        </div>
+        <div class="stop">
+          <span class="lbl">深度上限 / 停止条件</span>
+          <p>不推半导体物理，不做小信号模型，不背器件手册的二十个参数。</p>
+          <p><b>停：</b>给一块陌生板子，能对每个电阻电容逐点回答"它是干嘛的、去掉会怎样"。</p>
+        </div>
+      </article>
+
+      <article class="tcard">
+        <div class="id">T2</div>
+        <div>
+          <h3>C 与内存 · 对应 M2</h3>
+          <ul>
+            <li>数组名退化的两条规则，以及什么时候不能退化</li>
+            <li>结构体对齐：为什么 char/int/char 是 12 字节</li>
+            <li>栈 / 堆 / .data / .bss 各自放什么、谁清零</li>
+            <li>volatile：编译器什么时候会把变量提到寄存器</li>
+            <li>函数指针数组为什么天然适合做状态机</li>
+          </ul>
+        </div>
+        <div class="stop">
+          <span class="lbl">深度上限 / 停止条件</span>
+          <p>不读编译器源码，不纠缠未定义行为的哲学问题。</p>
+          <p><b>停：</b>闭卷算出任意结构体的 sizeof，随手画出自己程序的内存布局。</p>
+        </div>
+      </article>
+
+      <article class="tcard">
+        <div class="id">T3</div>
+        <div>
+          <h3>MCU 体系 · 对应 M3 前半</h3>
+          <ul>
+            <li>从时钟树到外设使能的完整路径</li>
+            <li>中断：抢占、响应、现场保护、临界区</li>
+            <li>定时器：计数 / 比较 / 预装载 / 影子寄存器</li>
+            <li>DMA：谁在搬数据，搬的时候 CPU 在干什么</li>
+          </ul>
+        </div>
+        <div class="stop">
+          <span class="lbl">深度上限 / 停止条件</span>
+          <p>不读 1000 页的 Cortex-M 全手册，只读"能解释现象"的那几章。</p>
+          <p><b>停：</b>看到"加了个 printf 就不崩了"这种怪事，能立刻说出原因。</p>
+        </div>
+      </article>
+
+      <article class="tcard">
+        <div class="id">T4</div>
+        <div>
+          <h3>总线时序 · 对应 M3 后半 / M8</h3>
+          <ul>
+            <li>UART 帧结构与波特率误差预算（两个 2% 怎么分配）</li>
+            <li>I2C 开漏、上拉、时钟拉伸、仲裁</li>
+            <li>SPI 四种模式与 CPOL / CPHA 的实际含义</li>
+            <li>总线电容与上拉阻值、速率三者怎么互相卡</li>
+          </ul>
+        </div>
+        <div class="stop">
+          <span class="lbl">深度上限 / 停止条件</span>
+          <p>不背协议分层模型，不学协议栈移植。</p>
+          <p><b>停：</b>随手给一段波形，能一眼指认"这是 NACK / 这是时钟拉伸 / 这里 CPHA 配反了"。</p>
+        </div>
+      </article>
+
+      <article class="tcard">
+        <div class="id">T5</div>
+        <div>
+          <h3>实时与并发 · 对应 M6 / M9</h3>
+          <ul>
+            <li>任务状态机与调度抢占点</li>
+            <li>优先级反转怎么发生，两种解法各付什么代价</li>
+            <li>栈大小怎么估，栈溢出长什么样</li>
+            <li>互斥量 / 信号量 / 队列各自的适用边界</li>
+          </ul>
+        </div>
+        <div class="stop">
+          <span class="lbl">深度上限 / 停止条件</span>
+          <p>不读调度器源码，不比较各家 RTOS 的实现差异。</p>
+          <p><b>停：</b>能算出每个任务该给多少栈，能手工复现一次优先级反转并修掉。</p>
+        </div>
+      </article>
+
+      <article class="tcard">
+        <div class="id">T6</div>
+        <div>
+          <h3>系统与控制 · 对应 M10 / M11</h3>
+          <ul>
+            <li>字符设备模型：每个 file_operations 钩子何时被调</li>
+            <li>设备树匹配流程</li>
+            <li>内核并发与锁的选择依据</li>
+            <li>PID 三个参数各自改变什么，为什么不能同时调</li>
+            <li>采样—计算—输出的时序预算</li>
+          </ul>
+        </div>
+        <div class="stop">
+          <span class="lbl">深度上限 / 停止条件</span>
+          <p>不追内核子系统，不做控制理论推导，不建模电机的磁链。</p>
+          <p><b>停：</b>oops 能独立定位到函数；阶跃响应能一次调进 10% 超调以内。</p>
+        </div>
+      </article>
+
+      <article class="tcard">
+        <div class="id">T7</div>
+        <div>
+          <h3>几何与优化 · 对应 M13 / M14</h3>
+          <ul>
+            <li>齐次变换、四元数与万向锁</li>
+            <li>相机投影模型与重投影误差</li>
+            <li>最小二乘与非线性优化（高斯牛顿的直觉）</li>
+            <li>协方差传播与贝叶斯滤波</li>
+          </ul>
+        </div>
+        <div class="stop">
+          <span class="lbl">深度上限 / 停止条件</span>
+          <p>不推矩阵求导，不自己实现 BA 求解器，不从零证明收敛性。</p>
+          <p><b>停：</b>能写出重投影误差函数，能说清"为什么会收敛到局部极小、什么时候要换初值"。</p>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="courses">
+      <div class="courses-h">
+        <h3>七条链配哪些课</h3>
+        <p>一门主课看透，其余当字典查。链接失效就按搜索词找——B 站 up 主删视频是常事。</p>
+      </div>
+
+      <div class="cgrid">
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1vPuP6bEmW/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T1 · 器件与电路</span>
+          <b>《数字电子技术基础》高校公开课</b>
+          <span class="cm">只看数制、门电路、组合逻辑、时序逻辑、触发器。放大电路只看结论，不推公式。</span>
+          <span class="cd"><span>B站 · 免费</span><em>搜：数字电子技术基础 高校公开课</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1ps4y1d73V/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T2 · C 与内存</span>
+          <b>王道《计算机组成原理》</b>
+          <span class="cm">只看「数据表示」那一章：补码、IEEE754、存储器层次。指针和对齐靠写代码，不靠看课。C 语法不牢先补翁恺《C 语言程序设计》。</span>
+          <span class="cd"><span>B站 · 免费</span><em>搜：王道 计算机组成原理</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1th411z7sn/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T3 / T4 · MCU 与总线</span>
+          <b>江协科技《STM32 入门教程 2023 版》</b>
+          <span class="cm">全看，一天一个外设，看完当天在板子上复现。UART / I2C / SPI 那几讲配逻辑分析仪反复看波形。</span>
+          <span class="cd"><span>B站 · 免费 · 这套最贴你的板子</span><em>搜：江协科技 STM32</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1844y1g7ud/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T5 · 实时与并发</span>
+          <b>韦东山《FreeRTOS 快速入门》</b>
+          <span class="cm">先看这套建立全局：任务、队列、信号量、优先级。看完能写出三任务系统再往下。</span>
+          <span class="cd"><span>B站 · 免费</span><em>搜：韦东山 FreeRTOS</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1Ar4y1C7En/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T5 · 进阶</span>
+          <b>韦东山《FreeRTOS 内部机制》</b>
+          <span class="cm">只看「调度」和「栈」两讲——优先级反转和栈溢出的答案在这里，别全看。</span>
+          <span class="cd"><span>B站 · 免费</span><em>搜：FreeRTOS 内部机制</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1HT421k7GW/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T6 · Linux 应用</span>
+          <b>韦东山《嵌入式 Linux 应用开发入门实验班》</b>
+          <span class="cm">以做出东西为目标：文件、进程、线程、socket、串口。配合 M9 的上位机验收。</span>
+          <span class="cd"><span>B站 · 免费</span><em>搜：韦东山 嵌入式Linux应用开发</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1Yb4y1t7Uj/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T6 · Linux 驱动</span>
+          <b>韦东山《70 天 30 节 Linux 驱动开发》</b>
+          <span class="cm">字符设备、设备树、中断、并发。看到 probe 流程那一讲再回来看 M10 的验收。</span>
+          <span class="cd"><span>B站 · 免费</span><em>搜：韦东山 Linux驱动开发</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1wZnmzrEWR/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T6 · 电机控制</span>
+          <b>《电机控制 PMSM &amp; FOC》开环 / 霍尔 / 编码器</b>
+          <span class="cm">先看开环和编码器部分，把「电角度怎么来的」搞清，再碰电流环。FOC 的公式先当黑箱。</span>
+          <span class="cd"><span>B站 · 免费</span><em>搜：电机控制 PMSM FOC</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1v4411H7ez/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T7 · 运动学</span>
+          <b>台大 林沛群《机器人学之运动学》</b>
+          <span class="cm">刚体变换、正逆运动学、轨迹规划。中文讲得最清楚的一套，配 P3 的机械臂一起看。</span>
+          <span class="cd"><span>B站 · 免费 · 有课件</span><em>搜：林沛群 机器人学 运动学</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1JK4y1s7xf/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">T7 · SLAM</span>
+          <b>高翔《视觉SLAM十四讲》配套视频</b>
+          <span class="cm">书为主、视频为辅。第 3–7 讲（李群、相机、非线性优化）必须动手实现，后面几讲可当综述。</span>
+          <span class="cd"><span>B站 · 免费 · 需配书</span><em>搜：视觉SLAM十四讲 高翔</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1iBM8z7EJe/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">M13 · 具身智能</span>
+          <b>CMU《机器人学习》公开课</b>
+          <span class="cm">先看模仿学习与行为克隆两讲，再看强化学习。数学跟不上就先跳，别卡在第一集。</span>
+          <span class="cd"><span>B站 · 免费 · 英文字幕</span><em>搜：CMU 机器人学习</em></span>
+        </a>
+
+        <a class="cc" href="https://www.bilibili.com/video/BV1r6h5zgE2i/" target="_blank" rel="noopener noreferrer">
+          <span class="ct">M14 · C++</span>
+          <b>侯捷《C++ 面向对象高级开发》</b>
+          <span class="cm">类、构造析构、拷贝、模板、STL。学它是为了读得动 OpenCV / PCL / ORB-SLAM 的源码。</span>
+          <span class="cd"><span>B站 · 免费</span><em>搜：侯捷 C++ 面向对象</em></span>
+        </a>
+
+      </div>
+
+      <div class="crules">
+        <div><b>①</b>同一时间只开一门主课，开三门等于一门没看</div>
+        <div><b>②</b>1.5 倍速是上限，再快就是在看剧情</div>
+        <div><b>③</b>每看完一节关掉视频，用三句话复述，说不出来倒回去</div>
+        <div><b>④</b>视频里出现代码先暂停自己写，再对照——照抄的不算</div>
+        <div><b>⑤</b>别追"2026 最新版"，这些课的核心内容五年不变</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="practice">
+    <div class="sec"><span class="no">04</span><h2>实践线：三层，只有第三层能写进简历</h2>
+      <p>不是所有"动手"都等价</p></div>
+
+    <div class="tiers">
+      <article class="tier">
+        <span class="tl">E1 · 验证型</span>
+        <h3>复现已知结论</h3>
+        <p>照着一个已知正确的路径做一遍，确认自己会工具。</p>
+        <p class="ex"><b>例：</b>按教程点灯、按手册配一个 ADC 通道。<br><b>作用：</b>熟悉工具。<br><b>危险：</b>做太多会产生"我在进步"的错觉——你只是在熟悉按钮。</p>
+      </article>
+
+      <article class="tier">
+        <span class="tl">E2 · 诊断型</span>
+        <h3>故意弄坏，再修回来</h3>
+        <p>制造一个特定故障，只用工具定位到根因，并写下排查路径。</p>
+        <p class="ex"><b>例：</b>把中断优先级配反、把 DMA 地址改成非对齐、把栈改小 32 字节。<br><b>作用：</b>长出故障树。<br><b>面试价值：</b>最高——这才是"你解决过问题"。</p>
+      </article>
+
+      <article class="tier">
+        <span class="tl">E3 · 交付型</span>
+        <h3>别人能用的东西</h3>
+        <p>有文档、有接口、跑够 24 小时不崩，别人按文档能在 30 分钟内跑起来。</p>
+        <p class="ex"><b>例：</b>P1 数据采集终端、Linux 上位机、FOC 驱动板。<br><b>作用：</b>逼出工程性。<br><b>简历价值：</b>只有这一层能写。</p>
+      </article>
+    </div>
+
+    <div class="nope" style="margin-top:12px">
+      <b>配比：实践时间里 E1 : E2 : E3 ≈ 4 : 3 : 3，但有一条硬规则——</b>
+      <span>每个模块至少要有一个 E2，否则这个模块不算学过。只会照着做的人，遇到没见过的 bug 会原地卡死，而面试官一定会问"你遇到过什么问题"。</span>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="card">
+    <div class="sec"><span class="no">05</span><h2>咬合：一张预测卡</h2>
+      <p>两条线唯一的连接件，每天一张，写不出来就是没懂</p></div>
+
+    <div class="pcard">
+      <div>
+        <span class="cn">01 · 因果</span>
+        <b>我要验证的因果关系</b>
+        <span class="hint">一句话，必须能写成"因为 X，所以 Y"。写不成句子，说明你还没有理论。</span>
+        <div class="fill"></div>
+      </div>
+      <div>
+        <span class="cn">02 · 预测</span>
+        <b>我预测会发生什么</b>
+        <span class="hint">要具体：数值、波形形状、输出顺序、耗时。<b>"大概会变快"不算预测。</b></span>
+        <div class="fill"></div>
+      </div>
+      <div>
+        <span class="cn">03 · 实测</span>
+        <b>实际发生了什么</b>
+        <span class="hint">贴波形截图、写读数、贴日志。这一栏空着，今天就没有实践。</span>
+        <div class="fill"></div>
+      </div>
+      <div class="attr">
+        <span class="cn">04 · 归因</span>
+        <b>差异指向哪一边</b>
+        <span class="hint">差得远 → 理论有洞；对得上但做不出 → 工艺有洞、工具不熟。分开记账。</span>
+        <div class="fill"></div>
+      </div>
+    </div>
+
+    <div class="mismatch">
+      <div class="mm"><span class="c">预测不出来</span><span class="a">理论没到"能用"的程度，只是"读过"。<b>→ 回去把这一条读到能算数，今晚别动手。</b></span></div>
+      <div class="mm"><span class="c">预测对，做不出</span><span class="a">这是工艺缺口：焊接、探头接法、工具配置、仪器量程。<b>→ 练工具，不用再读书。</b></span></div>
+      <div class="mm"><span class="c">预测错，结果对</span><span class="a">有隐藏变量——器件参数、探头电容、编译器优化。<b>→ 把它挖出来，写进故障速查手册。</b></span></div>
+      <div class="mm"><span class="c">两个都错</span><span class="a">正常，而且是最值钱的一天。<b>→ 这就是今天真正学到的东西，写进周报。</b></span></div>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="time">
+    <div class="sec"><span class="no">06</span><h2>时间：40 / 60，一周怎么排</h2>
+      <p>和全栈计划里"每周 25 小时"的分配是同一笔账</p></div>
+
+    <div class="ratio" role="img" aria-label="理论 40%，实践 60%">
+      <i class="rt"></i><i class="rp"></i>
+    </div>
+    <div class="rlab"><span>理论 40%</span><span>实践 60%</span></div>
+
+    <p style="font-size:13px;color:var(--ink2);max-width:74ch;margin:0 0 18px">
+      原来的四项可以一一对上：<b style="color:var(--ink)">系统学习 30% + 笔试 10%</b> = 理论 40%；
+      <b style="color:var(--ink)">动手实验 45% + 项目 15%</b> = 实践 60%。
+      换的不是比例，是<b style="color:var(--ink)">排法</b>——同一天里不再混着来，而是分时段、分状态。
+    </p>
+
+    <div class="tw">
+      <table class="wk">
+        <thead><tr><th style="width:74px">天</th><th style="width:78px">时长</th><th>做什么</th><th style="width:120px">模式</th></tr></thead>
+        <tbody>
+          <tr><td class="d">周一</td><td class="h">3 h</td><td>读新概念，把本周要验证的因果写成 5 张预测卡</td><td><span class="mk t">理论</span></td></tr>
+          <tr><td class="d">周二</td><td class="h">3 h</td><td>动手验证周一写的预测，填实测栏</td><td><span class="mk p">实践</span></td></tr>
+          <tr><td class="d">周三</td><td class="h">3 h</td><td>2 h 补理论漏洞 + 1 h 继续做实验</td><td><span class="mk t">理论</span><span class="mk p">实践</span></td></tr>
+          <tr><td class="d">周四</td><td class="h">3 h</td><td>整块改代码：调参、重构、故意弄坏再修</td><td><span class="mk p">实践</span></td></tr>
+          <tr><td class="d">周五</td><td class="h">3 h</td><td>2 h 读手册 + 1 h 笔试基本功</td><td><span class="mk t">理论</span></td></tr>
+          <tr><td class="d">周六</td><td class="h">6 h</td><td>全天块，做最难的动手：焊板、驱动、整机联调</td><td><span class="mk p">实践</span></td></tr>
+          <tr><td class="d">周日</td><td class="h">4 h</td><td>2 h 复盘预测卡 + 2 h 按"债"补漏</td><td><span class="mk m">复盘</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:12.6px;color:var(--ink3);margin:14px 0 0;max-width:76ch">
+      合计 25 h，其中理论 7 h、实践 14 h、复盘 4 h。周日那 2 h 补漏按当周的债分配——理论欠得多就补理论，
+      实践欠得多就补实践，所以长线上稳定落在 4 : 6。
+    </p>
+
+    <div class="day3">
+      <div class="d3"><span class="t3">3 小时怎么切</span><b>1 h + 1.5 h + 0.5 h</b>
+        <span>60 分钟理论读透一个点 · 90 分钟动手验证 · 30 分钟填卡和写日志。理论在前，动手在后，不要反过来。</span></div>
+      <div class="d3"><span class="t3">为什么理论排在晚上</span><b>安静、坐着、只用纸笔</b>
+        <span>读概念需要连续注意力。板子在手边时，人会忍不住去点一下，注意力就碎了。</span></div>
+      <div class="d3"><span class="t3">为什么实践要整块</span><b>少于 90 分钟不叫实践</b>
+        <span>接探头、改工程、烧录、排查，光启动成本就要 20 分钟。碎片时间只够看，不够做。</span></div>
+    </div>
+
+    <p style="font-size:12.6px;color:var(--ink3);margin:16px 0 0;max-width:80ch;line-height:1.7">
+      105 天表里每条任务都已经标了 <b style="color:var(--ink)">理 / 实 / 杂</b>：点顶部的筛选，就能把某一天拆成"先读哪几条、再做哪几条"。
+      全表 311 条里，理论 103、实践 167、杂项 41——杂项不算学习时间。
+    </p>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="map">
+    <div class="sec"><span class="no">07</span><h2>14 个模块的拆分对照</h2>
+      <p>左边只学这些，右边只产这些，中间那句是咬合问题</p></div>
+
+    <div class="tw">
+      <table class="maptbl">
+        <thead>
+          <tr>
+            <th style="width:186px">模块</th>
+            <th style="width:290px">理论 · 只学这些</th>
+            <th style="width:300px">实践 · 必须产出</th>
+            <th>咬合问题（做之前先答）</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><span class="mn">M1</span><span class="mh">电路与电子基础</span><span class="hr">15 / 25 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>分压与限流：多分支怎么算</li>
+              <li>二极管 Vf 与电流、温度的关系</li>
+              <li>MOSFET 三个参数的互相牵制</li>
+              <li>去耦电容贴在引脚旁的原因</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>分压：算→搭→测，三组阻值</li>
+              <li>LED 限流：算完实测 Vf 与电流</li>
+              <li>MOSFET 低边开关：测 Vds 与温升</li>
+              <li>上拉 4.7k / 10k：抓上升沿</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">10k 换 4.7k，上升沿快多少纳秒？<em>先按 C≈30pF（含探头）算，再抓波形。差 3 倍以内算过关。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M2</span><span class="mh">C 语言与嵌入式编程</span><span class="hr">18 / 22 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>数组名退化的两条规则</li>
+              <li>结构体对齐与填充</li>
+              <li>栈 / 堆 / .data / .bss</li>
+              <li>volatile 的三种非用不可</li>
+              <li>函数指针数组 = 状态表</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>sizeof 实验：改序、加 pack</li>
+              <li>手写环形缓冲（不查资料）</li>
+              <li>表驱动状态机</li>
+              <li>画一次真实程序的内存布局图</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">struct{char;int;char} 改成员顺序后，sizeof 是多少？<em>先写数字，再编译。闭卷算对才算理论过关。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M3</span><span class="mh">MCU 外设与底层驱动</span><span class="hr">45 / 75 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>时钟树到外设使能的路径</li>
+              <li>中断：抢占、现场保护</li>
+              <li>定时器：计数/比较/预装载</li>
+              <li>UART 帧与波特率误差预算</li>
+              <li>I2C 开漏、上拉、时钟拉伸</li>
+              <li>SPI 四模式 CPOL/CPHA</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>六个外设各一个 demo + 波形截图</li>
+              <li>自设帧协议（头/长度/命令/CRC）</li>
+              <li>DMA + 空闲中断收不定长</li>
+              <li>示波器验证 PWM 占空比与频率</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">波特率提到 921600，第一个出错的字节出现在哪？<em>先算误差累积，再用逻辑分析仪抓。错的位置能反过来验证你的公式。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M4</span><span class="mh">调试与故障定位</span><span class="hr">10 / 20 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>HardFault 栈帧：LR/PC/PSR</li>
+              <li>断点与观察点的硬件数量限制</li>
+              <li>printf 重定向 vs SWO 的侵入性</li>
+              <li>六类典型故障的因果链</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>故意造 8 种 bug，逐一用工具定位到行</li>
+              <li>每种写一条排查路径</li>
+              <li>做一张「症状 → 最可能原因」索引</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">这个 HardFault 的 PC 落在哪个函数？<em>先只看栈内容猜，再用 GDB 验证。猜对说明你读得懂现场。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M5</span><span class="mh">硬件设计与打板</span><span class="hr">20 / 40 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>最小系统四件套：电源/时钟/复位/下载</li>
+              <li>回流路径与铜皮的实际作用</li>
+              <li>层叠、阻抗、走线宽度</li>
+              <li>封装、焊盘与 DFM 红线</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>画最小系统板 → DRC 零错误 → 打样</li>
+              <li>手工焊接（含 QFN / 0402）</li>
+              <li>上电点亮，逐路测电压</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">第一次上电，最可能坏在哪三处？<em>先写三个候选和判断依据，上电后逐一排除。命中一个算理论过关。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M6</span><span class="mh">RTOS 实时系统</span><span class="hr">22 / 38 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>任务状态机与抢占点</li>
+              <li>优先级反转的成因与两种解法</li>
+              <li>栈大小怎么估</li>
+              <li>互斥量/信号量/队列的边界</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>三任务系统（采集+显示+通信）</li>
+              <li>人为制造优先级反转，再修</li>
+              <li>测栈水位，改到不溢出又不大</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">反转发生时，串口输出的顺序是什么？<em>先写出完整序列，再跑。顺序不对说明你没真正理解谁在等谁。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M7</span><span class="mh">工程化与通信协议</span><span class="hr">15 / 25 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>分层与依赖方向：谁可以调谁</li>
+              <li>接口契约：参数、错误码、时序</li>
+              <li>协议的可扩展性：版本、保留字段</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>把 demo 重构成分层工程</li>
+              <li>写接口文档</li>
+              <li>让一个人按文档 30 分钟跑通</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">陌生人拿到仓库，第一个卡点在哪？<em>先写下来，再真的找人试。你猜的卡点和他卡的地方通常不是同一个。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M8</span><span class="mh">无线、显示与物联网</span><span class="hr">20 / 40 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>链路预算：功率、灵敏度、路径损耗</li>
+              <li>MQTT 的 QoS 语义</li>
+              <li>刷新率与总线带宽的关系</li>
+              <li>断线重连的状态机</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>带屏 + 联网 + 手机远程控制</li>
+              <li>拔网线验证自动重连与状态上报</li>
+              <li>连续 24 h 不掉线</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">隔一堵墙 10 米，丢包率大概多少？<em>先按链路预算估一个量级，再实测。差一个数量级说明你漏了某项损耗。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M9</span><span class="mh">Linux 应用开发</span><span class="hr">30 / 50 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>进程 / 线程 / 文件描述符</li>
+              <li>阻塞与非阻塞 IO</li>
+              <li>select / poll / epoll 的差别</li>
+              <li>termios 每个参数干什么</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>上位机：串口/网口控制板子</li>
+              <li>带配置、日志、异常重连</li>
+              <li>连续跑 24 h</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">拔掉 USB 转串口，read 会阻塞还是立刻报错？<em>先答再试。这个答案决定你整个重连逻辑怎么写。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M10</span><span class="mh">Linux 驱动开发</span><span class="hr">32 / 48 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>file_operations 每个钩子何时被调</li>
+              <li>设备树匹配流程</li>
+              <li>内核并发与锁的选择</li>
+              <li>用户态/内核态边界</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>完整字符设备驱动 + ioctl + 设备树匹配</li>
+              <li>故意造一次 oops，独立定位到函数</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">oops 的 call trace 最上面那行是谁？<em>先猜再读。能一眼认出栈顶，说明你理解了调用链的方向。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M11</span><span class="mh">电机控制与机器人</span><span class="hr">22 / 38 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>电机方程与反电动势</li>
+              <li>FOC 两次坐标变换在干什么</li>
+              <li>PID 三个参数各自改变什么</li>
+              <li>采样—计算—输出的时序预算</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>开环 → 电流环 → 速度环</li>
+              <li>阶跃响应测超调与上升时间</li>
+              <li>机械臂重复精度测量</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">Kp 加倍，超调和上升时间各怎么变？<em>先写两个方向再调。方向写反了，说明你是在试参数，不是在调系统。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M12</span><span class="mh">求职准备</span><span class="hr">24 / 36 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>面试官的三层追问：是什么→为什么→换条件</li>
+              <li>项目叙述里的"我的那一行"</li>
+              <li>八股的本质是边界条件</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>3 分钟讲清一个项目（录音回听）</li>
+              <li>被追问到答不上来为止</li>
+              <li>模拟面试 5 次</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">对方听完会追问哪三个问题？<em>先写三个，再看实际。写不出来的问题，就是你简历里最虚的那部分。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M13</span><span class="mh">具身智能与大模型控制</span><span class="hr">45 / 75 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>三种范式：端到端 VLA / 分层指令 / 示教</li>
+              <li>动作空间定义与归一化</li>
+              <li>行为克隆与分布偏移</li>
+              <li>RL：MDP 与奖励设计（不推公式）</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>遥操作采集 50 条抓放数据</li>
+              <li>训行为克隆策略 + 仿真验证</li>
+              <li>真机复现 3 个姿态，记成功率</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">换一个训练时没出现过的位置，成功率会掉到多少？<em>先按数据分布估个数，再测。掉得比预测多，说明是分布偏移而不是模型容量。</em></div></td>
+          </tr>
+
+          <tr>
+            <td><span class="mn">M14</span><span class="mh">机器视觉与 SLAM</span><span class="hr">80 / 120 h</span></td>
+            <td data-h="理论 · 只学这些"><ul>
+              <li>相机模型、内参、畸变</li>
+              <li>对极几何与 PnP</li>
+              <li>后端优化与回环检测</li>
+              <li>单目尺度为何不可观</li>
+            </ul></td>
+            <td data-h="实践 · 必须产出"><ul>
+              <li>标定，重投影误差 &lt; 0.5 px</li>
+              <li>ORB-SLAM 跑通公开数据集</li>
+              <li>自写 EKF 融合 IMU + 轮速</li>
+            </ul></td>
+            <td data-h="咬合问题（做之前先答）"><div class="bind">直线走 10 米，纯 IMU 轨迹会漂多少？<em>先按零偏估一个量级，再与真值对比。差一个数量级，说明你漏了重力对齐或温漂。</em></div></td>
+          </tr>
+
+          
+
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12.4px;color:var(--ink4);margin:12px 0 0">
+      时长栏是「理论 / 实践」，合计 398 h / 652 h，约 38 : 62，与 40 / 60 的排法一致。
+    </p>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="brake">
+    <div class="sec"><span class="no">08</span><h2>双向刹车：两种债，两种症状</h2>
+      <p>两条线最容易死在"一边悄悄跑飞"</p></div>
+
+    <div class="brake">
+      <article class="bk">
+        <h4><i class="sw t"></i>理论债</h4>
+        <p>学完了模块，但对应的实验没做。最多允许欠 <b>1 个</b>单元。</p>
+        <p class="sym"><b>症状：</b>能说出名词，说不出数字。"上拉电阻影响上升沿"——多快？不知道。</p>
+        <p class="sym"><b>处置：</b>欠到 2 格，下周停掉理论，只动手，直到把欠的补上。</p>
+      </article>
+
+      <article class="bk">
+        <h4><i class="sw p"></i>实践债</h4>
+        <p>做了实验，但没补对应的理论。最多允许欠 <b>2 格</b>。</p>
+        <p class="sym"><b>症状：</b>代码能跑，改一个参数就崩，说不出为什么是这个值。</p>
+        <p class="sym"><b>处置：</b>欠到 3 格，下周拿出 3 小时专门补理论，不许碰新东西。</p>
+      </article>
+    </div>
+
+    <div class="loop">
+      每周日花 5 分钟数一下：<b>理论欠几格，实践欠几格</b>。两个数都记进周报。
+      连续三周某一项都是 0，通常不是自律，是<b>你在回避另一边</b>——只学不动手的人怕失败，只动手不学的人怕发现自己不懂。
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="daily">
+    <div class="sec"><span class="no">09</span><h2>每天怎么用（一共 5 分钟）</h2>
+      <p>这套东西只有变成动作才不会退化成道理</p></div>
+
+    <div class="steps5">
+      <div class="st5"><span class="n">START · 3 min</span><b>写前两行</b>
+        <span>打开预测卡，只填"因果"和"预测"。填不出来就别开始动手——那是在浪费时间。</span></div>
+      <div class="st5"><span class="n">DURING · 0 min</span><b>不许边做边查</b>
+        <span>卡住了记一笔，继续做完。查教程等于当场承认理论没到位，那就该回去读，而不是接着抄。</span></div>
+      <div class="st5"><span class="n">END · 2 min</span><b>补后两行</b>
+        <span>贴证据，写差异。卡上第 4 栏空着的日子，收获通常也是空的。</span></div>
+      <div class="st5"><span class="n">SUNDAY · 5 min</span><b>数债 + 归类</b>
+        <span>把本周 5 张卡摊开，看"归因"那一列反复出现什么——它就是下周的理论重点。</span></div>
+    </div>
+
+    <div class="loop">
+      <b>闭环在这里：</b>不是"学完理论再做实践"，而是<b>实践卡上反复出现的"差在哪"，直接决定下周读什么理论</b>。
+      理论线是实践线的函数，不是它的前置条件。所以两条线永远咬在一起，不会一边跑飞。
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="check">
+    <div class="sec"><span class="no">10</span><h2>自检：这周有没有真的咬合</h2>
+      <p>十条，能全部打勾再往下走</p></div>
+
+    <div class="cnt" id="dcount">0 / 10</div>
+    <div class="chks" id="dchk">
+      <label class="chk"><input type="checkbox" data-id="c1"><span>本周写的每个预测都是具体数值/波形/顺序，没有"大概会变快"这种话</span></label>
+      <label class="chk"><input type="checkbox" data-id="c2"><span>每张预测卡的第 3 栏（实测）都有截图或读数，不是"感觉对了"</span></label>
+      <label class="chk"><input type="checkbox" data-id="c3"><span>本周至少做过一个 E2（故意弄坏再修），并且写了排查路径</span></label>
+      <label class="chk"><input type="checkbox" data-id="c4"><span>理论没有领先实践超过 1 个单元</span></label>
+      <label class="chk"><input type="checkbox" data-id="c5"><span>实践没有超前理论 2 格——每段代码都能说出为什么这么配</span></label>
+      <label class="chk"><input type="checkbox" data-id="c6"><span>有一张卡的预测完全错了，而且你知道错在哪个隐藏变量上</span></label>
+      <label class="chk"><input type="checkbox" data-id="c7"><span>周日数过债：理论欠 __ 格，实践欠 __ 格，都记进周报了</span></label>
+      <label class="chk"><input type="checkbox" data-id="c8"><span>本周的"归因"列里，同一个词出现了两次以上——下周的理论重点就是它</span></label>
+      <label class="chk"><input type="checkbox" data-id="c9"><span>动手时间 ≥ 理论时间的 1.4 倍（约 40 / 60）</span></label>
+      <label class="chk"><input type="checkbox" data-id="c10"><span>这个模块有验收证据，不是"看完了"</span></label>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  var KEY = 'dual-track-v1';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#dchk input'));
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+  boxes.forEach(function (b) { if (saved[b.dataset.id]) b.checked = true; });
+
+  function upd() {
+    var o = {};
+    var n = 0;
+    boxes.forEach(function (b) { if (b.checked) { o[b.dataset.id] = 1; n++; } });
+    try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {}
+    var el = document.getElementById('dcount');
+    if (el) el.textContent = n + ' / ' + boxes.length;
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', upd); });
+  upd();
+})();
+</script>
+<script src="assets/pointer.js" defer></script>
+<script src="assets/reveal.js" defer></script>
+</body>
+</html>

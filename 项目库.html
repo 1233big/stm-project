@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>项目库 · 五个自研项目规格书</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+    --line:#dde5f4; --line2:#eef2fa;
+    --blue:#1d4ed8; --blue-soft:#eef3ff;
+    --teal:#0f766e; --teal-soft:#e9faf6;
+    --green:#0b7a5a; --green-soft:#e9f9f2; --green-line:#cdeee0;
+    --amber:#b45309; --amber-soft:#fff8e8;
+    --red:#b91c1c; --red-soft:#fef2f2;
+    --bg:#f5f7fc;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:120px}
+  body{margin:0;color:var(--ink);line-height:1.7;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(900px 460px at 4% -8%,#e4edff 0%,transparent 58%),
+               radial-gradient(800px 400px at 100% 1%,#e5f7f3 0%,transparent 52%),var(--bg);
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:30px 20px 90px}
+
+  .hero{background:linear-gradient(125deg,#0b1e3f 0%,#1d4ed8 58%,#0f766e 132%);
+    border-radius:20px;padding:32px 34px 28px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 24px 54px -30px rgba(9,30,74,.7)}
+  .hero::after{content:"";position:absolute;right:-70px;top:-100px;width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.17),transparent 62%)}
+  .eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.32em;opacity:.66}
+  .hero h1{margin:0;font-size:clamp(21px,3vw,30px);font-weight:800}
+  .hero .lead{margin:10px 0 0;max-width:640px;font-size:13.5px;opacity:.92}
+
+  /* tabs */
+  .tabs{position:sticky;top:0;z-index:30;background:rgba(245,247,252,.94);backdrop-filter:blur(10px);
+    margin:0 -20px;padding:11px 20px;border-bottom:1px solid var(--line)}
+  .tabs-in{max-width:1000px;margin:0 auto;display:flex;gap:8px;overflow-x:auto}
+  .tabs-in::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;display:flex;align-items:center;gap:8px;font-size:12.8px;padding:7px 15px;
+    border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink3);cursor:pointer;
+    font-family:inherit;transition:.15s;white-space:nowrap}
+  .tab b{font-size:11px;font-weight:800;color:var(--blue)}
+  .tab:hover{border-color:#bcd0f5;color:var(--ink)}
+  .tab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  .tab.on b{color:#c9daff}
+
+  .proj{display:none}
+  .proj.on{display:block}
+
+  /* proj head */
+  .ph{margin-top:22px;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .ph .code{flex:0 0 auto;width:58px;height:58px;border-radius:15px;display:grid;place-items:center;
+    background:linear-gradient(150deg,#1d4ed8,#0f766e);color:#fff;font-weight:800;font-size:19px}
+  .ph .meta{flex:1;min-width:220px}
+  .ph h2{margin:0;font-size:20px;font-weight:800;letter-spacing:.01em}
+  .ph .one{margin:4px 0 0;font-size:13px;color:var(--ink3)}
+  .ph .tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+  .pill{font-size:11px;border-radius:999px;padding:2px 10px;background:#fff;border:1px solid var(--line);color:var(--ink3)}
+  .pill.k{background:var(--blue-soft);border-color:#cfdcff;color:var(--blue);font-weight:700}
+
+  /* section blocks */
+  .blk{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:0 8px 24px -28px rgba(15,23,42,.6)}
+  .blk-h{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line2);background:#fbfcff}
+  .blk-h .n{width:22px;height:22px;border-radius:7px;background:var(--blue-soft);color:var(--blue);
+    font-size:11px;font-weight:800;display:grid;place-items:center;flex:0 0 auto}
+  .blk-h h3{margin:0;font-size:14.5px;font-weight:800;flex:1}
+  .blk-h .hint{font-size:11.5px;color:var(--ink4)}
+  .blk-b{padding:14px 18px 16px}
+
+  table{width:100%;border-collapse:collapse;font-size:12.8px}
+  th{text-align:left;padding:8px 10px;font-size:10.5px;letter-spacing:.1em;color:var(--ink4);
+    font-weight:800;border-bottom:1px solid var(--line2);background:#fcfdff}
+  td{padding:8px 10px;border-bottom:1px solid var(--line2);color:var(--ink2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td.id{white-space:nowrap;color:var(--blue);font-weight:800;font-size:11.5px}
+  td.num{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink3)}
+  td b{color:var(--ink);font-weight:700}
+  tfoot td{background:#fbfcff;font-weight:800;color:var(--ink)}
+
+  /* diagram */
+  .dia{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;padding:8px 0 4px}
+  .node{background:#fff;border:1px solid #c7d8fb;border-radius:10px;padding:9px 13px;text-align:center;
+    font-size:12px;line-height:1.4;min-width:96px;box-shadow:0 4px 12px -12px rgba(29,78,216,.8)}
+  .node b{display:block;font-size:12.5px;font-weight:800;color:var(--ink)}
+  .node span{font-size:10.5px;color:var(--ink4)}
+  .node.mcu{background:linear-gradient(160deg,#1d4ed8,#2563eb);border-color:#1d4ed8;color:#fff;min-width:120px}
+  .node.mcu b{color:#fff}
+  .node.mcu span{color:#c9daff}
+  .node.pw{background:var(--amber-soft);border-color:#f6d488}
+  .arw{color:#b9c6de;font-size:15px;flex:0 0 auto}
+  .dia-note{margin-top:8px;font-size:11.8px;color:var(--ink4);text-align:center}
+
+  /* stages */
+  .stage{display:flex;gap:14px;padding:12px 0;border-bottom:1px dashed var(--line2)}
+  .stage:last-child{border-bottom:none}
+  .stage .sn{flex:0 0 auto;width:52px;font-size:11.5px;font-weight:800;color:var(--blue);padding-top:2px}
+  .stage .sb{flex:1;min-width:0}
+  .stage .sb h4{margin:0 0 4px;font-size:13.4px;font-weight:800}
+  .stage .sb .do{font-size:12.7px;color:var(--ink2);margin:0 0 6px}
+  .stage .sb .acc{font-size:12.4px;color:var(--green);background:var(--green-soft);border-radius:7px;
+    padding:6px 10px;line-height:1.55}
+
+  .risk{margin-top:12px;background:var(--red-soft);border:1px solid #f6d5d5;border-radius:10px;
+    padding:11px 14px;font-size:12.5px;color:#7f1d1d}
+  .risk b{font-weight:800}
+  .risk ul{margin:6px 0 0;padding-left:17px}
+  .risk li{margin-bottom:3px}
+
+  .deliver{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:4px}
+  .deliver div{font-size:12.5px;color:var(--ink2);background:#f8faff;border:1px solid var(--line2);
+    border-radius:8px;padding:8px 11px}
+  .deliver div::before{content:"□ ";color:#b9c6de;font-weight:700}
+
+  .std{margin-top:24px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .std h3{margin:0 0 10px;font-size:14.5px;font-weight:800}
+  .std table{font-size:12.6px}
+  .std p{margin:0 0 8px;font-size:12.7px;color:var(--ink2)}
+
+  .foot{margin-top:30px;text-align:center;font-size:11.5px;color:var(--ink4)}
+  .back{display:inline-block;margin-bottom:12px;font-size:12px;color:var(--blue);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  @media (max-width:760px){
+    .deliver{grid-template-columns:1fr}
+    .blk-b{padding:12px 13px 14px}
+    .blk-h{padding:11px 13px}
+    .stage .sn{width:44px}
+  }
+  @media (max-width:620px){
+    /* 规格表列多，窄屏改成横向滚动，不压缩成一行一个字 */
+    .blk-b{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .blk-b table{min-width:520px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:18px 13px 70px}
+    .hero{padding:22px 18px}
+    .tabs{margin:0 -13px;padding:10px 13px}
+    .dia{justify-content:flex-start}
+    th,td{padding:7px 8px}
+  }
+  @media print{
+    body{background:#fff}
+    .tabs{display:none}
+    .proj{display:block !important}
+    .proj + .proj{margin-top:30px;page-break-before:always}
+    .blk,.stage{break-inside:avoid}
+  }
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <a class="back" href="学习总控台.html">← 返回总控台</a>
+    <a class="back" href="学练双线.html">学练双线 →</a>
+  </div>
+
+  <header class="hero">
+    <svg class="hero-art" viewBox="0 0 220 220" fill="none" stroke="#fff"
+         stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <rect x="26" y="26" width="168" height="168" rx="14"/>
+      <rect x="70" y="70" width="80" height="80" rx="8"/>
+      <circle cx="52" cy="52" r="4"/><circle cx="168" cy="52" r="4"/>
+      <circle cx="52" cy="168" r="4"/><circle cx="168" cy="168" r="4"/>
+      <path d="M70 90H40V60M70 110H40v40M150 90h30V60M150 110h30v40"/>
+      <path d="M90 70V40M110 70V28M130 70V40M90 150v30M110 150v42M130 150v30"/>
+    </svg>
+    <h1>项目库 · 五个自研项目规格书</h1>
+    <p class="lead">每个项目都写到「可以直接开工」的程度：需求编号、系统框图、BOM、关键技术点、分阶段验收、风险对策。P1–P3 是递进主线，P4 / P5 对应具身智能与视觉两个方向，二选一深入。</p>
+  </header>
+
+  <div class="tabs">
+    <div class="tabs-in" id="tabs">
+      <button class="tab on" data-p="p1"><b>P1</b> 数据采集终端</button>
+      <button class="tab" data-p="p2"><b>P2</b> FOC 无刷驱动板</button>
+      <button class="tab" data-p="p3"><b>P3</b> 三轴机械臂</button>
+      <button class="tab" data-p="p4"><b>P4</b> 视觉里程计小车</button>
+      <button class="tab" data-p="p5"><b>P5</b> MCP 机械臂</button>
+      <button class="tab" data-p="std"><b>+</b> 交付标准</button>
+    </div>
+  </div>
+
+  <!-- ================= P1 ================= -->
+  <section class="proj on" id="p1">
+    <div class="ph">
+      <div class="code">P1</div>
+      <div class="meta">
+        <h2>自画板数据采集终端</h2>
+        <p class="one">你的第一块自研板：从原理图到打样到固件到上位机，全流程走一遍。</p>
+        <div class="tags">
+          <span class="pill k">难度 ★★☆</span><span class="pill k">10 周</span>
+          <span class="pill k">≈¥150</span><span class="pill">对应 M1–M5、M9</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-spec">
+      <div class="blk-h"><span class="n">1</span><h3>需求规格</h3><span class="hint">每条都要能验证</span></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:60px">编号</th><th>功能需求</th><th style="width:150px">验收方式</th></tr></thead>
+          <tbody>
+            <tr><td class="id">FR-1</td><td>每 2 秒采集一次温度、湿度、光照强度</td><td class="num">串口日志</td></tr>
+            <tr><td class="id">FR-2</td><td>OLED 实时显示当前三项数值与供电电压</td><td class="num">目视</td></tr>
+            <tr><td class="id">FR-3</td><td>按键切换 3 个页面：实时值 / 极值统计 / 参数设置</td><td class="num">按键操作</td></tr>
+            <tr><td class="id">FR-4</td><td>按自定义协议帧上报，1Hz，带 CRC16</td><td class="num">抓包解析</td></tr>
+            <tr><td class="id">FR-5</td><td>采样周期、上报开关等参数掉电保存</td><td class="num">断电重启</td></tr>
+            <tr><td class="id">FR-6</td><td>上位机能实时显示曲线并记录到文件</td><td class="num">PC 端</td></tr>
+          </tbody>
+        </table>
+        <table style="margin-top:12px">
+          <thead><tr><th style="width:60px">编号</th><th>非功能需求</th><th style="width:150px">指标</th></tr></thead>
+          <tbody>
+            <tr><td class="id">NFR-1</td><td>连续运行不重启</td><td class="num">≥ 72 小时</td></tr>
+            <tr><td class="id">NFR-2</td><td>测量误差</td><td class="num">温度 ±0.5℃ / 湿度 ±3%RH</td></tr>
+            <tr><td class="id">NFR-3</td><td>整机静态电流</td><td class="num">&lt; 20 mA</td></tr>
+            <tr><td class="id">NFR-4</td><td>按键响应</td><td class="num">按下到界面切换 &lt; 100 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-diag">
+      <div class="blk-h"><span class="n">2</span><h3>系统框图</h3></div>
+      <div class="blk-b">
+        <div class="dia">
+          <div class="node pw"><b>Type-C 5V</b><span>输入</span></div>
+          <span class="arw">→</span>
+          <div class="node pw"><b>LDO 3.3V</b><span>+ 去耦</span></div>
+          <span class="arw">→</span>
+          <div class="node mcu"><b>STM32F103</b><span>主控</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>OLED</b><span>I2C1</span></div>
+        </div>
+        <div class="dia" style="margin-top:6px">
+          <div class="node"><b>AHT20</b><span>I2C1 从机</span></div>
+          <div class="node"><b>光敏分压</b><span>ADC1_CHx</span></div>
+          <div class="node"><b>供电检测</b><span>ADC 分压</span></div>
+          <div class="node"><b>2 按键 + 3 LED</b><span>GPIO</span></div>
+        </div>
+        <div class="dia-note">I2C 总线：OLED 与 AHT20 挂同一组 SDA/SCL，各配 4.7k 上拉；地址不可冲突。</div>
+      </div>
+    </div>
+
+    <div class="blk b-bom">
+      <div class="blk-h"><span class="n">3</span><h3>BOM 清单</h3><span class="hint">价格为 2026 年参考区间</span></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th>物料</th><th>型号 / 规格</th><th style="width:60px">数量</th><th style="width:110px">参考价</th></tr></thead>
+          <tbody>
+            <tr><td><b>MCU</b></td><td>STM32F103C8T6（LQFP48）</td><td class="num">1</td><td class="num">¥8</td></tr>
+            <tr><td><b>LDO</b></td><td>AMS1117-3.3（SOT-223）</td><td class="num">1</td><td class="num">¥0.5</td></tr>
+            <tr><td><b>晶振</b></td><td>8 MHz 无源 + 2×22pF</td><td class="num">1 套</td><td class="num">¥1</td></tr>
+            <tr><td><b>复位</b></td><td>10k 上拉 + 100nF</td><td class="num">1 套</td><td class="num">¥0.3</td></tr>
+            <tr><td><b>下载口</b></td><td>SWD 4pin 排针（含 3.3V/GND）</td><td class="num">1</td><td class="num">¥0.5</td></tr>
+            <tr><td><b>电源接口</b></td><td>Type-C 16pin 母座</td><td class="num">1</td><td class="num">¥0.8</td></tr>
+            <tr><td><b>去耦电容</b></td><td>100nF ×8、10µF ×2、4.7µF ×2</td><td class="num">12</td><td class="num">¥3</td></tr>
+            <tr><td><b>电阻</b></td><td>10k / 4.7k / 1k（0603）</td><td class="num">各若干</td><td class="num">¥1</td></tr>
+            <tr><td><b>指示</b></td><td>LED 0805 ×3（电源/运行/告警）</td><td class="num">3</td><td class="num">¥0.6</td></tr>
+            <tr><td><b>按键</b></td><td>6×6 轻触</td><td class="num">2</td><td class="num">¥0.6</td></tr>
+            <tr><td><b>显示</b></td><td>SSD1306 OLED 0.96" 模块</td><td class="num">1</td><td class="num">¥12</td></tr>
+            <tr><td><b>温湿度</b></td><td>AHT20 模块</td><td class="num">1</td><td class="num">¥10</td></tr>
+            <tr><td><b>光照</b></td><td>GL5516 光敏 + 10k 分压</td><td class="num">1</td><td class="num">¥1</td></tr>
+            <tr><td><b>PCB</b></td><td>2 层 5 片打样（含运费）</td><td class="num">1</td><td class="num">¥30</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3">合计（首单含运费）</td><td class="num">≈¥140–160</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-soft">
+      <div class="blk-h"><span class="n">4</span><h3>软件分层</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:110px">层</th><th>内容</th></tr></thead>
+          <tbody>
+            <tr><td><b>bsp/</b></td><td>oled.c、aht20.c、adc_light.c、key.c、uart_port.c —— 只碰硬件，不含业务</td></tr>
+            <tr><td><b>app/</b></td><td>sensor_task.c（采集与滤波）、ui.c（三页面状态机）、param.c（参数存取）</td></tr>
+            <tr><td><b>common/</b></td><td>protocol.c（帧编解码 + CRC16）、filter.c（滑动平均）、logger.c</td></tr>
+            <tr><td><b>main.c</b></td><td>只做初始化 + 主循环调度，不超过 100 行</td></tr>
+          </tbody>
+        </table>
+        <div class="dia-note" style="text-align:left;margin-top:10px">
+          规则：app 层不允许出现寄存器操作；bsp 层不允许出现业务判断。这条守住了，后面换芯片只改 bsp。
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-stage">
+      <div class="blk-h"><span class="n">5</span><h3>分阶段执行计划</h3></div>
+      <div class="blk-b">
+        <div class="stage">
+          <div class="sn">S1 · 2 周</div>
+          <div class="sb">
+            <h4>原理图与 PCB</h4>
+            <p class="do">选型 → 画电源 → 画 MCU 最小系统 → 画外设 → 加网络标号 → 查引脚冲突 → 布局走线 → 发论坛评审</p>
+            <div class="acc"><b>验收：</b>DRC 无严重错误；评审意见全部回复；3D 预览封装方向正确</div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="sn">S2 · 2 周</div>
+          <div class="sb">
+            <h4>打样与点亮</h4>
+            <p class="do">导出 Gerber → 下单 → 采购 BOM → 不通电测短路 → 限流上电 → 分段焊接</p>
+            <div class="acc"><b>验收：</b>3.3V 正常；SWD 能识别；烧录点灯程序后 LED 亮</div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="sn">S3 · 2 周</div>
+          <div class="sb">
+            <h4>驱动层</h4>
+            <p class="do">OLED 显示、AHT20 读数、ADC 采光敏、按键消抖、串口收发</p>
+            <div class="acc"><b>验收：</b>五项全部在自画板上工作；逻辑分析仪抓到的 I2C 波形正确</div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="sn">S4 · 2 周</div>
+          <div class="sb">
+            <h4>业务与协议</h4>
+            <p class="do">三页面状态机、参数存 Flash、协议帧收发、上位机曲线</p>
+            <div class="acc"><b>验收：</b>按键切换 &lt; 100ms；断电重启参数不丢；上位机实时刷新</div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="sn">S5 · 2 周</div>
+          <div class="sb">
+            <h4>稳定性与交付</h4>
+            <p class="do">72 小时连续运行、异常恢复（拔线/乱包）、测功耗、写文档</p>
+            <div class="acc"><b>验收：</b>72h 不死机；收到错误帧能拒绝不崩溃；静态电流达标</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-risk">
+      <div class="blk-h"><span class="n">6</span><h3>风险与对策</h3></div>
+      <div class="blk-b">
+        <div class="risk"><b>四个已知坑：</b>
+          <ul>
+            <li><b>I2C 上拉缺失</b>——板载必须画 4.7k，不要指望模块自带。</li>
+            <li><b>OLED 供电</b>——模块多为 3.3V，接 5V 可能烧；供电前查手册。</li>
+            <li><b>ADC 参考噪声</b>——VDDA 加 100nF + 1µF，软件上做 8 点平均。</li>
+            <li><b>Flash 写入</b>——必须先擦页；参数区单独占一页，别和代码混。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-deliv">
+      <div class="blk-h"><span class="n">7</span><h3>交付物清单</h3></div>
+      <div class="blk-b">
+        <div class="deliver">
+          <div>原理图 PDF + 源文件</div><div>PCB 源文件 + Gerber</div>
+          <div>BOM 表（含实际采购价）</div><div>固件源码（分层，Git 历史完整）</div>
+          <div>上位机源码</div><div>协议文档</div>
+          <div>测试记录（≥10 条）</div><div>README（接线 + 编译 + 演示）</div>
+          <div>演示视频（3 分钟）</div><div>复盘报告（问题-定位-修复 ≥5 条）</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= P2 ================= -->
+  <section class="proj" id="p2">
+    <div class="ph">
+      <div class="code">P2</div>
+      <div class="meta">
+        <h2>无刷电机 FOC 驱动板</h2>
+        <p class="one">从开环转到电流闭环再到速度闭环，把控制理论与实时系统真正焊在一起。</p>
+        <div class="tags">
+          <span class="pill k">难度 ★★★★</span><span class="pill k">12 周</span>
+          <span class="pill k">≈¥200</span><span class="pill">对应 M3、M5、M6、M11</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-spec">
+      <div class="blk-h"><span class="n">1</span><h3>需求规格</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:60px">编号</th><th>功能需求</th><th style="width:160px">验收方式</th></tr></thead>
+          <tbody>
+            <tr><td class="id">FR-1</td><td>驱动 12V 云台无刷电机，支持正反转</td><td class="num">目视 + 测速</td></tr>
+            <tr><td class="id">FR-2</td><td>三电阻低侧电流采样，电流环 10 kHz</td><td class="num">示波器看波形</td></tr>
+            <tr><td class="id">FR-3</td><td>转速闭环，阶跃响应超调 &lt; 10%</td><td class="num">上位机波形</td></tr>
+            <tr><td class="id">FR-4</td><td>串口支持在线修改 PID、限制电流、启停</td><td class="num">联调</td></tr>
+            <tr><td class="id">FR-5</td><td>过流 / 过温 / 堵转三重保护</td><td class="num">人为触发</td></tr>
+            <tr><td class="id">FR-6</td><td>磁编码器读角（AS5600）</td><td class="num">手转验证</td></tr>
+          </tbody>
+        </table>
+        <table style="margin-top:12px">
+          <thead><tr><th style="width:60px">编号</th><th>非功能需求</th><th style="width:160px">指标</th></tr></thead>
+          <tbody>
+            <tr><td class="id">NFR-1</td><td>PWM 频率</td><td class="num">20 kHz（超出人耳范围）</td></tr>
+            <tr><td class="id">NFR-2</td><td>死区时间</td><td class="num">可调 0.5–2 µs</td></tr>
+            <tr><td class="id">NFR-3</td><td>空载运行 30 分钟</td><td class="num">MOS 温升 &lt; 40℃</td></tr>
+            <tr><td class="id">NFR-4</td><td>转速控制精度</td><td class="num">稳态误差 &lt; 1%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-diag">
+      <div class="blk-h"><span class="n">2</span><h3>系统框图</h3></div>
+      <div class="blk-b">
+        <div class="dia">
+          <div class="node pw"><b>12V 输入</b><span>+ 保险 + 防反接</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>降压 3.3V</b><span>MP1584</span></div>
+          <span class="arw">→</span>
+          <div class="node mcu"><b>STM32G431</b><span>带运放 + HRTIM</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>三相驱动</b><span>DRV8313</span></div>
+        </div>
+        <div class="dia" style="margin-top:6px">
+          <div class="node"><b>三相桥</b><span>电机 U/V/W</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>采样电阻</b><span>0.01Ω ×3</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>运放放大</b><span>偏置 1.65V</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>ADC 注入</b><span>与 PWM 同步</span></div>
+        </div>
+        <div class="dia-note">电流采样链路；AS5600 磁编码器经 I2C 直接接 MCU，提供转子电角度。</div>
+        <div class="dia-note">关键：电流采样必须在 PWM 中心对齐时刻触发，否则读到的是开关噪声。</div>
+      </div>
+    </div>
+
+    <div class="blk b-bom">
+      <div class="blk-h"><span class="n">3</span><h3>BOM 清单</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th>物料</th><th>型号 / 规格</th><th style="width:60px">数量</th><th style="width:110px">参考价</th></tr></thead>
+          <tbody>
+            <tr><td><b>MCU</b></td><td>STM32G431CBT6（内置运放 + CORDIC）</td><td class="num">1</td><td class="num">¥15</td></tr>
+            <tr><td><b>三相驱动</b></td><td>DRV8313（2.5A 集成三半桥）</td><td class="num">1</td><td class="num">¥18</td></tr>
+            <tr><td><b>采样电阻</b></td><td>0.01Ω 1% 2512</td><td class="num">3</td><td class="num">¥3</td></tr>
+            <tr><td><b>磁编码器</b></td><td>AS5600 模块</td><td class="num">1</td><td class="num">¥8</td></tr>
+            <tr><td><b>降压</b></td><td>MP1584EN（12V→3.3V）</td><td class="num">1</td><td class="num">¥2</td></tr>
+            <tr><td><b>母线电容</b></td><td>100µF/25V 电解 ×2 + 10µF ×4</td><td class="num">6</td><td class="num">¥6</td></tr>
+            <tr><td><b>自举电容</b></td><td>100nF ×3</td><td class="num">3</td><td class="num">¥0.5</td></tr>
+            <tr><td><b>去耦</b></td><td>100nF ×8</td><td class="num">8</td><td class="num">¥1</td></tr>
+            <tr><td><b>接口</b></td><td>KF128 接线端子 ×2、XH2.54 电机座</td><td class="num">3</td><td class="num">¥5</td></tr>
+            <tr><td><b>保护</b></td><td>自恢复保险 + 防反接 MOS</td><td class="num">1 套</td><td class="num">¥3</td></tr>
+            <tr><td><b>电机</b></td><td>2205 / 2805 云台无刷</td><td class="num">1</td><td class="num">¥40</td></tr>
+            <tr><td><b>PCB</b></td><td>2 层 2oz 铜厚，5 片</td><td class="num">1</td><td class="num">¥50</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3">合计</td><td class="num">≈¥190–215</td></tr></tfoot>
+        </table>
+        <div class="dia-note" style="text-align:left;margin-top:10px">
+          <b>铜厚必须选 2oz</b>：三相大电流走线，1oz 压降和温升都过不了。
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-soft">
+      <div class="blk-h"><span class="n">4</span><h3>软件分层与控制结构</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:130px">模块</th><th>职责</th></tr></thead>
+          <tbody>
+            <tr><td><b>pwm_drv</b></td><td>三相互补 PWM + 死区 + 中心对齐</td></tr>
+            <tr><td><b>adc_curr</b></td><td>注入通道采样三相电流，与 PWM 同步触发</td></tr>
+            <tr><td><b>foc_core</b></td><td>Clarke → Park → PI → 反 Park → SVPWM</td></tr>
+            <tr><td><b>speed_loop</b></td><td>编码器测速 + 速度环 PI</td></tr>
+            <tr><td><b>protect</b></td><td>过流（硬件比较器 + 软件）、过温、堵转</td></tr>
+            <tr><td><b>ui_host</b></td><td>串口协议 + 上位机波形与调参</td></tr>
+          </tbody>
+        </table>
+        <div class="dia-note" style="text-align:left;margin-top:10px">
+          控制周期：电流环 100µs（10kHz），速度环 1ms。用定时器中断驱动，电流环里不允许有任何打印。
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-stage">
+      <div class="blk-h"><span class="n">5</span><h3>分阶段执行计划</h3></div>
+      <div class="blk-b">
+        <div class="stage">
+          <div class="sn">S1 · 2 周</div>
+          <div class="sb"><h4>方案与原理图</h4>
+            <p class="do">确定拓扑（集成驱动 vs 分立）、算电流能力、画电源与三相桥、画采样与保护</p>
+            <div class="acc"><b>验收：</b>原理图评审通过；采样电阻功率余量 ≥ 3 倍</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S2 · 2 周</div>
+          <div class="sb"><h4>PCB 与打样</h4>
+            <p class="do">大电流走线加宽、铺铜、开窗；下单 2oz；焊接</p>
+            <div class="acc"><b>验收：</b>限流 0.5A 上电，3.3V 正常，静态电流 &lt; 50mA</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S3 · 2 周</div>
+          <div class="sb"><h4>开环 PWM</h4>
+            <p class="do">三相 PWM 输出、死区验证、六步换相让电机转起来</p>
+            <div class="acc"><b>验收：</b>电机能转；死区波形正确；MOS 不烫</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S4 · 3 周</div>
+          <div class="sb"><h4>电流环</h4>
+            <p class="do">ADC 同步采样、Clarke/Park、电流 PI、SVPWM</p>
+            <div class="acc"><b>验收：</b>给定 Iq 时电流跟随误差 &lt; 10%；堵转时能限流</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S5 · 3 周</div>
+          <div class="sb"><h4>速度环 + 上位机</h4>
+            <p class="do">编码器测速、速度 PI、串口波形、在线调参、保护逻辑</p>
+            <div class="acc"><b>验收：</b>阶跃超调 &lt; 10%；稳态误差 &lt; 1%；能在线改参数不重启</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-risk">
+      <div class="blk-h"><span class="n">6</span><h3>风险与安全</h3></div>
+      <div class="blk-b">
+        <div class="risk"><b>这个项目会炸管，必须按顺序来：</b>
+          <ul>
+            <li><b>死区不能为 0</b>——上下管直通会在几微秒内烧掉 MOS，第一次一定用 2µs。</li>
+            <li><b>先限流再上电</b>——电源限流 0.5A，一切正常后再逐步放开。</li>
+            <li><b>母线电容先充电</b>——大电容直接上电会有巨大浪涌，串电阻预充。</li>
+            <li><b>电机必须固定</b>——第一次转起来可能飞车，夹死在台钳上。</li>
+            <li><b>不要用手摸驱动板</b>——带电时 12V 和开关尖峰都在。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-deliv">
+      <div class="blk-h"><span class="n">7</span><h3>交付物清单</h3></div>
+      <div class="blk-b">
+        <div class="deliver">
+          <div>原理图 + PCB + Gerber</div><div>BOM（2oz 铜厚标注）</div>
+          <div>FOC 算法源码（带注释）</div><div>上位机（波形 + 调参）</div>
+          <div>控制参数记录表（不同电机）</div><div>保护触发测试记录</div>
+          <div>温升测试数据</div><div>演示视频（含阶跃响应）</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= P3 ================= -->
+  <section class="proj" id="p3">
+    <div class="ph">
+      <div class="code">P3</div>
+      <div class="meta">
+        <h2>桌面三轴机械臂 + 视觉抓取</h2>
+        <p class="one">把运动学、插补、协议、视觉、标定串成一个"会动手"的系统，这是机器人岗最直接的证明。</p>
+        <div class="tags">
+          <span class="pill k">难度 ★★★★★</span><span class="pill k">14 周</span>
+          <span class="pill k">≈¥400</span><span class="pill">对应 M6–M11 综合</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-spec">
+      <div class="blk-h"><span class="n">1</span><h3>需求规格</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:60px">编号</th><th>功能需求</th><th style="width:160px">验收方式</th></tr></thead>
+          <tbody>
+            <tr><td class="id">FR-1</td><td>三自由度机械臂，可到达工作空间内任意 XY 点</td><td class="num">点位测试</td></tr>
+            <tr><td class="id">FR-2</td><td>输入目标坐标，逆解得三个关节角</td><td class="num">对比正解回代</td></tr>
+            <tr><td class="id">FR-3</td><td>直线插补，移动过程不抖动</td><td class="num">视频 + 轨迹</td></tr>
+            <tr><td class="id">FR-4</td><td>视觉识别指定颜色物块并抓取</td><td class="num">随机摆放 10 次</td></tr>
+            <tr><td class="id">FR-5</td><td>串口协议：手动控制、坐标控制、示教回放</td><td class="num">上位机操作</td></tr>
+            <tr><td class="id">FR-6</td><td>断电后不失控（舵机缓停）</td><td class="num">拔电观察</td></tr>
+          </tbody>
+        </table>
+        <table style="margin-top:12px">
+          <thead><tr><th style="width:60px">编号</th><th>非功能需求</th><th style="width:160px">指标</th></tr></thead>
+          <tbody>
+            <tr><td class="id">NFR-1</td><td>重复定位精度</td><td class="num">±2 mm</td></tr>
+            <tr><td class="id">NFR-2</td><td>单次抓取节拍</td><td class="num">&lt; 8 s</td></tr>
+            <tr><td class="id">NFR-3</td><td>抓取成功率</td><td class="num">≥ 80%（10 次随机摆放）</td></tr>
+            <tr><td class="id">NFR-4</td><td>连续运行</td><td class="num">≥ 1 小时无丢步</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-diag">
+      <div class="blk-h"><span class="n">2</span><h3>系统框图</h3></div>
+      <div class="blk-b">
+        <div class="dia">
+          <div class="node pw"><b>5V/6V 5A</b><span>独立供电</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>三路舵机</b><span>基座 / 大臂 / 小臂</span></div>
+          <span class="arw">←</span>
+          <div class="node mcu"><b>STM32F103</b><span>PWM + 插补</span></div>
+          <span class="arw">↔</span>
+          <div class="node"><b>PC 上位机</b><span>串口协议</span></div>
+        </div>
+        <div class="dia" style="margin-top:6px">
+          <div class="node"><b>USB 摄像头</b><span>俯视工作区</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>OpenCV</b><span>颜色分割 + 中心</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>像素→坐标</b><span>标定矩阵</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>发送目标点</b><span>串口</span></div>
+        </div>
+        <div class="dia-note">舵机必须独立供电，与 MCU 共地。用 MCU 的 5V 直接带三个舵机会导致复位。</div>
+      </div>
+    </div>
+
+    <div class="blk b-bom">
+      <div class="blk-h"><span class="n">3</span><h3>BOM 清单</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th>物料</th><th>型号 / 规格</th><th style="width:60px">数量</th><th style="width:110px">参考价</th></tr></thead>
+          <tbody>
+            <tr><td><b>舵机</b></td><td>MG996R 金属齿（14kg·cm）</td><td class="num">3</td><td class="num">¥45</td></tr>
+            <tr><td><b>结构件</b></td><td>铝合金机械臂支架套件（含轴承）</td><td class="num">1</td><td class="num">¥80</td></tr>
+            <tr><td><b>控制板</b></td><td>STM32F103 最小系统 + 扩展板</td><td class="num">1</td><td class="num">¥30</td></tr>
+            <tr><td><b>电源</b></td><td>6V 5A 开关电源</td><td class="num">1</td><td class="num">¥30</td></tr>
+            <tr><td><b>摄像头</b></td><td>USB 摄像头 1080p</td><td class="num">1</td><td class="num">¥60</td></tr>
+            <tr><td><b>底板</b></td><td>亚克力/铝板 300×300</td><td class="num">1</td><td class="num">¥25</td></tr>
+            <tr><td><b>紧固件</b></td><td>M3 螺丝螺母、铜柱</td><td class="num">1 套</td><td class="num">¥20</td></tr>
+            <tr><td><b>标定板</b></td><td>A4 棋盘格打印</td><td class="num">1</td><td class="num">¥2</td></tr>
+            <tr><td><b>线材</b></td><td>杜邦线、端子</td><td class="num">1 套</td><td class="num">¥20</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3">合计（不含 PC）</td><td class="num">≈¥310–420</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-soft">
+      <div class="blk-h"><span class="n">4</span><h3>关键技术点</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:130px">模块</th><th>要点</th></tr></thead>
+          <tbody>
+            <tr><td><b>逆运动学</b></td><td>两连杆平面逆解有两组解（肘上/肘下），固定选一组；角度超限要拒绝并上报错误，不要硬转。</td></tr>
+            <tr><td><b>插补</b></td><td>直线插补：把线段按 1mm 步长离散，每步做一次逆解，按固定周期下发。</td></tr>
+            <tr><td><b>舵机控制</b></td><td>50Hz PWM，0.5–2.5ms；写入前做限幅；大幅移动时用速度上限限制，避免甩飞。</td></tr>
+            <tr><td><b>手眼标定</b></td><td>九点标定：让机械臂点 9 个已知坐标，记录对应像素，求仿射变换矩阵。</td></tr>
+            <tr><td><b>视觉</b></td><td>HSV 颜色分割 → 形态学去噪 → 最大轮廓 → 质心像素。</td></tr>
+            <tr><td><b>通信</b></td><td>帧格式沿用 P1：帧头 + 长度 + 命令 + 数据 + CRC16。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-stage">
+      <div class="blk-h"><span class="n">5</span><h3>分阶段执行计划</h3></div>
+      <div class="blk-b">
+        <div class="stage">
+          <div class="sn">S1 · 2 周</div>
+          <div class="sb"><h4>机械装配与单轴标定</h4>
+            <p class="do">装结构、测每个关节的角度范围、标定 PWM 脉宽与角度的对应关系</p>
+            <div class="acc"><b>验收：</b>每个关节能准确走到 0/45/90 度；限位不撞结构</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S2 · 3 周</div>
+          <div class="sb"><h4>运动学</h4>
+            <p class="do">建坐标系、写正解、写逆解、正逆互验</p>
+            <div class="acc"><b>验收：</b>给定 20 组随机角度，正解→逆解→正解误差 &lt; 0.5mm</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S3 · 3 周</div>
+          <div class="sb"><h4>插补与协议</h4>
+            <p class="do">直线插补、速度规划、串口协议、上位机示教与回放</p>
+            <div class="acc"><b>验收：</b>画一个 100×100mm 正方形，轨迹偏差 &lt; 2mm</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S4 · 4 周</div>
+          <div class="sb"><h4>视觉与标定</h4>
+            <p class="do">相机安装与畸变校正、颜色分割、九点标定、坐标转换</p>
+            <div class="acc"><b>验收：</b>物块放 9 个位置，视觉给出的坐标误差 &lt; 3mm</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S5 · 2 周</div>
+          <div class="sb"><h4>联调与演示</h4>
+            <p class="do">抓取流程串起来、异常处理、连续测试、录制演示</p>
+            <div class="acc"><b>验收：</b>随机摆放 10 次，成功 ≥ 8 次；单次节拍 &lt; 8s</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-risk">
+      <div class="blk-h"><span class="n">6</span><h3>风险与对策</h3></div>
+      <div class="blk-b">
+        <div class="risk"><b>四个典型坑：</b>
+          <ul>
+            <li><b>舵机供电不足</b>——三个 MG996R 同时动电流可达 3A，用 MCU 的 5V 必复位。</li>
+            <li><b>逆解多解选错</b>——会出现"手臂穿到自己身体里"的动作，要加关节限位判断。</li>
+            <li><b>标定误差累积</b>——像素→坐标用一次仿射变换，别用复杂模型，误差可控。</li>
+            <li><b>温漂</b>——舵机跑久了角度会偏，每 30 分钟回零一次。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-deliv">
+      <div class="blk-h"><span class="n">7</span><h3>交付物清单</h3></div>
+      <div class="blk-b">
+        <div class="deliver">
+          <div>机械装配图 + 实物照片</div><div>运动学推导笔记（含正逆解公式）</div>
+          <div>固件源码（插补 + 协议）</div><div>上位机（示教 + 回放）</div>
+          <div>视觉标定记录（九点数据）</div><div>抓取成功率测试表（≥10 次）</div>
+          <div>演示视频（含失败案例与改进）</div><div>复盘报告</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= P4 ================= -->
+  <section class="proj" id="p4">
+    <div class="ph">
+      <div class="code">P4</div>
+      <div class="meta">
+        <h2>视觉里程计与目标跟踪小车</h2>
+        <p class="one">让车知道"我在哪、往哪走"：单目相机 + IMU + 轮速三路融合，考的是标定、特征、滤波和标定误差的账。</p>
+        <div class="tags">
+          <span class="pill k">难度 ★★★★</span><span class="pill k">12 周</span>
+          <span class="pill k">≈¥780</span><span class="pill">对应 M14 + M9</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-spec">
+      <div class="blk-h"><span class="n">1</span><h3>需求规格</h3><span class="hint">每条都要能验证</span></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:60px">编号</th><th>功能需求</th><th style="width:160px">验收方式</th></tr></thead>
+          <tbody>
+            <tr><td class="id">FR-1</td><td>单目相机实时输出位姿（位置 + 姿态）</td><td class="num">轨迹图</td></tr>
+            <tr><td class="id">FR-2</td><td>相机标定：内参与畸变系数，可离线复现</td><td class="num">重投影误差</td></tr>
+            <tr><td class="id">FR-3</td><td>ORB 特征提取与帧间匹配，估计相对位姿</td><td class="num">匹配内点率</td></tr>
+            <tr><td class="id">FR-4</td><td>EKF 融合视觉 / IMU / 轮速三路</td><td class="num">与纯轮速对比</td></tr>
+            <tr><td class="id">FR-5</td><td>识别指定 ArUco 或色块并跟随</td><td class="num">移动目标测试</td></tr>
+            <tr><td class="id">FR-6</td><td>轨迹按 TUM 格式录制，可回放与导出</td><td class="num">evo 工具对齐</td></tr>
+          </tbody>
+        </table>
+        <table style="margin-top:12px">
+          <thead><tr><th style="width:60px">编号</th><th>非功能需求</th><th style="width:160px">指标</th></tr></thead>
+          <tbody>
+            <tr><td class="id">NFR-1</td><td>位置漂移（10 m 直线）</td><td class="num">&lt; 5%</td></tr>
+            <tr><td class="id">NFR-2</td><td>位姿输出频率</td><td class="num">≥ 20 Hz</td></tr>
+            <tr><td class="id">NFR-3</td><td>单帧处理耗时</td><td class="num">&lt; 40 ms</td></tr>
+            <tr><td class="id">NFR-4</td><td>连续运行</td><td class="num">≥ 30 min 不崩</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-diag">
+      <div class="blk-h"><span class="n">2</span><h3>系统框图</h3></div>
+      <div class="blk-b">
+        <div class="dia">
+          <div class="node"><b>单目相机</b><span>30 fps</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>ORB + 匹配</b><span>帧间位姿</span></div>
+          <span class="arw">→</span>
+          <div class="node mcu"><b>EKF 融合</b><span>三路加权</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>位姿输出</b><span>TUM 轨迹</span></div>
+        </div>
+        <div class="dia" style="margin-top:6px">
+          <div class="node"><b>IMU</b><span>预积分</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>STM32</b><span>编码器 + 航向角</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>串口</b><span>200 Hz 上报</span></div>
+          <span class="arw">→</span>
+          <div class="node mcu"><b>融合节点</b><span>时间戳对齐</span></div>
+        </div>
+        <div class="dia-note">三路数据必须打时间戳再融合。用"到达时间"而不是"采集时间"做对齐，是漂移的第一大来源。</div>
+      </div>
+    </div>
+
+    <div class="blk b-bom">
+      <div class="blk-h"><span class="n">3</span><h3>BOM 清单</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th>物料</th><th>型号 / 规格</th><th style="width:60px">数量</th><th style="width:110px">参考价</th></tr></thead>
+          <tbody>
+            <tr><td><b>主控</b></td><td>树莓派 4B 4G（跑视觉）</td><td class="num">1</td><td class="num">¥420</td></tr>
+            <tr><td><b>相机</b></td><td>USB 免驱 1080p，广角 120°</td><td class="num">1</td><td class="num">¥80</td></tr>
+            <tr><td><b>IMU</b></td><td>MPU6050 或 ICM20602</td><td class="num">1</td><td class="num">¥15</td></tr>
+            <tr><td><b>底盘</b></td><td>两轮差速 + 霍尔编码器电机</td><td class="num">1 套</td><td class="num">¥160</td></tr>
+            <tr><td><b>下位机</b></td><td>STM32F103 最小系统</td><td class="num">1</td><td class="num">¥30</td></tr>
+            <tr><td><b>电源</b></td><td>18650 ×2 + 降压模块</td><td class="num">1 套</td><td class="num">¥55</td></tr>
+            <tr><td><b>标定板</b></td><td>A3 棋盘格 + ArUco 打印</td><td class="num">1</td><td class="num">¥10</td></tr>
+            <tr><td><b>线材</b></td><td>杜邦线、端子、扎带</td><td class="num">1 套</td><td class="num">¥20</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3">合计（树莓派占大头，有现成板子可省）</td><td class="num">≈¥720–850</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-soft">
+      <div class="blk-h"><span class="n">4</span><h3>关键技术点</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:130px">模块</th><th>要点</th></tr></thead>
+          <tbody>
+            <tr><td><b>相机标定</b></td><td>张正友法，15 张以上不同角度；畸变系数不收敛说明图太少或角点检测失败，别硬凑。</td></tr>
+            <tr><td><b>特征与匹配</b></td><td>ORB + 暴力匹配 + 比值检验；跑直线时特征少，要允许跟踪失败并降级到纯轮速。</td></tr>
+            <tr><td><b>尺度</b></td><td>单目尺度不可观，必须用轮速或已知尺寸物体给尺度，否则轨迹图只能看形状看不了大小。</td></tr>
+            <tr><td><b>EKF</b></td><td>状态选 [x, y, θ, v, ω]；过程噪声按实际打滑程度调，别照抄教程。</td></tr>
+            <tr><td><b>时间同步</b></td><td>相机、IMU、串口三路频率不同，融合前统一到同一时钟。</td></tr>
+            <tr><td><b>评估</b></td><td>用 evo 对齐后算 ATE / RPE，不要只看"看起来像"。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-stage">
+      <div class="blk-h"><span class="n">5</span><h3>分阶段执行计划</h3></div>
+      <div class="blk-b">
+        <div class="stage">
+          <div class="sn">S1 · 2 周</div>
+          <div class="sb"><h4>标定与数据通路</h4>
+            <p class="do">相机标定、IMU 读通、编码器读通、三路数据同时录到文件</p>
+            <div class="acc"><b>验收：</b>重投影误差 &lt; 0.5 px；三路数据时间戳误差 &lt; 10 ms</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S2 · 3 周</div>
+          <div class="sb"><h4>纯视觉里程计</h4>
+            <p class="do">ORB 提取、帧间匹配、本质矩阵求位姿、轨迹累积</p>
+            <div class="acc"><b>验收：</b>绕桌一圈，轨迹闭合误差 &lt; 20 cm</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S3 · 3 周</div>
+          <div class="sb"><h4>三路融合</h4>
+            <p class="do">EKF 搭建、噪声参数整定、视觉失效时降级</p>
+            <div class="acc"><b>验收：</b>10 m 直线漂移 &lt; 5%；遮住相机后仍能靠 IMU + 轮速继续输出</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S4 · 2 周</div>
+          <div class="sb"><h4>目标跟踪</h4>
+            <p class="do">ArUco / 色块检测、目标坐标转世界坐标、闭环跟随</p>
+            <div class="acc"><b>验收：</b>目标以 0.2 m/s 移动，跟随距离误差 &lt; 30 cm</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S5 · 2 周</div>
+          <div class="sb"><h4>评估与交付</h4>
+            <p class="do">多段轨迹录制、evo 评估、失败场景复现、录演示</p>
+            <div class="acc"><b>验收：</b>给出 ATE 数值表和 3 个失败案例的原因分析</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-risk">
+      <div class="blk-h"><span class="n">6</span><h3>风险与对策</h3></div>
+      <div class="blk-b">
+        <div class="risk"><b>四个典型坑：</b>
+          <ul>
+            <li><b>漂移到无法解释</b>——先跑纯轮速、再跑纯 IMU、最后融合，逐层对比才知道是谁在拖后腿。</li>
+            <li><b>标定误差放大</b>——内参错 1%，10 米后能差出几十厘米；标定必须重投影验证，不能"看着还行"。</li>
+            <li><b>树莓派算力不够</b>——分辨率降到 640×480、特征点限 800 个；实在不行把视觉放 PC 上跑离线。</li>
+            <li><b>只看图不看数</b>——轨迹图好看不代表对。必须用 evo 出 ATE / RPE 表。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-deliv">
+      <div class="blk-h"><span class="n">7</span><h3>交付物清单</h3></div>
+      <div class="blk-b">
+        <div class="deliver">
+          <div>标定参数文件 + 重投影误差报告</div><div>三路数据同步采集程序</div>
+          <div>视觉里程计源码</div><div>EKF 融合源码与参数说明</div>
+          <div>多段轨迹数据（TUM 格式）</div><div>evo 评估结果（ATE / RPE 表）</div>
+          <div>失败案例复现记录（≥3 个）</div><div>演示视频 + 复盘报告</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= P5 ================= -->
+  <section class="proj" id="p5">
+    <div class="ph">
+      <div class="code">P5</div>
+      <div class="meta">
+        <h2>MCP 机械臂 · 语言指令抓取</h2>
+        <p class="one">让机械臂听懂"把红色方块放到左边"。核心不是模型多大，而是你有没有 50 条干净的数据。</p>
+        <div class="tags">
+          <span class="pill k">难度 ★★★★</span><span class="pill k">10 周</span>
+          <span class="pill k">≈¥160</span><span class="pill">对应 M13（需先完成 P3）</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-spec">
+      <div class="blk-h"><span class="n">1</span><h3>需求规格</h3><span class="hint">每条都要能验证</span></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:60px">编号</th><th>功能需求</th><th style="width:160px">验收方式</th></tr></thead>
+          <tbody>
+            <tr><td class="id">FR-1</td><td>复用 P3 机械臂，追加二指夹爪</td><td class="num">夹爪开合测试</td></tr>
+            <tr><td class="id">FR-2</td><td>遥操作：键盘或手柄控制，可一键开始/停止录制</td><td class="num">录 1 条回放</td></tr>
+            <tr><td class="id">FR-3</td><td>采集 50 条抓放数据，标注成功/失败</td><td class="num">数据集统计</td></tr>
+            <tr><td class="id">FR-4</td><td>行为克隆策略训练，输入图像 + 目标，输出关节增量</td><td class="num">离线 loss 曲线</td></tr>
+            <tr><td class="id">FR-5</td><td>真机部署，端到端延迟 &lt; 200 ms</td><td class="num">打点计时</td></tr>
+            <tr><td class="id">FR-6</td><td>自然语言指令经 MCP / function calling 解析为目标物体与目标位</td><td class="num">20 条指令测试</td></tr>
+          </tbody>
+        </table>
+        <table style="margin-top:12px">
+          <thead><tr><th style="width:60px">编号</th><th>非功能需求</th><th style="width:160px">指标</th></tr></thead>
+          <tbody>
+            <tr><td class="id">NFR-1</td><td>训练过的位置</td><td class="num">成功率 ≥ 80%</td></tr>
+            <tr><td class="id">NFR-2</td><td>没训练过的位置</td><td class="num">成功率 ≥ 50%</td></tr>
+            <tr><td class="id">NFR-3</td><td>单次抓取</td><td class="num">&lt; 10 s</td></tr>
+            <tr><td class="id">NFR-4</td><td>指令解析</td><td class="num">&lt; 3 s</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-diag">
+      <div class="blk-h"><span class="n">2</span><h3>系统框图</h3></div>
+      <div class="blk-b">
+        <div class="dia">
+          <div class="node"><b>语音 / 文字</b><span>"放到左边"</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>LLM + MCP</b><span>解析为目标</span></div>
+          <span class="arw">→</span>
+          <div class="node mcu"><b>策略网络</b><span>图像 + 目标 → 动作</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>关节增量</b><span>10 Hz 下发</span></div>
+        </div>
+        <div class="dia" style="margin-top:6px">
+          <div class="node"><b>相机</b><span>俯视工作区</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>目标检测</b><span>颜色 + 位置</span></div>
+          <span class="arw">→</span>
+          <div class="node mcu"><b>观测拼接</b><span>图像 + 目标向量</span></div>
+          <span class="arw">→</span>
+          <div class="node"><b>训练 / 推理</b><span>同一份代码</span></div>
+        </div>
+        <div class="dia-note">训练和推理必须走同一套预处理，否则模型在真机上是废的。先跑通"录制→训练→回放"的闭环，再谈效果。</div>
+      </div>
+    </div>
+
+    <div class="blk b-bom">
+      <div class="blk-h"><span class="n">3</span><h3>BOM 清单（P3 基础上的增量）</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th>物料</th><th>型号 / 规格</th><th style="width:60px">数量</th><th style="width:110px">参考价</th></tr></thead>
+          <tbody>
+            <tr><td><b>夹爪</b></td><td>二指舵机夹爪 + 支架</td><td class="num">1</td><td class="num">¥65</td></tr>
+            <tr><td><b>相机</b></td><td>USB 相机（复用 P3 的即可）</td><td class="num">0–1</td><td class="num">¥0–60</td></tr>
+            <tr><td><b>手柄</b></td><td>USB 手柄，遥操作用（可用键盘替代）</td><td class="num">0–1</td><td class="num">¥0–50</td></tr>
+            <tr><td><b>玩具物块</b></td><td>不同颜色积木 10 个</td><td class="num">1 套</td><td class="num">¥15</td></tr>
+            <tr><td><b>桌面背景</b></td><td>纯色桌垫，减少背景干扰</td><td class="num">1</td><td class="num">¥20</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3">增量合计（不含 P3 已有硬件与 PC）</td><td class="num">≈¥100–210</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-soft">
+      <div class="blk-h"><span class="n">4</span><h3>关键技术点</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:130px">模块</th><th>要点</th></tr></thead>
+          <tbody>
+            <tr><td><b>数据</b></td><td>50 条是最低限，覆盖 5 个位置 × 10 次；位置别都摆在正中，边角要占一半。</td></tr>
+            <tr><td><b>动作空间</b></td><td>输出关节增量而不是绝对角度，推理时才不会一步跳飞。</td></tr>
+            <tr><td><b>行为克隆</b></td><td>本质是监督学习：图像 → 动作。过拟合到背景是最常见的失败，先做随机裁剪和亮度扰动。</td></tr>
+            <tr><td><b>分布偏移</b></td><td>模型一旦偏出训练分布就会越走越偏；DAgger 的思路是让它自己走、你在旁边纠正，记录纠正后的样本。</td></tr>
+            <tr><td><b>语言接口</b></td><td>用 function calling 让模型输出结构化参数（颜色、目标区域），而不是让它直接生成角度。</td></tr>
+            <tr><td><b>安全</b></td><td>限速、限力矩、急停键；调试时先在空载下跑。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk b-stage">
+      <div class="blk-h"><span class="n">5</span><h3>分阶段执行计划</h3></div>
+      <div class="blk-b">
+        <div class="stage">
+          <div class="sn">S1 · 2 周</div>
+          <div class="sb"><h4>夹爪与遥操作</h4>
+            <p class="do">装夹爪、写遥操作程序、跑通录制与回放</p>
+            <div class="acc"><b>验收：</b>手动完成 10 次抓放；录制的轨迹能原样回放</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S2 · 2 周</div>
+          <div class="sb"><h4>数据采集</h4>
+            <p class="do">5 个位置各采 10 条，成功失败都留，标注到位</p>
+            <div class="acc"><b>验收：</b>50 条数据全部可回放，成功率标注一致率 100%</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S3 · 3 周</div>
+          <div class="sb"><h4>训练与离线评估</h4>
+            <p class="do">搭训练管线、行为克隆基线、数据增强、验证集划分</p>
+            <div class="acc"><b>验收：</b>离线动作误差低于"永远输出平均动作"的基线 50% 以上</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S4 · 2 周</div>
+          <div class="sb"><h4>真机部署</h4>
+            <p class="do">推理频率、延迟优化、失败回退、安全限幅</p>
+            <div class="acc"><b>验收：</b>训练过的位置 ≥ 80%，新位置 ≥ 50%</div></div>
+        </div>
+        <div class="stage">
+          <div class="sn">S5 · 1 周</div>
+          <div class="sb"><h4>语言接口与演示</h4>
+            <p class="do">接 MCP / function calling、20 条指令测试、录演示</p>
+            <div class="acc"><b>验收：</b>20 条指令解析正确 ≥ 18 条；演示含失败案例</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-risk">
+      <div class="blk-h"><span class="n">6</span><h3>风险与对策</h3></div>
+      <div class="blk-b">
+        <div class="risk"><b>四个典型坑：</b>
+          <ul>
+            <li><b>数据太少</b>——20 条就想出效果，结果模型只学会了"回到中间"；先攒够 50 条再说。</li>
+            <li><b>只学背景</b>——相机固件、光照一变全崩；加随机裁剪、亮度扰动，并换一天再测。</li>
+            <li><b>训练推理不一致</b>——归一化参数、图像尺寸、通道顺序任一不同，真机就是随机动作。</li>
+            <li><b>一步跳飞</b>——输出绝对角度会让机械臂乱甩；改增量并限幅。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk b-deliv">
+      <div class="blk-h"><span class="n">7</span><h3>交付物清单</h3></div>
+      <div class="blk-b">
+        <div class="deliver">
+          <div>夹爪装配与遥操作程序</div><div>50 条数据集（含成功/失败标注）</div>
+          <div>预处理与训练脚本</div><div>模型权重 + 训练曲线</div>
+          <div>真机推理程序（含安全限幅）</div><div>语言接口 demo（MCP / function calling）</div>
+          <div>成功率对比表（训练过 vs 新位置）</div><div>演示视频 + 复盘报告</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 交付标准 ================= -->
+  <section class="proj" id="std">
+    <div class="ph">
+      <div class="code">★</div>
+      <div class="meta">
+        <h2>通用交付标准</h2>
+        <p class="one">五个项目都要满足这套标准。达不到，就只能算"课程作业"，不能写进简历当"工程项目"。</p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h"><span class="n">1</span><h3>仓库结构</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:150px">目录</th><th>放什么</th></tr></thead>
+          <tbody>
+            <tr><td><b>/hardware</b></td><td>原理图 PDF 与源文件、PCB 源文件、Gerber、BOM</td></tr>
+            <tr><td><b>/firmware</b></td><td>bsp/ app/ common/ main.c，附 Makefile</td></tr>
+            <tr><td><b>/host</b></td><td>上位机源码</td></tr>
+            <tr><td><b>/docs</b></td><td>协议文档、测试记录、复盘、照片</td></tr>
+            <tr><td><b>/media</b></td><td>演示视频、波形截图</td></tr>
+            <tr><td><b>README.md</b></td><td>一句话介绍 + 接线图 + 编译方法 + 演示 GIF</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h"><span class="n">2</span><h3>测试记录表（每个项目都要有）</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:80px">编号</th><th>测试项</th><th style="width:160px">预期</th><th style="width:120px">实测</th><th style="width:80px">结论</th></tr></thead>
+          <tbody>
+            <tr><td class="id">T-01</td><td>上电电压</td><td class="num">3.3V ±5%</td><td class="num">_____</td><td class="num">□通过</td></tr>
+            <tr><td class="id">T-02</td><td>静态电流</td><td class="num">按 NFR</td><td class="num">_____</td><td class="num">□通过</td></tr>
+            <tr><td class="id">T-03</td><td>通信误码</td><td class="num">连续 1 万帧 0 错误</td><td class="num">_____</td><td class="num">□通过</td></tr>
+            <tr><td class="id">T-04</td><td>连续运行</td><td class="num">按 NFR</td><td class="num">_____</td><td class="num">□通过</td></tr>
+            <tr><td class="id">T-05</td><td>异常恢复</td><td class="num">拔线/乱包不崩溃</td><td class="num">_____</td><td class="num">□通过</td></tr>
+          </tbody>
+        </table>
+        <p style="margin:10px 0 0;font-size:12.4px;color:var(--ink3)">测不出数据的项目不算通过。每一条都要有实测值。</p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h"><span class="n">3</span><h3>面试时怎么讲（每个项目都要准备）</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:120px">时长</th><th>讲什么</th></tr></thead>
+          <tbody>
+            <tr><td><b>30 秒</b></td><td>做了什么、解决了什么问题、结果是什么（带一个数字）</td></tr>
+            <tr><td><b>3 分钟</b></td><td>背景 → 方案选型 → 我的职责 → 关键技术点 → 结果</td></tr>
+            <tr><td><b>10 分钟</b></td><td>展开一块原理图、一段关键代码、一次完整的排查过程</td></tr>
+            <tr><td><b>被追问</b></td><td>为什么这么设计 / 还有什么方案 / 如果重做会怎么改 / 最难查的 bug</td></tr>
+          </tbody>
+        </table>
+        <p style="margin:10px 0 0;font-size:12.4px;color:var(--ink3)">练法：对着镜子讲一遍并录音，回放时你会发现大量"呃""那个"和跳过的逻辑。</p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h"><span class="n">4</span><h3>什么样的项目能写进简历</h3></div>
+      <div class="blk-b">
+        <table>
+          <thead><tr><th style="width:70px"></th><th>标准</th><th>反例</th></tr></thead>
+          <tbody>
+            <tr><td><b>能</b></td><td>自己画板、自己写固件、有量化指标、能讲 30 分钟</td><td>—</td></tr>
+            <tr><td><b>不能</b></td><td>—</td><td>跟着教程敲的"智能家居"（没有自己的设计决策）</td></tr>
+            <tr><td><b>不能</b></td><td>—</td><td>只有代码没有硬件的"模块拼接"（买现成模块拼起来）</td></tr>
+            <tr><td><b>不能</b></td><td>—</td><td>说不清指标的项目（"能跑就行"）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">项目库 · P1 → P2 → P3 递进，P4 / P5 是方向项目 · 打印时会输出全部五个</p>
+</div>
+
+<script>
+(function () {
+  var tabs = document.getElementById('tabs');
+  var projs = Array.prototype.slice.call(document.querySelectorAll('.proj'));
+  tabs.addEventListener('click', function (e) {
+    var b = e.target.closest('.tab');
+    if (!b) return;
+    Array.prototype.forEach.call(tabs.querySelectorAll('.tab'), function (t) { t.classList.remove('on'); });
+    b.classList.add('on');
+    projs.forEach(function (p) { p.classList.toggle('on', p.id === b.dataset.p); });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

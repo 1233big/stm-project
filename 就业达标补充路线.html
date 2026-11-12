@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>就业达标补充路线 · 大二上 → 大四秋招</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b;
+    --line:#dbe3f3; --blue:#1d4ed8; --blue-soft:#eff4ff;
+    --green:#0b7a5a; --green-soft:#e9f9f2; --green-line:#c6efdf;
+    --orange:#ea580c; --orange-soft:#fff4ec; --orange-line:#ffd8c0;
+    --red:#b91c1c; --bg:#f4f7fd;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;color:var(--ink);line-height:1.65;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:
+      radial-gradient(1000px 480px at 5% -6%, #e2ecff 0%, transparent 58%),
+      radial-gradient(880px 420px at 102% 2%, #ddf5ea 0%, transparent 52%),
+      var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:44px 22px 90px}
+
+  /* hero */
+  .hero{
+    background:linear-gradient(122deg,#0b2a6b 0%,#1d4ed8 58%,#0ea5a5 130%);
+    border-radius:22px;padding:38px 38px 32px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 22px 50px -26px rgba(13,42,107,.6);
+  }
+  .hero::after{content:"";position:absolute;right:-110px;bottom:-150px;width:340px;height:340px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.2),transparent 62%)}
+  .eyebrow{margin:0 0 10px;font-size:12.5px;letter-spacing:.3em;opacity:.72}
+  .hero h1{margin:0;font-size:clamp(24px,3.4vw,36px);font-weight:800;letter-spacing:.02em}
+  .hero .lead{margin:12px 0 0;max-width:660px;font-size:14.5px;opacity:.92}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+  .chips span{font-size:12.5px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
+    border-radius:999px;padding:5px 13px}
+
+  /* section */
+  section{margin-top:40px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+  .sec-head h2{margin:0;font-size:19px;font-weight:800;letter-spacing:.02em}
+  .sec-head .no{font-size:12px;font-weight:800;color:var(--blue);background:var(--blue-soft);
+    border-radius:7px;padding:2px 8px;letter-spacing:.06em}
+  .sec-head p{margin:0;font-size:13px;color:var(--ink3)}
+
+  /* diagnosis */
+  .diag{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .diag .item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;
+    box-shadow:0 10px 24px -22px rgba(15,23,42,.5)}
+  .diag .pct{font-size:30px;font-weight:800;line-height:1.05;color:var(--blue)}
+  .diag .pct small{font-size:13px;font-weight:600;color:var(--ink3)}
+  .diag h3{margin:8px 0 6px;font-size:14px;font-weight:700}
+  .diag p{margin:0;font-size:12.5px;color:var(--ink3);line-height:1.55}
+  .diag .item.warn .pct{color:var(--orange)}
+
+  /* module cards */
+  .mods{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .mod{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px 20px 18px;
+    box-shadow:0 10px 26px -24px rgba(15,23,42,.55);position:relative;overflow:hidden}
+  .mod::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
+  .mod.g::before{background:var(--green)}
+  .mod.o::before{background:var(--orange)}
+  .mod-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .letter{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:13px;font-weight:800;
+    background:var(--blue-soft);color:var(--blue)}
+  .mod.g .letter{background:var(--green-soft);color:var(--green)}
+  .mod.o .letter{background:var(--orange-soft);color:var(--orange)}
+  .mod h3{margin:0;font-size:15.5px;font-weight:800;flex:1}
+  .cost{font-size:11.5px;color:var(--ink3);background:#f6f8fd;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .why{margin:8px 0 12px;font-size:12.5px;color:#8a5a2b;background:#fffaf0;border:1px solid #f7e3bf;
+    border-radius:8px;padding:7px 10px;line-height:1.5}
+  .mod.g .why{color:#0b5c46;background:#f2fbf7;border-color:#cdeee0}
+  .mod.o .why{color:#9a3412;background:#fff8f2;border-color:#ffdcc4}
+  .mod ul{margin:0;padding-left:0;list-style:none;font-size:13px;color:var(--ink2)}
+  .mod li{position:relative;padding-left:16px;margin-bottom:5px}
+  .mod li::before{content:"";position:absolute;left:2px;top:.62em;width:5px;height:5px;border-radius:50%;background:#b9c9ea}
+  .mod li b{color:var(--ink);font-weight:700}
+
+  /* timeline */
+  .tl{position:relative;padding-left:26px}
+  .tl::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:linear-gradient(#c7d5f5,#cdeee0)}
+  .term{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:16px 18px;margin-bottom:14px;box-shadow:0 8px 22px -22px rgba(15,23,42,.5)}
+  .term::before{content:"";position:absolute;left:-25px;top:22px;width:9px;height:9px;border-radius:50%;
+    background:#fff;border:2px solid var(--blue);box-sizing:content-box}
+  .term:nth-child(even)::before{border-color:var(--green)}
+  .term h3{margin:0 0 2px;font-size:15px;font-weight:800}
+  .term .when{font-size:12px;color:var(--ink3);letter-spacing:.04em;margin-bottom:9px}
+  .row{display:flex;gap:10px;font-size:13px;margin-bottom:5px;align-items:flex-start}
+  .row .k{flex:0 0 72px;color:var(--ink3);font-size:12px;padding-top:2px}
+  .row .v{flex:1;color:var(--ink2)}
+  .k-course{color:var(--blue)!important;font-weight:700}
+  .k-extra{color:var(--green)!important;font-weight:700}
+  .k-mile{color:var(--orange)!important;font-weight:700}
+
+  /* projects */
+  .projs{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+  .proj{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;
+    box-shadow:0 10px 26px -24px rgba(15,23,42,.5);display:flex;flex-direction:column}
+  .proj h3{margin:0 0 4px;font-size:15px;font-weight:800;line-height:1.4}
+  .stars{color:#f59e0b;font-size:12.5px;letter-spacing:2px}
+  .proj .meta{font-size:12px;color:var(--ink3);margin:6px 0 10px}
+  .proj .lbl{font-size:11px;letter-spacing:.14em;color:var(--ink3);font-weight:700;margin:8px 0 4px}
+  .proj p{margin:0;font-size:12.5px;color:var(--ink2);line-height:1.55}
+  .accept{margin-top:auto;padding-top:12px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--green);font-weight:600}
+
+  /* checklist */
+  .check{background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 20px 18px;
+    box-shadow:0 10px 26px -24px rgba(15,23,42,.5)}
+  .check h3{margin:18px 0 8px;font-size:13px;letter-spacing:.1em;color:var(--ink3);font-weight:800}
+  .chk{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed #eef2fa;cursor:pointer}
+  .chk:last-child{border-bottom:none}
+  .chk input{appearance:none;width:18px;height:18px;border:2px solid #c3d0ea;border-radius:5px;margin:2px 0 0;flex:0 0 auto;
+    cursor:pointer;transition:.15s;position:relative;background:#fff}
+  .chk input:checked{background:var(--green);border-color:var(--green)}
+  .chk input:checked::after{content:"";position:absolute;left:5px;top:1.5px;width:5px;height:10px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(44deg)}
+  .chk span{font-size:13.5px;color:var(--ink2);line-height:1.5}
+  .chk input:checked + span{color:#94a3b8;text-decoration:line-through}
+  .progress{display:flex;align-items:center;gap:12px;padding:16px 0 4px}
+  .bar{flex:1;height:8px;background:#eef2fa;border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1d4ed8,#0b7a5a);border-radius:99px;transition:width .3s}
+  .progress b{font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums}
+
+  /* advice */
+  .advice{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+  .adv{background:linear-gradient(160deg,#fff,#f8fbff);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .adv h3{margin:0 0 8px;font-size:14px;font-weight:800;color:var(--ink)}
+  .adv p{margin:0;font-size:12.5px;color:var(--ink2);line-height:1.6}
+
+  .foot{margin-top:34px;text-align:center;font-size:12px;color:#94a3b8}
+  .back{display:inline-block;margin-bottom:14px;font-size:13px;color:var(--blue);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  @media (max-width:900px){
+    .diag{grid-template-columns:repeat(2,1fr)}
+    .mods{grid-template-columns:1fr}
+    .projs{grid-template-columns:1fr}
+    .advice{grid-template-columns:1fr}
+    .hero{padding:28px 22px}
+    .row .k{flex-basis:62px}
+  }
+  @media (max-width:560px){
+    .wrap{padding:20px 13px 70px}
+    .diag{grid-template-columns:1fr}
+  }
+  @media print{body{background:#fff}.hero{box-shadow:none}}
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+    <a class="back" style="margin-bottom:0" href="学习总控台.html">总控台</a>
+    <a class="back" style="margin-bottom:0" href="AI嵌入式机器人成长路线图.html">← 返回主路线图</a>
+  </div>
+
+  <header class="hero">
+    <h1>就业达标补充路线</h1>
+    <p class="lead">原路线图解决的是「知识覆盖」。企业校招看的是「你能不能干活」。这份清单补的是课程没教的四块：笔试基本功、工程能力、自研项目、实习与竞赛证明。</p>
+    <div class="chips">
+      <span>起点：2026.11 大二上第 8 周</span>
+      <span>终点：2028.09 秋招</span>
+      <span>周期：约 22 个月</span>
+    </div>
+  </header>
+
+  <!-- 01 诊断 -->
+  <section>
+    <div class="sec-head">
+      <span class="no">01</span>
+      <h2>先看清：课程给你什么、不给你什么</h2>
+    </div>
+    <div class="diag">
+      <div class="item">
+        <div class="pct">80<small>%</small></div>
+        <h3>知识覆盖</h3>
+        <p>从电路到 RTOS 的知识面完整，这是路线图最大的价值。</p>
+      </div>
+      <div class="item warn">
+        <div class="pct">30<small>%</small></div>
+        <h3>工程能力</h3>
+        <p>Git、Makefile、GDB、示波器、看 datasheet——课程默认你会。</p>
+      </div>
+      <div class="item warn">
+        <div class="pct">20<small>%</small></div>
+        <h3>项目可信度</h3>
+        <p>教学项目人人同款，面试问「为什么这样设计」就答不出。</p>
+      </div>
+      <div class="item warn">
+        <div class="pct">0<small>%</small></div>
+        <h3>实习与竞赛</h3>
+        <p>这两项在机器人/嵌入式校招里的权重，高于任何一门课。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 补课模块 -->
+  <section>
+    <div class="sec-head">
+      <span class="no">02</span>
+      <h2>七个补课模块</h2>
+      <p>叠加在原路线图上并行推进</p>
+    </div>
+
+    <div class="mods">
+
+      <article class="mod">
+        <div class="mod-top"><div class="letter">A</div><h3>笔试基本功</h3><span class="cost">每天 40 min</span></div>
+        <div class="why">课程不教，但校招第一关就是笔试。这一块不过，后面全白搭。</div>
+        <ul>
+          <li><b>C 深水区</b>：指针与数组、函数指针、const/volatile/static、结构体对齐、位运算、大小端</li>
+          <li><b>内存模型</b>：栈 / 堆 / .data / .bss / 常量区，一个变量存在哪</li>
+          <li><b>编译链接</b>：预处理→编译→汇编→链接，读懂 .map 文件</li>
+          <li><b>算法</b>：链表、栈队列、哈希、二叉树、排序；LeetCode 目标 150 题</li>
+          <li><b>嵌入式八股</b>：启动流程、中断向量表、RTOS 调度、I2C/SPI/CAN 时序</li>
+        </ul>
+      </article>
+
+      <article class="mod g">
+        <div class="mod-top"><div class="letter">B</div><h3>工程能力</h3><span class="cost">边做边学</span></div>
+        <div class="why">入职第一个月就要用。学生和工程师的分水岭，几乎全在这里。</div>
+        <ul>
+          <li><b>Git</b>：分支、合并冲突、commit 规范；所有代码进仓库</li>
+          <li><b>构建系统</b>：手写 Makefile、CMake 基础、链接脚本 .ld</li>
+          <li><b>调试</b>：GDB + OpenOCD、断点/观察点、<b>HardFault 定位到行号</b></li>
+          <li><b>仪器</b>：示波器、逻辑分析仪、可调电源限流、烙铁热风枪</li>
+          <li><b>文档</b>：README、原理图、BOM、测试记录——面试官会看</li>
+        </ul>
+      </article>
+
+      <article class="mod o">
+        <div class="mod-top"><div class="letter">C</div><h3>一个自研项目</h3><span class="cost">6–12 周</span></div>
+        <div class="why">这是简历上唯一能证明「你会干活」的东西。一个做深 > 五个跟教程敲的。</div>
+        <ul>
+          <li><b>从 0 开始</b>：自己画板（嘉立创打样）、自己写固件、自己写上位机</li>
+          <li><b>有真实约束</b>：成本、功耗、体积、可靠性至少占一项</li>
+          <li><b>有量化指标</b>：能说「待机电流 42µA」「抓取成功率 85%」</li>
+          <li><b>有取舍故事</b>：为什么用 DMA 不用中断，为什么这个电阻选 10k</li>
+        </ul>
+      </article>
+
+      <article class="mod g">
+        <div class="mod-top"><div class="letter">D</div><h3>竞赛</h3><span class="cost">2027 全年</span></div>
+        <div class="why">机器人岗对竞赛的认可度≈半个实习，尤其是电赛国赛。</div>
+        <ul>
+          <li><b>全国大学生电子设计竞赛</b>：2027 年是国赛年，8 月，最对口</li>
+          <li><b>智能车竞赛</b>：选题方向与嵌入式控制高度重合</li>
+          <li><b>RoboMaster</b>：团队工程量大，简历亮点最强但耗时</li>
+          <li><b>蓝桥杯嵌入式</b>：个人赛，顺便练笔试手感</li>
+        </ul>
+      </article>
+
+      <article class="mod o">
+        <div class="mod-top"><div class="letter">E</div><h3>实习</h3><span class="cost">2028.3–8</span></div>
+        <div class="why">校招最硬的一张牌。有实习的本科生，简历直接进下一轮。</div>
+        <ul>
+          <li><b>2027.10 开始投</b>：暑期实习提前批，提前半年</li>
+          <li><b>目标</b>：嵌入式软件 / 驱动 / 测试开发，优先有转正名额的</li>
+          <li><b>大二暑假别空着</b>：实验室、学长工作室、小厂项目都算</li>
+          <li><b>实习中留下证据</b>：需求文档、提交记录、上线数据</li>
+        </ul>
+      </article>
+
+      <article class="mod">
+        <div class="mod-top"><div class="letter">F</div><h3>系统原理</h3><span class="cost">大三上，约 40 h</span></div>
+        <div class="why">只会调库的人，三年后会被淘汰；懂原理的人，能往上走。</div>
+        <ul>
+          <li><b>操作系统</b>：进程/线程、调度、内存管理、同步与互斥</li>
+          <li><b>RTOS 原理</b>：任务切换、优先级反转与继承、临界区</li>
+          <li><b>数据结构</b>：手写链表/环形缓冲区/状态机，别只会调库</li>
+          <li><b>英语</b>：能直接读 reference manual，不靠翻译</li>
+        </ul>
+      </article>
+
+      <article class="mod">
+        <div class="mod-top"><div class="letter">G</div><h3>表达与包装</h3><span class="cost">持续</span></div>
+        <div class="why">同样一个项目，会讲的人拿到 offer，不会讲的人被当成"跟着做的"。</div>
+        <ul>
+          <li><b>简历一页</b>：STAR 结构，每条都带数字</li>
+          <li><b>三分钟讲项目</b>：背景 → 我的方案 → 结果 → 踩坑</li>
+          <li><b>复盘文档</b>：每个项目写完就归档，秋招前直接复用</li>
+          <li><b>GitHub</b>：有 README、有图、有测试记录的项目首页</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 03 时间表 -->
+  <section>
+    <div class="sec-head">
+      <span class="no">03</span>
+      <h2>两年落地节奏</h2>
+      <p>蓝色=原课程，绿色=补充模块，橙色=里程碑</p>
+    </div>
+
+    <div class="tl">
+
+      <div class="term">
+        <h3>大二上（现在 → 2027.01）</h3>
+        <div class="when">约 10 周 + 寒假</div>
+        <div class="row"><span class="k">课程</span><span class="v"><b class="k-course">阶段 1+2</b>：电路与 C 语言、单片机（GPIO / 定时器 / 中断 / 通信 / PCB）</span></div>
+        <div class="row"><span class="k">补充</span><span class="v"><b class="k-extra">A 笔试</b> 每天 40 min（C 深水区 + 50 题）；<b class="k-extra">B 工程</b> 把 Git、Makefile 用起来</span></div>
+        <div class="row"><span class="k">里程碑</span><span class="v"><b class="k-mile">寒假：亲手画一块最小系统板并打样点亮</b>——从原理图到固件全自己来</span></div>
+      </div>
+
+      <div class="term">
+        <h3>大二下（2027.02 → 2027.06）</h3>
+        <div class="when">约 18 周</div>
+        <div class="row"><span class="k">课程</span><span class="v"><b class="k-course">阶段 3+4</b>：Linux 应用开发、STM32/GD32 外设驱动、DMA、RTOS</span></div>
+        <div class="row"><span class="k">补充</span><span class="v"><b class="k-extra">C 自研项目</b> 立项并开工；<b class="k-extra">D 竞赛</b> 组队准备电赛（控制类方向）</span></div>
+        <div class="row"><span class="k">里程碑</span><span class="v"><b class="k-mile">进实验室 / 找到带队学长</b>；自研项目做出第一个可运行的版本</span></div>
+      </div>
+
+      <div class="term">
+        <h3>大二暑假（2027.07 → 2027.08）</h3>
+        <div class="when">约 8 周</div>
+        <div class="row"><span class="k">课程</span><span class="v"><b class="k-course">阶段 5</b>：蓝牙 / WiFi / LVGL / MQTT，做一个带屏能联网的设备</span></div>
+        <div class="row"><span class="k">补充</span><span class="v"><b class="k-extra">D 竞赛</b>：电赛国赛（8 月）全力冲</span></div>
+        <div class="row"><span class="k">里程碑</span><span class="v"><b class="k-mile">拿到一个省级以上奖项</b>，简历第一行有了内容</span></div>
+      </div>
+
+      <div class="term">
+        <h3>大三上（2027.09 → 2028.01）</h3>
+        <div class="when">约 18 周</div>
+        <div class="row"><span class="k">课程</span><span class="v"><b class="k-course">阶段 6</b>：Linux 驱动做深（完整字符设备 + 设备树 + 一次真实 oops 调试）</span></div>
+        <div class="row"><span class="k">补充</span><span class="v"><b class="k-extra">F 系统原理</b>；<b class="k-extra">E 实习</b> 10 月起投 2028 暑期实习；刷题到 150</span></div>
+        <div class="row"><span class="k">里程碑</span><span class="v"><b class="k-mile">自研项目结项并写完复盘文档</b>；拿到第一份实习面试</span></div>
+      </div>
+
+      <div class="term">
+        <h3>大三下 + 暑假（2028.02 → 2028.08）</h3>
+        <div class="when">约 6 个月</div>
+        <div class="row"><span class="k">课程</span><span class="v"><b class="k-course">阶段 7</b> 具身智能当兴趣补充，<u>不作为主攻方向</u></span></div>
+        <div class="row"><span class="k">补充</span><span class="v"><b class="k-extra">E 实习</b> 全力争取转正；<b class="k-extra">G 表达</b> 整理项目与简历</span></div>
+        <div class="row"><span class="k">里程碑</span><span class="v"><b class="k-mile">一段 ≥2 个月的嵌入式实习</b>——秋招最硬的一张牌</span></div>
+      </div>
+
+      <div class="term">
+        <h3>大四上（2028.09 → 2028.11）</h3>
+        <div class="when">秋招</div>
+        <div class="row"><span class="k">课程</span><span class="v"><b class="k-course">阶段 8</b>：C++ / SLAM / 点云，作为简历加分项，别当主菜</span></div>
+        <div class="row"><span class="k">补充</span><span class="v">八股冲刺 + 项目复盘 + 模拟面试</span></div>
+        <div class="row"><span class="k">里程碑</span><span class="v"><b class="k-mile">投递 → 面试 → offer</b></span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 04 项目 -->
+  <section>
+    <div class="sec-head">
+      <span class="no">04</span>
+      <h2>三个自研项目方案 · 挑一个做透</h2>
+      <p>都要求：自己画板、自己写固件、自己写上位机、自己写测试报告</p>
+    </div>
+
+    <div class="projs">
+      <article class="proj">
+        <h3>无刷电机 FOC 驱动小板</h3>
+        <div class="stars">★★★★☆</div>
+        <div class="meta">成本 ≈ 120 元 · 6–8 周</div>
+        <div class="lbl">涉及技术</div>
+        <p>STM32 + ADC 注入采样 + PWM 死区 + 电流环 PI + 串口上位机在线调参</p>
+        <div class="lbl">面试可讲</div>
+        <p>为什么用注入通道、死区时间怎么算、电流环带宽怎么调</p>
+        <div class="accept">验收：电机低速平稳无抖动，上位机能实时看三相电流波形</div>
+      </article>
+
+      <article class="proj">
+        <h3>低功耗电池环境节点</h3>
+        <div class="stars">★★★☆☆</div>
+        <div class="meta">成本 ≈ 80 元 · 4–6 周</div>
+        <div class="lbl">涉及技术</div>
+        <p>STOP 模式 + RTC 唤醒 + DMA + LoRa/BLE 上报 + 功耗实测</p>
+        <div class="lbl">面试可讲</div>
+        <p>每个 µA 花在哪、唤醒源怎么选、为什么不用中断轮询</p>
+        <div class="accept">验收：单节 18650 实测续航 ≥ 3 个月，待机电流 &lt; 50 µA</div>
+      </article>
+
+      <article class="proj">
+        <h3>桌面三轴机械臂 + 视觉抓取</h3>
+        <div class="stars">★★★★★</div>
+        <div class="meta">成本 ≈ 400 元 · 10–14 周</div>
+        <div class="lbl">涉及技术</div>
+        <p>逆运动学 + 轨迹插补 + 自定义串口协议 + OpenCV + 手眼标定</p>
+        <div class="lbl">面试可讲</div>
+        <p>逆解多解怎么选、插补周期怎么定、标定误差怎么补偿</p>
+        <div class="accept">验收：随机摆放抓取成功率 ≥ 80%，单次节拍 &lt; 8 s</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 05 清单 -->
+  <section>
+    <div class="sec-head">
+      <span class="no">05</span>
+      <h2>就业达标验收清单</h2>
+      <p>打勾状态存在本地浏览器，随时回来看进度</p>
+    </div>
+
+    <div class="check" id="checklist">
+      <h3>技术硬指标</h3>
+      <label class="chk"><input type="checkbox" data-id="c1"><span>能手写单链表、环形缓冲区、状态机，不查资料</span></label>
+      <label class="chk"><input type="checkbox" data-id="c2"><span>讲得清栈/堆/BSS 的区别，以及一个局部变量存在哪</span></label>
+      <label class="chk"><input type="checkbox" data-id="c3"><span>能在 10 分钟内用 GDB 把一个 HardFault 定位到具体行号</span></label>
+      <label class="chk"><input type="checkbox" data-id="c4"><span>用示波器测过 PWM 死区时间、I2C 上升沿，并说出为什么不合格</span></label>
+      <label class="chk"><input type="checkbox" data-id="c5"><span>能解释 FreeRTOS 优先级反转，并说出你项目里怎么解决的</span></label>
+      <label class="chk"><input type="checkbox" data-id="c6"><span>LeetCode 累计 150 题，C 语言八股能连续答 20 题</span></label>
+
+      <h3>项目可信度</h3>
+      <label class="chk"><input type="checkbox" data-id="p1"><span>有一个自己画板、自己写固件的完整项目（不是教学项目）</span></label>
+      <label class="chk"><input type="checkbox" data-id="p2"><span>项目有量化指标，且是你实测出来的</span></label>
+      <label class="chk"><input type="checkbox" data-id="p3"><span>能连续讲 30 分钟，包含 3 个技术取舍和 5 个踩过的坑</span></label>
+      <label class="chk"><input type="checkbox" data-id="p4"><span>GitHub 上有 README、原理图、测试记录，别人能复现</span></label>
+
+      <h3>求职筹码</h3>
+      <label class="chk"><input type="checkbox" data-id="j1"><span>有一个省级以上竞赛奖项（电赛/智能车/RoboMaster）</span></label>
+      <label class="chk"><input type="checkbox" data-id="j2"><span>有一段 ≥ 2 个月的嵌入式相关实习</span></label>
+      <label class="chk"><input type="checkbox" data-id="j3"><span>简历一页，每条都带数字，能被非同行看懂</span></label>
+      <label class="chk"><input type="checkbox" data-id="j4"><span>模拟面试过 3 次以上，有人给你挑过毛病</span></label>
+
+      <div class="progress">
+        <div class="bar"><i id="barFill"></i></div>
+        <b id="barText">0 / 14</b>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 忠告 -->
+  <section>
+    <div class="sec-head">
+      <span class="no">06</span>
+      <h2>三句大实话</h2>
+    </div>
+    <div class="advice">
+      <article class="adv">
+        <h3>别做课程收集者</h3>
+        <p>把一门课学完，不如把一个项目做穿。面试官不问你上了几门课，只问你做过什么、卡住过什么、怎么出来的。</p>
+      </article>
+      <article class="adv">
+        <h3>别等到大三才找组织</h3>
+        <p>实验室、学长、竞赛队，越早进越好。有人带一年的效果，抵得上自己摸索两年。现在就去敲实验室的门。</p>
+      </article>
+      <article class="adv">
+        <h3>别怕英文手册</h3>
+        <p>Reference Manual 和 Datasheet 是这行的母语。硬着头皮读半年，你会发现自己不再需要任何中文教程。</p>
+      </article>
+    </div>
+  </section>
+
+  <p class="foot">就业达标补充路线 · 配合《AI嵌入式 + 机器人工程师成长蓝图 2026版》使用</p>
+</div>
+
+<script>
+(function () {
+  var KEY = 'employability-checklist-v1';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input[type=checkbox]'));
+  var fill = document.getElementById('barFill');
+  var text = document.getElementById('barText');
+
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+
+  function render() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    fill.style.width = (done / boxes.length * 100) + '%';
+    text.textContent = done + ' / ' + boxes.length;
+  }
+
+  boxes.forEach(function (b) {
+    if (saved[b.dataset.id]) b.checked = true;
+    b.addEventListener('change', function () {
+      saved[b.dataset.id] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+      render();
+    });
+  });
+  render();
+})();
+</script>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI嵌入式 + 机器人工程师成长蓝图 · 2026版</title>
+<style>
+  :root{
+    --ink:#0f172a;
+    --ink-2:#334155;
+    --ink-3:#64748b;
+    --line:#dbe3f3;
+    --blue:#1d4ed8;
+    --blue-soft:#eff4ff;
+    --cyan:#0e7490;
+    --orange:#ea580c;
+    --bg:#f4f7fd;
+    --card:#ffffff;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 520px at 8% -8%, #e3ecff 0%, transparent 60%),
+      radial-gradient(900px 460px at 100% 0%, #dff3ff 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.hero{
+    background:linear-gradient(120deg,#0b2a6b 0%,#1d4ed8 55%,#2b7fff 100%);
+    border-radius:22px;
+    padding:40px 40px 34px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 22px 50px -24px rgba(13,42,107,.55);
+  }
+  header.hero::after{
+    content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;
+    border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 62%);
+  }
+  .eyebrow{font-size:13px;letter-spacing:.28em;text-transform:uppercase;opacity:.75;margin:0 0 10px}
+  header.hero h1{margin:0;font-size:clamp(26px,3.6vw,40px);letter-spacing:.02em;font-weight:800}
+  header.hero p.sub{margin:12px 0 0;font-size:15px;opacity:.9;max-width:640px}
+  .badge-2026{display:inline-block;margin-left:12px;padding:3px 10px;border-radius:999px;background:#ff5c5c;font-size:13px;font-weight:700;vertical-align:middle;letter-spacing:0}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+  .stat{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:14px 16px;backdrop-filter:blur(4px)}
+  .stat b{display:block;font-size:26px;font-weight:800;line-height:1.15}
+  .stat span{font-size:12.5px;opacity:.82}
+
+  /* ---------- toc ---------- */
+  nav.toc{display:flex;flex-wrap:wrap;gap:9px;margin:26px 0 8px}
+  nav.toc a{
+    font-size:13px;text-decoration:none;color:var(--blue);background:#fff;
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+    transition:.18s;white-space:nowrap;
+  }
+  nav.toc a:hover{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-1px)}
+  nav.toc a.adv{color:var(--orange);border-color:#ffd9c2}
+  nav.toc a.adv:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+
+  .supp-link{
+    display:inline-flex;align-items:center;gap:8px;margin:18px 0 0;padding:11px 18px;
+    background:linear-gradient(100deg,#e9f9f2,#eff4ff);border:1px solid #cdeee0;border-radius:12px;
+    color:#0b5c46;font-size:13.5px;font-weight:700;text-decoration:none;transition:.18s;
+  }
+  .supp-link:hover{transform:translateY(-1px);box-shadow:0 12px 24px -18px rgba(11,122,90,.7)}
+  .supp-link span{font-weight:400;color:var(--ink-3);font-size:12.5px}
+
+  /* ---------- mind map ---------- */
+  .map{display:grid;grid-template-columns:210px minmax(0,1fr);gap:0;margin-top:38px;align-items:start}
+
+  .root{position:sticky;top:28px;padding-top:6px}
+  .root-card{
+    background:linear-gradient(160deg,#0b2a6b,#1d4ed8);
+    color:#fff;border-radius:18px;padding:22px 20px;
+    box-shadow:0 18px 40px -22px rgba(13,42,107,.7);
+    position:relative;
+  }
+  .root-card h2{margin:0 0 6px;font-size:19px;line-height:1.35;font-weight:800;letter-spacing:.01em}
+  .root-card small{display:block;font-size:12px;opacity:.78;letter-spacing:.08em}
+  .root-card ul{list-style:none;margin:16px 0 0;padding:0;font-size:13px;opacity:.92}
+  .root-card li{padding:6px 0;border-top:1px solid rgba(255,255,255,.16);display:flex;justify-content:space-between;gap:8px}
+  .root-card li b{font-weight:700}
+  .root::after{
+    content:"";position:absolute;right:-22px;top:74px;width:22px;height:2px;background:#c7d5f5;
+  }
+
+  .branches{position:relative;padding-left:34px}
+  .branches::before{
+    content:"";position:absolute;left:0;top:52px;bottom:52px;width:2px;
+    background:linear-gradient(#c7d5f5,#c7d5f5 92%,transparent);
+  }
+
+  .branch{position:relative;padding-bottom:26px}
+  .branch::before{
+    content:"";position:absolute;left:-34px;top:40px;width:34px;height:2px;background:#c7d5f5;
+  }
+  .branch::after{
+    content:"";position:absolute;left:-37px;top:37px;width:8px;height:8px;border-radius:50%;
+    background:#fff;border:2px solid var(--blue);box-sizing:content-box;
+  }
+  .branch.adv::after{border-color:var(--orange)}
+  .branch.adv::before{background:#ffcdb0}
+  .branches::before{}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:0 10px 26px -20px rgba(15,23,42,.45);
+    overflow:hidden;transition:.2s;
+  }
+  .card:hover{box-shadow:0 18px 36px -22px rgba(29,78,216,.5);transform:translateY(-2px)}
+
+  .card-head{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px dashed var(--line)}
+  .num{
+    flex:0 0 auto;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+    background:var(--blue-soft);color:var(--blue);font-weight:800;font-size:14px;
+  }
+  .adv .num{background:#fff1e8;color:var(--orange)}
+  .card-head h3{margin:0;font-size:17px;font-weight:800;letter-spacing:.01em;flex:1}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .tag{font-size:11.5px;padding:2px 8px;border-radius:999px;background:#f1f5fd;color:var(--ink-3);letter-spacing:.02em;white-space:nowrap}
+  .tag.days{background:#eaf0ff;color:var(--blue);font-weight:700}
+  .adv .tag.days{background:#fff1e8;color:var(--orange)}
+
+  .card-body{padding:16px 18px 18px}
+  .position{margin:0 0 14px;font-size:13.5px;color:var(--ink-2);background:#f8faff;border-left:3px solid #bfd3ff;padding:9px 12px;border-radius:0 8px 8px 0}
+  .adv .position{background:#fffaf6;border-left-color:#ffc9a8}
+
+  .group{margin-bottom:13px}
+  .group:last-child{margin-bottom:0}
+  .group h4{margin:0 0 7px;font-size:11.5px;letter-spacing:.16em;color:var(--ink-3);font-weight:700;text-transform:uppercase}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{
+    font-size:12.5px;color:var(--ink-2);background:#f7f9fe;border:1px solid #e6ecf9;
+    border-radius:8px;padding:5px 10px;line-height:1.4;
+  }
+  .chip.key{background:var(--blue-soft);border-color:#cfdcff;color:#12359b;font-weight:600}
+  .adv .chip.key{background:#fff1e8;border-color:#ffd3ba;color:#9a3412}
+
+  .projects{display:flex;flex-wrap:wrap;gap:7px}
+  .proj{
+    font-size:12.5px;font-weight:600;color:#0b5c46;background:#e9f9f2;border:1px solid #c6efdf;
+    border-radius:999px;padding:4px 12px;
+  }
+  .proj::before{content:"▶ ";font-size:9px;opacity:.6}
+
+  /* ---------- footer notes ---------- */
+  .note{margin-top:44px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 28px;box-shadow:0 10px 26px -22px rgba(15,23,42,.4)}
+  .note h2{margin:0 0 16px;font-size:16px;letter-spacing:.05em;display:flex;align-items:center;gap:8px}
+  .note ol{margin:0;padding-left:20px;color:var(--ink-2);font-size:13.5px}
+  .note li{margin-bottom:9px}
+  .note li b{color:var(--ink)}
+  .foot{margin-top:26px;text-align:center;font-size:12px;color:#94a3b8}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    .map{grid-template-columns:1fr}
+    .root{position:static;padding-top:0;margin-bottom:26px}
+    .root::after{display:none}
+    .branches{padding-left:26px}
+    .branch::before{left:-26px;width:26px}
+    .branch::after{left:-29px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    header.hero{padding:30px 24px}
+  }
+  @media (max-width:560px){
+    .wrap{padding:24px 14px 60px}
+    .card-head{flex-wrap:wrap}
+    .meta{justify-content:flex-start;width:100%}
+    .branch::before,.branch::after{display:none}
+    .branches{padding-left:0}
+    .branches::before{display:none}
+  }
+  @media print{
+    body{background:#fff}
+    .root{position:static}
+    .card{break-inside:avoid;box-shadow:none}
+    nav.toc{display:none}
+  }
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>AI 嵌入式 + 机器人工程师成长蓝图<span class="badge-2026">2026版</span></h1>
+    <p class="sub">培养掌握前沿 AI 与嵌入式机器人技术的复合型人才 —— 从电路与 C 语言，到单片机、Linux、RTOS、驱动，再到具身智能与大模型控制的完整路径。</p>
+
+    <div class="stats">
+      <div class="stat"><b>8</b><span>阶段</span></div>
+      <div class="stat"><b>95 天</b><span>线下授课</span></div>
+      <div class="stat"><b>80 天</b><span>线上进阶（赠送）</span></div>
+      <div class="stat"><b>11+</b><span>实战项目</span></div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#s1">① 电路和C语言基础</a>
+    <a href="#s2">② 单片机开发</a>
+    <a href="#s3">③ AI Linux应用开发</a>
+    <a href="#s4">④ AI嵌入式开发</a>
+    <a href="#s5">⑤ 蓝牙WiFi和LVGL</a>
+    <a href="#s6">⑥ Linux驱动开发</a>
+    <a href="#s7">⑦ 具身智能机器人</a>
+    <a href="#s8" class="adv">⑧ 毕业后冲高薪</a>
+  </nav>
+
+  <a class="supp-link" href="学习总控台.html" style="background:linear-gradient(100deg,#eef3ff,#e9faf6);border-color:#c9dcff;color:#1e3a8a;margin-right:8px">学习总控台 <span>十个页面 · 从哪开始</span></a>
+  <a class="supp-link" href="就业达标补充路线.html">就业达标补充路线 <span>课程没教的四个模块 · 两年时间表 · 验收清单</span></a>
+
+  <a class="supp-link" href="嵌入式软硬件全栈学习计划.html" style="margin-left:8px;background:linear-gradient(100deg,#eef3ff,#e9faf6);border-color:#c9dcff;color:#1e3a8a">软硬件全栈学习计划 <span>14 个模块 · 每模块验收标准 · 每周 25h 怎么排</span></a>
+
+  <a class="supp-link" href="学练双线.html#theory" style="margin-left:8px">配套 B 站课程 <span>七条理论链各配一门主课 · 只看哪几章 · 看课规矩</span></a>
+
+  <div class="map">
+
+    <aside class="root">
+      <div class="root-card">
+        <small>ROADMAP</small>
+        <h2>AI嵌入式<br>+ 机器人工程师</h2>
+        <ul>
+          <li><span>硬件底层</span><b>阶段 1–2</b></li>
+          <li><span>系统与驱动</span><b>阶段 3–6</b></li>
+          <li><span>具身智能</span><b>阶段 7</b></li>
+          <li><span>职业跃迁</span><b>阶段 8</b></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="branches">
+
+      <!-- 1 -->
+      <section class="branch" id="s1">
+        <article class="card">
+          <div class="card-head">
+            <div class="num">01</div>
+            <h3>电路和 C 语言基础</h3>
+            <div class="meta"><span class="tag days">15 天</span><span class="tag">线下</span></div>
+          </div>
+          <div class="card-body">
+            <p class="position">构建机器人硬件与底层控制的基石：掌握计算机组成、数模电与 C 语言编程，为复杂机器人系统打下坚实基础。</p>
+            <div class="group">
+              <h4>核心内容</h4>
+              <div class="chips">
+                <span class="chip key">计算机体系结构</span>
+                <span class="chip key">内存 / CPU / 外设</span>
+                <span class="chip">数据表示</span>
+                <span class="chip">组合电路</span>
+                <span class="chip">模拟电路</span>
+                <span class="chip">数字电路</span>
+                <span class="chip">常见元器件</span>
+                <span class="chip key">C 语言编程入门</span>
+                <span class="chip">数据结构与算法</span>
+                <span class="chip">编程调试技巧</span>
+              </div>
+            </div>
+            <div class="group">
+              <h4>阶段产出</h4>
+              <div class="chips"><span class="chip">硬件物理解层 + 控制层基础</span><span class="chip">能读懂原理图与器件手册</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 2 -->
+      <section class="branch" id="s2">
+        <article class="card">
+          <div class="card-head">
+            <div class="num">02</div>
+            <h3>单片机开发</h3>
+            <div class="meta"><span class="tag days">25 天</span><span class="tag">线下</span></div>
+          </div>
+          <div class="card-body">
+            <p class="position">深入机器人核心部件的“大脑”——单片机：掌握 GPIO、传感器、电机控制与通信，具备独立开发机器人基础硬件模块的能力。</p>
+            <div class="group">
+              <h4>核心内容</h4>
+              <div class="chips">
+                <span class="chip key">单片机工作原理与基本架构</span>
+                <span class="chip key">GPIO 控制与配置</span>
+                <span class="chip">模拟信号采集与数字化</span>
+                <span class="chip key">定时器与中断</span>
+                <span class="chip">常用传感器使用</span>
+                <span class="chip key">电机控制</span>
+                <span class="chip key">UART / I2C / SPI</span>
+                <span class="chip">电路设计软件使用</span>
+                <span class="chip">原理图设计</span>
+                <span class="chip">PCB 布局设计基础</span>
+                <span class="chip">能耗管理与优化</span>
+              </div>
+            </div>
+            <div class="group">
+              <h4>实战项目</h4>
+              <div class="projects"><span class="proj">蓝牙麦克纳姆轮底盘项目</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 3 -->
+      <section class="branch" id="s3">
+        <article class="card">
+          <div class="card-head">
+            <div class="num">03</div>
+            <h3>AI Linux 应用开发</h3>
+            <div class="meta"><span class="tag days">15 天</span><span class="tag">线下</span></div>
+          </div>
+          <div class="card-body">
+            <p class="position">驾驭机器人常用的 Linux 系统，结合 AI 工具高效开发上层应用（感知、决策、控制逻辑），成为机器人领域复合型人才。</p>
+            <div class="group">
+              <h4>核心内容</h4>
+              <div class="chips">
+                <span class="chip key">Linux 命令行与文件管理</span>
+                <span class="chip key">AI 辅助的应用程序开发</span>
+                <span class="chip key">系统调用与库函数</span>
+              </div>
+            </div>
+            <div class="group">
+              <h4>实战项目</h4>
+              <div class="projects">
+                <span class="proj">智能家居控制系统</span>
+                <span class="proj">工业 PLC 控制系统</span>
+                <span class="proj">智能车载系统</span>
+                <span class="proj">医疗设备上位机</span>
+                <span class="proj">机器狗测试系统</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 4 -->
+      <section class="branch" id="s4">
+        <article class="card">
+          <div class="card-head">
+            <div class="num">04</div>
+            <h3>AI 嵌入式开发</h3>
+            <div class="meta"><span class="tag days">20 天</span><span class="tag">线下</span></div>
+          </div>
+          <div class="card-body">
+            <p class="position">精通机器人常用 ARM 处理器与 RTOS 实时操作系统，熟悉外设驱动、功耗优化，满足机器人对精确控制与实时响应的严苛要求。</p>
+            <div class="group">
+              <h4>核心内容</h4>
+              <div class="chips">
+                <span class="chip key">ARM Cortex-M 架构与指令集</span>
+                <span class="chip key">STM32 / GD32 IDE 与工具链</span>
+                <span class="chip">外设驱动（GPIO / ADC / UART / I2C / SPI）</span>
+                <span class="chip key">定时器与 PWM 生成</span>
+                <span class="chip">系统时钟配置与优化</span>
+                <span class="chip key">中断管理与 ISR 编写</span>
+                <span class="chip key">DMA 使用与配置</span>
+                <span class="chip">功耗管理（低功耗模式）</span>
+                <span class="chip key">RTOS 基本概念与使用</span>
+                <span class="chip">代码优化与调试技巧</span>
+              </div>
+            </div>
+            <div class="group">
+              <h4>实战项目</h4>
+              <div class="projects"><span class="proj">交互扩展板 + FreeRTOS 项目</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 5 -->
+      <section class="branch" id="s5">
+        <article class="card">
+          <div class="card-head">
+            <div class="num">05</div>
+            <h3>蓝牙 WiFi 与 LVGL 开发</h3>
+            <div class="meta"><span class="tag days">10 天</span><span class="tag">线下</span></div>
+          </div>
+          <div class="card-body">
+            <p class="position">为机器人赋予“沟通”与“展示”能力：学习 GUI 设计与 LVGL 图形库，结合无线通信实现 HMI 与远程控制。</p>
+            <div class="group">
+              <h4>核心内容</h4>
+              <div class="chips">
+                <span class="chip key">LVGL 图形库与自定义控件</span>
+                <span class="chip">GUI 设计与用户体验</span>
+                <span class="chip">触摸屏输入与事件处理</span>
+                <span class="chip key">蓝牙 BLE / Classic 配置与传输</span>
+                <span class="chip key">WiFi 配置与网络通信</span>
+                <span class="chip">TCP/IP 协议栈基础</span>
+                <span class="chip">JSON / XML 数据编解码</span>
+                <span class="chip key">MQTT 远程设备控制</span>
+                <span class="chip">安全性与数据加密</span>
+                <span class="chip">用户接口设计与测试</span>
+              </div>
+            </div>
+            <div class="group">
+              <h4>实战项目</h4>
+              <div class="projects">
+                <span class="proj">安防摄像头</span>
+                <span class="proj">穿戴手表</span>
+                <span class="proj">感情陪伴助手</span>
+                <span class="proj">黑马深夜食堂后厨打印机</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 6 -->
+      <section class="branch" id="s6">
+        <article class="card">
+          <div class="card-head">
+            <div class="num">06</div>
+            <h3>Linux 驱动开发</h3>
+            <div class="meta"><span class="tag days">5 天</span><span class="tag">线下</span></div>
+          </div>
+          <div class="card-body">
+            <p class="position">掌握为机器人定制硬件（特殊传感器、执行器）编写 Linux 驱动的核心技能，确保各部件被操作系统高效管理。</p>
+            <div class="group">
+              <h4>核心内容</h4>
+              <div class="chips">
+                <span class="chip">系统调用与库函数</span>
+                <span class="chip key">设备驱动结构与编写</span>
+                <span class="chip key">Makefile / 构建系统</span>
+                <span class="chip key">进程与多线程编程</span>
+                <span class="chip">Linux 调试工具</span>
+                <span class="chip key">网络编程</span>
+                <span class="chip">Linux / 安卓 / 鸿蒙编译与裁剪</span>
+              </div>
+            </div>
+            <div class="group">
+              <h4>实战项目</h4>
+              <div class="projects"><span class="proj">设备驱动项目</span><span class="proj">Linux 内核项目</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 7 -->
+      <section class="branch" id="s7">
+        <article class="card">
+          <div class="card-head">
+            <div class="num">07</div>
+            <h3>具身智能机器人开发</h3>
+            <div class="meta"><span class="tag days">5 天</span><span class="tag">线下</span></div>
+          </div>
+          <div class="card-body">
+            <p class="position">融合大语言模型与机器人技术，学习模仿学习、强化学习等前沿 AI 算法，实现“大脑”与“身体”的协同，让机器人完成复杂任务。</p>
+            <div class="group">
+              <h4>核心内容</h4>
+              <div class="chips">
+                <span class="chip key">具身智能与大模型融合</span>
+                <span class="chip">基础理论 / 硬件配置</span>
+                <span class="chip key">数据集录制</span>
+                <span class="chip key">模仿学习</span>
+                <span class="chip key">强化学习</span>
+                <span class="chip">多模态交互开发</span>
+                <span class="chip">机械臂实操训练</span>
+                <span class="chip">复刻斯坦福 / DeepMind 成果</span>
+              </div>
+            </div>
+            <div class="group">
+              <h4>实战项目</h4>
+              <div class="projects"><span class="proj">视觉机器人项目</span><span class="proj">MCP 机械臂项目</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 8 -->
+      <section class="branch adv" id="s8">
+        <article class="card">
+          <div class="card-head">
+            <div class="num">08</div>
+            <h3>毕业工作后冲高薪课程</h3>
+            <div class="meta"><span class="tag days">80 天</span><span class="tag">线上赠送</span></div>
+          </div>
+          <div class="card-body">
+            <p class="position">通过 C++、高级 AI、机器人学、机器视觉等进阶课程，拓宽技术视野、深化专业技能，实现机器人工程师职业生涯的飞跃。</p>
+            <div class="group">
+              <h4>核心内容</h4>
+              <div class="chips">
+                <span class="chip key">C++ 核心编程 / 高级开发</span>
+                <span class="chip">人工智能与高等数学</span>
+                <span class="chip key">机器人运动学</span>
+                <span class="chip">机械臂运动学</span>
+                <span class="chip key">2D 机器视觉</span>
+                <span class="chip key">3D 点云</span>
+                <span class="chip">强化学习</span>
+                <span class="chip key">SLAM</span>
+                <span class="chip">传感器融合</span>
+                <span class="chip">智能仓储</span>
+                <span class="chip">数字孪生 / 虚拟仿真</span>
+                <span class="chip">产业互联网升级</span>
+              </div>
+            </div>
+            <div class="group">
+              <h4>方向去向</h4>
+              <div class="chips"><span class="chip">机器人算法</span><span class="chip">嵌入式软件</span><span class="chip">运动控制</span><span class="chip">视觉 / SLAM</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+    </div>
+  </div>
+
+  <section class="note">
+    <h2>🧭 学习路线图说明</h2>
+    <ol>
+      <li><b>电路和C语言基础</b>：构建机器人硬件和底层控制的基石，掌握计算机组成、数模电及 C 语言编程，为复杂的机器人系统打下坚实基础。</li>
+      <li><b>单片机开发</b>：深入机器人核心部件的“大脑”——单片机，掌握 GPIO、传感器、电机控制及通信，具备独立开发机器人基础硬件模块的能力。项目：蓝牙麦克纳姆轮底盘。</li>
+      <li><b>AI Linux应用开发</b>：驾驭机器人常用的 Linux 操作系统，结合 AI 工具高效开发机器人上层应用（如感知、决策、控制逻辑），成为机器人领域复合型人才。项目：智能家居、工业PLC、智能车载等。</li>
+      <li><b>AI嵌入式开发</b>：精通机器人常用 ARM 处理器及 RTOS 实时操作系统，熟悉外设驱动、功耗优化，满足机器人对精确控制与实时响应的严苛要求。项目：交互扩展板 + FreeRTOS。</li>
+      <li><b>蓝牙wifi和LVGL开发</b>：为机器人赋予“沟通”与“展示”能力，学习 GUI 设计与 LVGL 图形库，结合无线通信技术实现机器人 HMI 与远程控制。项目：安防摄像头、穿戴手表等。</li>
+      <li><b>Linux驱动开发</b>：掌握为机器人定制硬件（如特殊传感器、执行器）编写 Linux 驱动的关键技能，确保机器人各部件能被操作系统高效管理。项目：设备驱动、Linux 内核。</li>
+      <li><b>具身智能机器人开发</b>：融合大语言模型与机器人技术，学习模仿学习、强化学习等前沿 AI 算法，实现“大脑”与“身体”的协同，掌控机器人完成复杂任务，迈向 AI 驱动的智能机器人时代。项目：视觉机器人、MCP 机械臂。</li>
+      <li><b>毕业工作后冲高薪课程</b>：通过 C++、高级 AI、机器人学、机器视觉等进阶课程，拓宽技术视野，深化专业技能，实现机器人工程师职业生涯的飞跃。</li>
+    </ol>
+  </section>
+
+  <p class="foot">AI嵌入式 + 机器人工程师成长蓝图 · 2026版</p>
+</div>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>学习总控台 · AI嵌入式 + 机器人</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+    --line:#dde5f4; --line2:#eef2fa;
+    --blue:#1d4ed8; --blue-soft:#eef3ff;
+    --teal:#0f766e; --teal-soft:#e9faf6;
+    --green:#0b7a5a; --green-soft:#e9f9f2;
+    --amber:#b45309; --amber-soft:#fff8e8;
+    --bg:#f5f7fc;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;color:var(--ink);line-height:1.7;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(1000px 520px at 4% -8%,#e2ecff 0%,transparent 58%),
+               radial-gradient(880px 440px at 100% 1%,#e0f7f1 0%,transparent 52%),var(--bg);
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:34px 22px 90px}
+
+  .hero{background:linear-gradient(125deg,#06173a 0%,#1d4ed8 56%,#0f766e 132%);
+    border-radius:24px;padding:40px 40px 34px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 28px 60px -32px rgba(6,23,58,.75)}
+  .hero::after{content:"";position:absolute;right:-100px;top:-120px;width:360px;height:360px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.18),transparent 62%)}
+  .eyebrow{margin:0 0 10px;font-size:11.5px;letter-spacing:.34em;opacity:.68}
+  .hero h1{margin:0;font-size:clamp(24px,3.4vw,36px);font-weight:800;letter-spacing:.02em}
+  .hero .lead{margin:12px 0 0;max-width:640px;font-size:14.5px;opacity:.93}
+
+  /* now banner */
+  .now{margin-top:26px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.24);
+    border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .now .dot{width:9px;height:9px;border-radius:50%;background:#7dffb8;flex:0 0 auto;
+    box-shadow:0 0 0 5px rgba(125,255,184,.18);animation:pulse 2s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 9px rgba(125,255,184,.06)}}
+  .now .txt{flex:1;min-width:200px}
+  .now .txt b{display:block;font-size:14.5px;font-weight:800;margin-bottom:2px}
+  .now .txt span{font-size:12.5px;opacity:.85}
+  .now a{font-size:12.5px;color:#06173a;background:#fff;border-radius:999px;padding:7px 16px;
+    text-decoration:none;font-weight:700;white-space:nowrap}
+  .now a:hover{background:#d9f7e8}
+
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin-top:14px}
+  .fact{background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.18);border-radius:11px;padding:11px 13px}
+  .fact b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+  .fact span{font-size:11px;opacity:.8}
+
+  section{margin-top:38px}
+  .sec{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .sec .no{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#fff;background:var(--blue);
+    border-radius:6px;padding:2px 8px}
+  .sec h2{margin:0;font-size:17px;font-weight:800}
+  .sec p{margin:0;font-size:12.5px;color:var(--ink4)}
+
+  /* cards */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+  .card{display:flex;flex-direction:column;gap:7px;background:#fff;border:1px solid var(--line);
+    border-radius:15px;padding:18px 18px 16px;text-decoration:none;color:inherit;
+    box-shadow:0 10px 26px -28px rgba(15,23,42,.6);transition:.18s;position:relative;overflow:hidden}
+  .card:hover{transform:translateY(-2px);box-shadow:0 18px 34px -26px rgba(29,78,216,.55);
+    border-color:#c3d6f8}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
+  .card.g::before{background:var(--green)}
+  .card.t::before{background:var(--teal)}
+  .card.o::before{background:var(--amber)}
+  .card .ic{font-size:17px;line-height:1}
+  .card h3{margin:0;font-size:14.5px;font-weight:800;letter-spacing:.01em}
+  .card p{margin:0;font-size:12.3px;color:var(--ink3);line-height:1.55}
+  .card .go{margin-top:auto;padding-top:8px;font-size:11.5px;color:var(--blue);font-weight:700}
+  .card .badge{position:absolute;right:14px;top:14px;font-size:9.5px;font-weight:800;
+    background:var(--green-soft);color:var(--green);border-radius:999px;padding:1px 8px;letter-spacing:.04em}
+  .card .badge.new{background:var(--amber-soft);color:var(--amber)}
+
+  /* flow */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .fl{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px 17px;position:relative}
+  .fl .st{font-size:10.5px;letter-spacing:.14em;color:var(--ink4);font-weight:800;margin-bottom:5px}
+  .fl b{display:block;font-size:13.5px;margin-bottom:4px}
+  .fl span{font-size:12.3px;color:var(--ink2);line-height:1.55;display:block}
+
+  /* checkpoints */
+  .cp{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .cp .row{display:flex;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line2);align-items:flex-start}
+  .cp .row:last-child{border-bottom:none}
+  .cp .w{flex:0 0 66px;font-size:12px;font-weight:800;color:var(--blue)}
+  .cp .d{flex:1;font-size:12.9px;color:var(--ink2)}
+  .cp .s{flex:0 0 auto;font-size:11.5px;color:var(--green);font-weight:700}
+
+  /* principles */
+  .prin{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .pr{background:linear-gradient(160deg,#fff,#f8fbff);border:1px solid var(--line);border-radius:13px;padding:17px}
+  .pr b{display:block;font-size:13.5px;margin-bottom:5px}
+  .pr span{font-size:12.4px;color:var(--ink2);line-height:1.6;display:block}
+
+  .foot{margin-top:34px;text-align:center;font-size:11.5px;color:var(--ink4)}
+
+  /* ---------- 打卡卡（featured） ---------- */
+  .card.feat{
+    grid-column:span 2;flex-direction:row;align-items:center;gap:18px;
+    background:linear-gradient(120deg,#0b1e3f 0%,#1d4ed8 72%,#0f766e 145%);
+    border-color:transparent;color:#fff;padding:20px 22px;
+  }
+  .card.feat:hover{border-color:transparent}
+  .card.feat h3{color:#fff;font-size:16px;margin:0}
+  .card.feat .feat-sub{margin:4px 0 0;font-size:12.5px;color:#c8d8ff}
+  .card.feat .go{color:#fff;opacity:.85}
+  .feat-l{flex:1;min-width:0}
+  .feat-r{display:flex;align-items:center;gap:16px}
+  .strip{display:flex;gap:5px}
+  .strip i{width:15px;height:15px;border-radius:4px;display:block;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.16);
+    transition:background .2s var(--ease-out,cubic-bezier(.16,1,.3,1))}
+  .strip i.on{background:#fff;border-color:#fff}
+  .strip i.tdy{box-shadow:0 0 0 2px rgba(255,255,255,.42)}
+  .feat-stat{text-align:center;line-height:1.05}
+  .feat-stat b{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em}
+  .feat-stat span{font-size:10.5px;opacity:.72}
+
+  /* ---------- 今日学习（日历下方清单） ---------- */
+  .card.today{grid-column:span 4;display:flex;flex-direction:column;gap:11px;
+    padding:17px 20px 14px}
+  .today-h{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .today-h h3{margin:0;font-size:15.5px;letter-spacing:-.01em}
+  .today-sub{margin:5px 0 0;font-size:12.2px;color:var(--ink3);line-height:1.5}
+  .today-course{display:flex;flex-direction:column;gap:2px;text-decoration:none;flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:7px 13px;
+    background:rgba(255,255,255,.04);transition:border-color .18s,background .18s}
+  .today-course span{font-size:9.5px;letter-spacing:.12em;color:var(--ink4)}
+  .today-course b{font-size:12.5px;color:var(--ink2);font-weight:700}
+  .today-course:hover{border-color:rgba(79,140,255,.5);background:rgba(79,140,255,.14)}
+  .today-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:9px}
+  .tt{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:11px;
+    border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);cursor:pointer;
+    font-size:12.4px;line-height:1.55;color:var(--ink2);
+    transition:border-color .18s,background .18s}
+  .tt:hover{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.045)}
+  .tt input{margin:3px 0 0;width:14px;height:14px;accent-color:#199e70;flex:0 0 auto;cursor:pointer}
+  .tt .ttag{width:16px;height:16px;line-height:14px;text-align:center;font-size:10px;
+    border-radius:4px;flex:0 0 auto;margin-top:2px;font-weight:700;
+    font-family:var(--font-mono,ui-monospace,monospace)}
+  .tt .ttag.t{color:#a8c9ff;background:rgba(57,135,229,.22);border:1px solid rgba(57,135,229,.45)}
+  .tt .ttag.p{color:#6fe0b2;background:rgba(25,158,112,.22);border:1px solid rgba(25,158,112,.45)}
+  .tt .ttag.n{color:#93a3bd;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16)}
+  .tt .x{flex:1;min-width:0}
+  .tt input:checked ~ .x{color:var(--ink4);text-decoration:line-through}
+  .tt .lk{font-size:10.5px;color:#9dc2ff;text-decoration:none;border:1px solid rgba(57,135,229,.34);
+    border-radius:6px;padding:1px 7px;white-space:nowrap;flex:0 0 auto;margin-top:1px}
+  .tt .lk:hover{background:rgba(79,140,255,.2);color:#fff}
+  .today-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;
+    flex-wrap:wrap;font-size:11.6px;color:var(--ink4)}
+  .today-foot a{color:var(--ink3);text-decoration:none;transition:color .18s}
+  .today-foot a:hover{color:#8fb7ff}
+  .today-foot b{color:var(--ink2);font-weight:700}
+
+  .card .ic{width:21px;height:21px;color:#2563eb}
+  .card.o .ic{color:#b45309}
+  .card.t .ic{color:#0f766e}
+
+  .hero-art{position:absolute;right:-26px;top:-34px;
+    width:212px;height:212px;opacity:.13;pointer-events:none;z-index:-1}
+
+  @media (max-width:900px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .flow{grid-template-columns:repeat(2,1fr)}
+    .prin{grid-template-columns:1fr}
+    .hero{padding:28px 24px}
+    .card.feat{grid-column:span 2;flex-direction:column;align-items:flex-start;gap:12px}
+    .feat-r{width:100%;justify-content:space-between}
+    .card.today{grid-column:span 2}
+    .hero-art{display:none}
+  }
+  @media (max-width:560px){
+    .wrap{padding:18px 13px 70px}
+    .grid,.flow{grid-template-columns:1fr}
+    .card.today{grid-column:auto;padding:15px 14px 13px}
+    .today-list{grid-template-columns:1fr}
+    .hero{padding:24px 18px}
+    .cp .row{flex-wrap:wrap;gap:6px}
+    .card.feat{grid-column:auto}
+    .now{flex-direction:column;align-items:flex-start;gap:10px}
+    .now a{width:100%;text-align:center}
+  }
+  /* 学练双线 · 方法条 */
+  .method-bar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin:0 0 36px;
+    padding:19px 24px;border-radius:18px;text-decoration:none;
+    border:1px solid rgba(255,255,255,.10);
+    background:linear-gradient(115deg,rgba(57,135,229,.11),rgba(25,158,112,.07) 68%);
+    transition:border-color .2s,transform .2s,background .2s}
+  .method-bar:hover{border-color:rgba(255,255,255,.26);transform:translateY(-3px)}
+  .method-bar .mb-t{display:flex;flex-direction:column;gap:3px;flex:1;min-width:260px}
+  .method-bar .mb-t b{font-size:15.5px;color:var(--ink);letter-spacing:-.01em}
+  .method-bar .mb-t span{font-size:12.4px;color:var(--ink3);line-height:1.55}
+  .method-bar .mb-steps{display:flex;align-items:center;gap:9px;font-size:12.2px;
+    color:var(--ink2);font-family:var(--font-mono);letter-spacing:.02em}
+  .method-bar .mb-steps i{font-style:normal;color:var(--ink4)}
+  .method-bar .mb-go{font-size:12.5px;color:var(--ink2);border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;padding:6px 15px;white-space:nowrap;transition:.2s}
+  .method-bar:hover .mb-go{color:#fff;border-color:rgba(79,140,255,.5);
+    background:rgba(79,140,255,.18)}
+  @media (max-width:700px){
+    .method-bar .mb-steps{display:none}
+  }
+  @media print{body{background:#fff}.card{break-inside:avoid;box-shadow:none}}
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <svg class="hero-art" viewBox="0 0 200 200" fill="none" stroke="#fff" stroke-width="1.4"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="62" y="62" width="76" height="76" rx="11"/>
+      <rect x="81" y="81" width="38" height="38" rx="5" opacity=".65"/>
+      <path d="M62 78H34M62 100H26M62 122H38M138 78h28M138 100h36M138 122h24"/>
+      <path d="M78 62V34M100 62V26M122 62V38M78 138v28M100 138v36M122 138v24"/>
+      <circle cx="34" cy="78" r="2.6"/><circle cx="26" cy="100" r="2.6"/><circle cx="38" cy="122" r="2.6"/>
+      <circle cx="166" cy="78" r="2.6"/><circle cx="174" cy="100" r="2.6"/><circle cx="162" cy="122" r="2.6"/>
+      <path d="M22 164h46l10-15h44l10 15h46" opacity=".5"/>
+    </svg>
+    <h1>AI 嵌入式 + 机器人 · 学习总控台</h1>
+    <p class="lead">从路线图到每天的任务、从故障排查到面试题库，全部在这里。不要贪多，按「现在该做什么」一步步走。</p>
+
+    <div class="now" id="now">
+      <span class="dot"></span>
+      <div class="txt">
+        <b id="nowT">准备期</b>
+        <span id="nowD">距第 1 周还有 9 天 · 先把器材和仓库准备好</span>
+      </div>
+      <a id="nowA" href="105天逐日任务表.html">去看逐日表 →</a>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><b>105</b><span>天任务</span></div>
+      <div class="fact"><b>15</b><span>周复盘</span></div>
+      <div class="fact"><b>24</b><span>个故障排查</span></div>
+      <div class="fact"><b>70+</b><span>道面试题</span></div>
+    </div>
+  </header>
+
+  <section class="kpi-sec">
+    <div class="sec"><h2>进度总览</h2><p>读取各页面的勾选与打卡记录</p></div>
+    <div class="kpi-grid" id="kpiGrid">
+      <article class="kpi" data-metric="tasks">
+        <div class="ring">
+          <svg viewBox="0 0 100 100" role="img" aria-labelledby="kpi-t">
+            <title id="kpi-t">任务完成进度</title>
+            <circle class="track" cx="50" cy="50" r="42"></circle>
+            <circle class="bar" cx="50" cy="50" r="42" stroke="#3987e5"></circle>
+          </svg>
+          <b class="pct">0<span>%</span></b>
+        </div>
+        <div class="kpi-txt"><span class="lbl">任务完成</span><span class="frac">0 / 311 项</span></div>
+      </article>
+
+      <article class="kpi" data-metric="weeks">
+        <div class="ring">
+          <svg viewBox="0 0 100 100" role="img" aria-labelledby="kpi-w">
+            <title id="kpi-w">周清单完成进度</title>
+            <circle class="track" cx="50" cy="50" r="42"></circle>
+            <circle class="bar" cx="50" cy="50" r="42" stroke="#3987e5"></circle>
+          </svg>
+          <b class="pct">0<span>%</span></b>
+        </div>
+        <div class="kpi-txt"><span class="lbl">周清单</span><span class="frac">0 / 87 项</span></div>
+      </article>
+
+      <article class="kpi" data-metric="skills">
+        <div class="ring">
+          <svg viewBox="0 0 100 100" role="img" aria-labelledby="kpi-s">
+            <title id="kpi-s">能力自测完成进度</title>
+            <circle class="track" cx="50" cy="50" r="42"></circle>
+            <circle class="bar" cx="50" cy="50" r="42" stroke="#3987e5"></circle>
+          </svg>
+          <b class="pct">0<span>%</span></b>
+        </div>
+        <div class="kpi-txt"><span class="lbl">能力自测</span><span class="frac">0 / 22 项</span></div>
+      </article>
+
+      <article class="kpi" data-metric="checkin">
+        <div class="ring">
+          <svg viewBox="0 0 100 100" role="img" aria-labelledby="kpi-c">
+            <title id="kpi-c">打卡天数进度</title>
+            <circle class="track" cx="50" cy="50" r="42"></circle>
+            <circle class="bar" cx="50" cy="50" r="42" stroke="#199e70"></circle>
+          </svg>
+          <b class="pct">0<span>%</span></b>
+        </div>
+        <div class="kpi-txt"><span class="lbl">累计打卡</span><span class="frac">0 / 105 天</span></div>
+      </article>
+    </div>
+    <table class="sr-only" id="kpiTable">
+      <caption>进度数据表</caption>
+      <thead><tr><th>指标</th><th>已完成</th><th>总量</th><th>完成率</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <a class="method-bar" href="学练双线.html">
+    <div class="mb-t">
+      <b>学练双线 · 理论一条，实践一条</b>
+      <span>14 个模块拆成两条线：理论只回答"为什么"，实践只产"证据"，中间用一张预测卡焊死。先看这页，再排每一天。</span>
+    </div>
+    <div class="mb-steps"><span>写预测</span><i>→</i><span>看实测</span><i>→</i><span>归因</span></div>
+    <span class="mb-go">打开 →</span>
+  </a>
+
+  <!-- 入口 -->
+  <section>
+    <div class="sec"><span class="no">01</span><h2>十二个页面，各管一件事</h2><p>绿色标记的是你明天就会用到的</p></div>
+    <div class="grid bento">
+
+      <a class="card feat" href="打卡日历.html">
+        <div class="feat-l">
+          <h3>今日打卡</h3>
+          <p class="feat-sub" id="featSub">今天还没打卡 · 学完点一下</p>
+          <span class="go">打开日历 →</span>
+        </div>
+        <div class="feat-r">
+          <div class="mini" id="mini" aria-hidden="true"></div>
+          <div class="feat-stat"><b id="featStreak">0</b><span>连续天数</span></div>
+        </div>
+      </a>
+
+      <div class="card today" id="todayCard">
+        <div class="today-h">
+          <div>
+            <h3 id="todayTitle">今日学习</h3>
+            <p class="today-sub" id="todaySub">正在读取计划…</p>
+          </div>
+          <a class="today-course" id="todayCourse" href="#" target="_blank" rel="noopener noreferrer" hidden>
+            <span>本周主课</span><b></b>
+          </a>
+        </div>
+        <div class="today-list" id="todayList"></div>
+        <div class="today-foot">
+          <span id="todayStd"></span>
+          <span><b id="todayDone">0 / 0</b> 已完成 · <a href="105天逐日任务表.html">完整任务表 →</a></span>
+        </div>
+      </div>
+
+      <a class="card g big" href="105天逐日任务表.html">
+        <span class="badge">每天用</span>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        <h3>105 天逐日任务表</h3>
+        <p>每天做什么、做多久、做到什么程度算完成。带勾选和进度。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card g" href="每周复盘-周报.html">
+        <span class="badge">每周用</span>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13H5z"/><path d="M9 10h6M9 14h6"/></svg>
+        <h3>每周复盘 · 周报</h3>
+        <p>做了什么、卡在哪、学到什么。自动保存，可导出 Markdown。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card g big" href="故障速查手册.html">
+        <span class="badge">卡住时用</span>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+        <h3>故障速查手册</h3>
+        <p>24 个高频故障：先查什么、常见根因、怎么验证。支持关键词搜索。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card" href="15周逐周任务清单.html">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="2" cy="6" r="0.6" fill="currentColor"/></svg>
+        <h3>15 周任务清单</h3>
+        <p>每周一个主题、一份任务、一个交付物。周维度的总览。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card big" href="嵌入式软硬件全栈学习计划.html">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+        <h3>软硬件全栈学习计划</h3>
+        <p>14 个模块，每个都有硬件/软件双栏内容和硬性验收标准。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card" href="项目库.html">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.6"/><rect x="13" y="3" width="8" height="8" rx="1.6"/><rect x="3" y="13" width="8" height="8" rx="1.6"/><rect x="13" y="13" width="8" height="8" rx="1.6"/></svg>
+        <h3>项目库 · 三份规格书</h3>
+        <p>P1 采集终端 / P2 FOC 驱动板 / P3 机械臂：需求、框图、BOM、分阶段验收。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card" href="AI嵌入式机器人成长路线图.html">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg>
+        <h3>主路线图</h3>
+        <p>八阶段全景：从电路 C 语言到具身智能，看清两年的大图。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card" href="就业达标补充路线.html">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        <h3>就业达标补充路线</h3>
+        <p>课程没教的四个模块：笔试、工程能力、自研项目、实习竞赛。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card o" href="面试题库.html">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 5z"/></svg>
+        <h3>面试题库</h3>
+        <p>70+ 道：C 语言、嵌入式、RTOS、Linux、项目追问、反问技巧。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card t big" href="学习资源库.html">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2z"/><path d="M20 5a2 2 0 0 0-2-2h-5v18h5a2 2 0 0 0 2-2z"/></svg>
+        <h3>学习资源库</h3>
+        <p>官方文档、中文课程、书单、工具链，以及「怎么读手册」。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+      <a class="card t big" href="器材采购清单.html">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>
+        <h3>器材采购清单</h3>
+        <p>分三阶段买什么、多少钱、哪些能省。附四条选购原则。</p>
+        <span class="go">打开 →</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- 怎么用 -->
+  <section>
+    <div class="sec"><span class="no">02</span><h2>这一套怎么用</h2><p>四个动作，形成一个闭环</p></div>
+    <div class="flow">
+      <div class="fl"><div class="st">STEP 1</div><b>周一早上看逐日表</b><span>只做今天那一格，不提前看整周。</span></div>
+      <div class="fl"><div class="st">STEP 2</div><b>卡住了查速查手册</b><span>先自己按清单排查 20 分钟，再问人。</span></div>
+      <div class="fl"><div class="st">STEP 3</div><b>周日填复盘</b><span>写现象不写结论，这是未来的面试素材。</span></div>
+      <div class="fl"><div class="st">STEP 4</div><b>每月回看一次路线图</b><span>确认自己还在主线上，没跑偏。</span></div>
+    </div>
+  </section>
+
+  <!-- 检查点 -->
+  <section>
+    <div class="sec"><span class="no">03</span><h2>四个检查点</h2><p>过不去就别往下走</p></div>
+    <div class="cp">
+      <div class="row"><span class="w">W4 末</span><span class="d">能不看资料讲清开发板原理图；中断嵌套实验有波形</span><span class="s">否则回补 M1</span></div>
+      <div class="row"><span class="w">W8 末</span><span class="d">六个外设全部跑通，每个都有波形或数据证据</span><span class="s">否则停一周</span></div>
+      <div class="row"><span class="w">W10 末</span><span class="d">有一个能连续演示 3 分钟、别人能按文档跑起来的项目</span><span class="s">否则寒假补</span></div>
+      <div class="row"><span class="w">W15 末</span><span class="d">自己画的板子点亮，且全部功能验证通过</span><span class="s">否则别急着上 RTOS</span></div>
+    </div>
+  </section>
+
+  <!-- 原则 -->
+  <section>
+    <div class="sec"><span class="no">04</span><h2>三条铁律</h2></div>
+    <div class="prin">
+      <div class="pr"><b>动手不低于 40%</b><span>每周 25 小时里，至少 10 小时在板子上。看视频超过一半，就是在骗自己。</span></div>
+      <div class="pr"><b>交付物不能欠</b><span>任务可以顺延，交付物不行。它是下一周的起点。</span></div>
+      <div class="pr"><b>写现象不写结论</b><span>「I2C 读不到数据」比「学了 I2C」有价值十倍。周报要写给未来的自己看。</span></div>
+    </div>
+  </section>
+
+  <p class="foot">学习总控台 · 2026.11 → 2028.11 · 一切从这里开始</p>
+</div>
+
+<script>
+(function () {
+  var START = new Date(2026, 10, 2); // 2026-11-02 周一
+  var THEMES = [
+    "把工位建起来，读懂开发板", "欧姆定律用起来：分压与开关", "C 深水区 + GPIO 八种模式",
+    "时钟树与中断", "定时器与 PWM", "UART 与自己的通信协议", "ADC 与 DMA",
+    "I2C 与 SPI：用波形读懂总线", "综合小项目 v1", "项目打磨与笔记收口",
+    "考试周：只维持手感", "选型与原理图", "评审与 PCB 布局", "打样、采购、焊接",
+    "全功能验证与寒假复盘"
+  ];
+  var now = new Date();
+  var t = document.getElementById('nowT');
+  var d = document.getElementById('nowD');
+  var a = document.getElementById('nowA');
+
+  if (now < START) {
+    var days = Math.ceil((START - now) / 86400000);
+    t.textContent = '准备期';
+    d.textContent = '距第 1 周还有 ' + days + ' 天 · 先把器材和仓库准备好';
+    a.textContent = '先看阶段一器材 →';
+    a.href = '器材采购清单.html';
+  } else {
+    var n = Math.floor((now - START) / 604800000) + 1;
+    if (n > 15) {
+      t.textContent = '十五周已完成';
+      d.textContent = '该进入电赛集训与项目深化阶段了';
+      a.textContent = '看全栈计划 →';
+      a.href = '嵌入式软硬件全栈学习计划.html';
+    } else {
+      var end = new Date(START.getTime() + (n * 7 - 1) * 86400000);
+      t.textContent = '第 ' + n + ' 周 · ' + THEMES[n - 1];
+      var left = Math.ceil((end - now) / 86400000);
+      d.textContent = left >= 0 ? ('本周还剩 ' + left + ' 天 · 按逐日表推进') : '本周已过，记得补周报';
+      a.textContent = '打开本周任务 →';
+      a.href = '105天逐日任务表.html#w' + n;
+    }
+  }
+})();
+</script>
+
+<script src="assets/plan-data.js"></script>
+<script>
+/* 今日打卡：读取 checkin-v1，渲染 28 天热力图 + 连续天数 */
+(function () {
+  var KEY = 'checkin-v1';
+  var data = {};
+  try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { data = {}; }
+
+  function fmt(d) {
+    return d.getFullYear() + '-' +
+      ('0' + (d.getMonth() + 1)).slice(-2) + '-' +
+      ('0' + d.getDate()).slice(-2);
+  }
+
+  var today = new Date(); today.setHours(0,0,0,0);
+  var mini = document.getElementById('mini');
+  if (!mini) return;
+
+  // 28 天热力图：4 行 × 7 列，最后一格是今天
+  for (var i = 27; i >= 0; i--) {
+    var d = new Date(today); d.setDate(d.getDate() - i);
+    var el = document.createElement('i');
+    if (data[fmt(d)]) el.className = 'on';
+    if (i === 0) el.className += ' tdy';
+    mini.appendChild(el);
+  }
+
+  var streak = 0, cur = new Date(today);
+  if (!data[fmt(cur)]) cur.setDate(cur.getDate() - 1);
+  while (data[fmt(cur)]) { streak++; cur.setDate(cur.getDate() - 1); }
+
+  document.getElementById('featStreak').textContent = streak;
+  document.getElementById('featSub').textContent = data[fmt(today)]
+    ? '今天已打卡 · 连续 ' + streak + ' 天'
+    : '今天还没打卡 · 学完点一下';
+})();
+</script>
+<script>
+/* 今日学习：按日期取当天任务，勾选写回 daily-plan-v1（与 105 天表共用同一份记录） */
+(function () {
+  var D = window.PLAN_DATA;
+  var card = document.getElementById('todayCard');
+  if (!D || !card) return;
+
+  var KEY = 'daily-plan-v1';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+
+  var pad = function (n) { return ('0' + n).slice(-2); };
+  var iso = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+  var start = new Date(D.start + 'T00:00:00');
+  var end = new Date(D.end + 'T00:00:00');
+
+  var titleEl = document.getElementById('todayTitle');
+  var subEl = document.getElementById('todaySub');
+  var courseEl = document.getElementById('todayCourse');
+  var listEl = document.getElementById('todayList');
+  var stdEl = document.getElementById('todayStd');
+  var doneEl = document.getElementById('todayDone');
+
+  function dayIndex(k) {
+    for (var i = 0; i < D.days.length; i++) if (D.days[i].k === k) return i;
+    return -1;
+  }
+
+  function render(now) {
+    now = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var key = iso(now);
+    var idx = dayIndex(key), day, mode;
+    if (idx >= 0) { day = D.days[idx]; mode = 'today'; }
+    else if (now < start) { day = D.days[0]; mode = 'before'; }
+    else { day = D.days[D.days.length - 1]; mode = 'after'; }
+
+    var dayNo = dayIndex(day.k) + 1;
+
+    if (mode === 'today') {
+      titleEl.textContent = '今日学习 · 第 ' + dayNo + ' 天';
+      subEl.innerHTML = 'W' + day.w + ' · ' + day.t + ' · 约 ' + day.h +
+        '　<span style="color:var(--ink2)">' + day.theme + '</span>';
+    } else if (mode === 'before') {
+      var gap = Math.round((start - now) / 86400000);
+      titleEl.textContent = '今日学习 · 还没开始';
+      subEl.innerHTML = '距 ' + D.start + ' 还有 <span style="color:var(--ink2);font-weight:700">' +
+        gap + ' 天</span>。下面是第 1 天要做的事，器材可以先备好。';
+    } else {
+      titleEl.textContent = '今日学习 · 105 天已走完';
+      subEl.innerHTML = '下面是最后一天。往回看这一百天，能拿出证据的才算学过。';
+    }
+
+    var course = D.courses[(day.mod || '').split(' / ')[0]];
+    if (course && course.u) {
+      courseEl.href = course.u;
+      courseEl.querySelector('b').textContent = course.n;
+      courseEl.title = course.t || '';
+      if (course.internal) {
+        courseEl.removeAttribute('target');
+        courseEl.removeAttribute('rel');
+      } else {
+        courseEl.target = '_blank';
+        courseEl.rel = 'noopener noreferrer';
+      }
+      courseEl.hidden = false;
+    } else {
+      courseEl.hidden = true;
+    }
+
+    listEl.innerHTML = '';
+    (day.tasks || []).forEach(function (t, ti) {
+      var id = 'w' + day.w + 'd' + day.di + 't' + ti;
+      var cls = t.k === '理' ? 't' : (t.k === '实' ? 'p' : 'n');
+      var lab = document.createElement('label');
+      lab.className = 'tt';
+
+      var html = '<input type="checkbox" data-id="' + id + '">' +
+        '<i class="ttag ' + cls + '">' + t.k + '</i>' +
+        '<span class="x">' + t.x + '</span>';
+
+      if (t.k === '理' && course && course.u) {
+        html += '<a class="lk" href="' + course.u + '"' +
+          (course.internal ? '' : ' target="_blank" rel="noopener noreferrer"') + '>看课</a>';
+      }
+      lab.innerHTML = html;
+
+      var cb = lab.querySelector('input');
+      if (saved[id]) cb.checked = true;
+      cb.addEventListener('change', function () {
+        if (cb.checked) saved[id] = true; else delete saved[id];
+        try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+        count();
+        if (window.__kpiRefresh) window.__kpiRefresh('tasks');
+      });
+
+      listEl.appendChild(lab);
+    });
+
+    stdEl.innerHTML = day.st
+      ? '<span style="color:var(--ink3)">完成标准：</span>' + day.st
+      : '';
+
+    function count() {
+      var n = 0, all = listEl.querySelectorAll('input');
+      for (var i = 0; i < all.length; i++) if (all[i].checked) n++;
+      doneEl.textContent = n + ' / ' + all.length;
+    }
+    count();
+  }
+
+  render(new Date());
+  window.__todayRender = function (k) { render(new Date(k + 'T00:00:00')); };
+})();
+</script>
+<script>
+/* 进度环：读取各页面写入 localStorage 的勾选记录 */
+(function () {
+  var M = [
+    { m:'tasks',   key:'daily-plan-v1',               total:311, unit:'项', label:'任务完成' },
+    { m:'weeks',   key:'week15-checklist-v1',         total:87,  unit:'项', label:'周清单' },
+    { m:'skills',  key:'fullstack-plan-checklist-v1', total:22,  unit:'项', label:'能力自测' },
+    { m:'checkin', key:'checkin-v1',                  total:105, unit:'天', label:'累计打卡' }
+  ];
+  var C = 2 * Math.PI * 42;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function read(k) {
+    try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function count(o) {
+    var n = 0;
+    for (var k in o) if (o[k]) n++;
+    return n;
+  }
+  function animateNumber(el, target) {
+    var start = performance.now(), dur = 900;
+    function step(now) {
+      var t = Math.min(1, (now - start) / dur);
+      var e = 1 - Math.pow(1 - t, 3);
+      el.innerHTML = Math.round(target * e) + '<span>%</span>';
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  var rows = [];
+
+  M.forEach(function (it) {
+    var done = count(read(it.key));
+    var pct = Math.max(0, Math.min(100, it.total ? done / it.total * 100 : 0));
+    var el = document.querySelector('.kpi[data-metric="' + it.m + '"]');
+    if (!el) return;
+
+    var bar = el.querySelector('.bar');
+    var pctEl = el.querySelector('.pct');
+    el.querySelector('.frac').textContent = done + ' / ' + it.total + ' ' + it.unit;
+    el.setAttribute('title', it.label + '：' + done + ' / ' + it.total + '（' + Math.round(pct) + '%）');
+
+    function play() {
+      bar.style.strokeDashoffset = (C * (1 - pct / 100)).toFixed(2);
+      if (reduce) pctEl.innerHTML = Math.round(pct) + '<span>%</span>';
+      else animateNumber(pctEl, pct);
+    }
+
+    if (reduce || !('IntersectionObserver' in window)) {
+      play();
+    } else {
+      var played = false;
+      var io = new IntersectionObserver(function (en) {
+        if (!en[0].isIntersecting || played) return;
+        played = true;
+        play();
+        io.disconnect();
+      }, { threshold: 0.35 });
+      io.observe(el);
+    }
+
+    rows.push([it.label, done, it.total, Math.round(pct) + '%']);
+  });
+
+  var tb = document.querySelector('#kpiTable tbody');
+  if (tb) rows.forEach(function (r) {
+    var tr = document.createElement('tr');
+    r.forEach(function (c) { var td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+    tb.appendChild(tr);
+  });
+
+  // 供今日清单勾选后即时刷新对应环，不重播动画
+  window.__kpiRefresh = function (metric) {
+    var it = null;
+    for (var i = 0; i < M.length; i++) if (M[i].m === metric) it = M[i];
+    if (!it) return;
+    var el = document.querySelector('.kpi[data-metric="' + metric + '"]');
+    if (!el) return;
+    var done = count(read(it.key));
+    var pct = Math.max(0, Math.min(100, it.total ? done / it.total * 100 : 0));
+    el.querySelector('.frac').textContent = done + ' / ' + it.total + ' ' + it.unit;
+    var bar = el.querySelector('.bar');
+    if (bar) bar.style.strokeDashoffset = (C * (1 - pct / 100)).toFixed(2);
+    var p = el.querySelector('.pct');
+    if (p) p.innerHTML = Math.round(pct) + '<span>%</span>';
+  };
+})();
+</script>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

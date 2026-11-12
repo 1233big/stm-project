@@ -1,0 +1,1501 @@
+/* ============================================================
+   theme.css — 暗黑 · 液态玻璃 · 全宽版
+   覆盖：色板 / 背景 / 布局 / 玻璃面 / 组件 / 动效 / 浏览器表面
+   浅色版存档在 theme-light.css
+   ============================================================ */
+
+/* ---------- 1. 色板 ---------- */
+:root{
+  --ink:#e8eefc;
+  --ink-2:#b9c6dd;  --ink2:#b9c6dd;
+  --ink-3:#8a9ab5;  --ink3:#8a9ab5;
+  --ink-4:#6a7a95;  --ink4:#6a7a95;
+
+  --line:rgba(255,255,255,.11);
+  --line2:rgba(255,255,255,.07);
+
+  --blue:#4f8cff;
+  --blue-deep:#8fb7ff;
+  --blue-soft:rgba(79,140,255,.16);
+
+  --teal:#2dd4bf;
+  --teal-soft:rgba(45,212,191,.14);
+
+  --green:#34d399;
+  --green-soft:rgba(52,211,153,.14);
+  --green-line:rgba(52,211,153,.28);
+
+  --amber:#fbbf24;
+  --amber-soft:rgba(251,191,36,.13);
+
+  --red:#f87171;
+  --red-soft:rgba(248,113,113,.13);
+
+  --bg:#070b14;
+  --card:rgba(255,255,255,.045);
+
+  --radius:18px;
+  --shadow-1:0 1px 0 rgba(255,255,255,.07) inset, 0 10px 30px -18px rgba(0,0,0,.9);
+  --shadow-2:0 1px 0 rgba(255,255,255,.12) inset, 0 24px 56px -26px rgba(0,0,0,.95);
+  --shadow-3:0 1px 0 rgba(255,255,255,.14) inset, 0 40px 90px -40px rgba(0,0,0,1);
+
+  --font-sans:-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+              "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono:ui-monospace, "SF Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --glass-line:rgba(255,255,255,.12);
+}
+
+/* ---------- 2. 基础 ---------- */
+html{ -webkit-text-size-adjust:100%; }
+
+body{
+  font-family:var(--font-sans);
+  color:var(--ink);
+  background-color:#070b14;
+  background-image:
+    radial-gradient(1200px 700px at 12% -12%, rgba(37,99,235,.20), transparent 62%),
+    radial-gradient(1000px 640px at 100% -6%, rgba(13,148,136,.16), transparent 58%),
+    radial-gradient(900px 700px at 50% 108%, rgba(124,58,237,.16), transparent 62%);
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+  font-feature-settings:"kern" 1, "liga" 1;
+  letter-spacing:.002em;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* 极光层 */
+body::before{
+  content:"";
+  position:fixed; inset:-25%;
+  z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(38% 34% at 22% 18%, rgba(59,130,246,.34), transparent 64%),
+    radial-gradient(34% 30% at 78% 24%, rgba(45,212,191,.22), transparent 62%),
+    radial-gradient(40% 36% at 46% 86%, rgba(139,92,246,.24), transparent 64%);
+  filter:blur(70px) saturate(120%);
+  animation:aurora 30s ease-in-out infinite alternate;
+}
+@keyframes aurora{
+  0%  { transform:translate3d(-2%,-1%,0) scale(1); }
+  50% { transform:translate3d(2%,2%,0) scale(1.06); }
+  100%{ transform:translate3d(-1%,3%,0) scale(1.03); }
+}
+
+/* 网格层 */
+body::after{
+  content:"";
+  position:fixed; inset:0;
+  z-index:-1; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.032) 1px, transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(130% 90% at 50% 0%, #000 0%, transparent 78%);
+  -webkit-mask-image:radial-gradient(130% 90% at 50% 0%, #000 0%, transparent 78%);
+}
+
+h1,h2,h3,h4{ text-wrap:balance; letter-spacing:-.012em; color:var(--ink); }
+h1{ letter-spacing:-.024em; }
+p{ text-wrap:pretty; }
+code,kbd,samp,pre,.mono{ font-family:var(--font-mono); }
+
+[class*="count"],[class*="num"],.cnt,.pct,td.num,.price,.meta,time,.date b,.wki b,
+.fact b,.stats b,.st b,.feat-stat b{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+
+/* ---------- 3. 全宽布局 ---------- */
+.wrap{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:34px clamp(18px,3.2vw,68px) 96px !important;
+}
+.app{
+  width:100% !important;
+  max-width:none !important;
+  padding-left:clamp(12px,2vw,44px) !important;
+  padding-right:clamp(12px,2vw,44px) !important;
+}
+.main{ padding-right:clamp(0px,2vw,28px) !important; }
+.lead, p.lead{ max-width:80ch; }
+
+@media (min-width:1560px){
+  .grid{ grid-template-columns:repeat(4,1fr) !important; }
+  .mods{ grid-template-columns:repeat(3,1fr) !important; }
+  .projs{ grid-template-columns:repeat(4,1fr) !important; }
+}
+
+/* ---------- 4. 玻璃面 ---------- */
+.card,.mod,.week,.term,.proj,.fld,.blk,.day,.cal,.st,.note,.diag .item,.pillar,
+.allocate,.daycard,.check,.pr,.adv,.fl,.list,.steps,.flow,.cp,.wki,details,.ms,
+.deliver div,.daily,.std,.hit{
+  background-image:
+    linear-gradient(152deg, rgba(255,255,255,.085) 0%, rgba(255,255,255,.028) 42%,
+                    rgba(255,255,255,.055) 100%) !important;
+  background-color:rgba(12,18,32,.55) !important;
+  border:1px solid var(--glass-line) !important;
+  border-radius:var(--radius);
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:var(--shadow-1);
+  background-size:220% 220%;
+  background-position:0% 0%;
+  transition:background-position .55s var(--ease-out),
+             border-color .3s var(--ease-out),
+             box-shadow .3s var(--ease-out),
+             transform .24s var(--ease-out);
+}
+
+.card:hover,.proj:hover,.adv:hover,.wki:hover,.diag .item:hover,
+.pillar:hover,.pr:hover,.st:hover{
+  background-position:100% 60%;
+  border-color:rgba(255,255,255,.24) !important;
+  box-shadow:var(--shadow-2), 0 0 0 1px rgba(79,140,255,.16);
+  transform:translateY(-2px);
+}
+
+/* 内部小卡不重复玻璃，避免层级堆叠发灰 */
+.daily .it,.mod .col,.deliver div,.facts .fact{
+  background:rgba(255,255,255,.04) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+
+/* ---------- 5. Hero ---------- */
+.hero{
+  position:relative; isolation:isolate;
+  border-radius:26px;
+  padding:clamp(30px,3.4vw,52px) clamp(26px,3.4vw,56px) clamp(26px,3vw,44px);
+  background:
+    radial-gradient(120% 140% at 88% -20%, rgba(79,140,255,.42), transparent 58%),
+    radial-gradient(100% 120% at 8% 110%, rgba(45,212,191,.22), transparent 62%),
+    linear-gradient(145deg, #0a1224 0%, #0e1a33 55%, #0b2030 100%);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:var(--shadow-3), 0 0 0 1px rgba(255,255,255,.04) inset;
+  color:#fff;
+  overflow:hidden;
+}
+.hero::after{
+  content:"";
+  position:absolute; right:-90px; top:-110px; width:360px; height:360px; border-radius:50%;
+  background:radial-gradient(circle, rgba(79,140,255,.30), transparent 66%);
+  filter:blur(10px);
+  z-index:-1;
+}
+.hero::before{
+  content:""; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+  background-size:36px 36px;
+  mask-image:radial-gradient(120% 100% at 78% 0%, #000 0%, transparent 70%);
+  -webkit-mask-image:radial-gradient(120% 100% at 78% 0%, #000 0%, transparent 70%);
+  z-index:-1; pointer-events:none;
+}
+.hero h1{
+  font-size:clamp(26px,3vw,42px);
+  background:linear-gradient(100deg,#ffffff 0%,#cfe0ff 42%,#9de9df 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero .lead{ color:#c6d6f5; font-size:clamp(13.5px,1.1vw,15.5px); }
+
+.fact,.stat{
+  background:rgba(255,255,255,.07) !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  border-radius:13px;
+}
+
+/* ---------- 6. 语义块 ---------- */
+.goal{ color:#cfe0ff !important; background:rgba(79,140,255,.14) !important; border:1px solid rgba(79,140,255,.22) !important; }
+.why{ color:#ffd9a3 !important; background:rgba(251,191,36,.09) !important; border:1px solid rgba(251,191,36,.20) !important; }
+.position{ color:var(--ink2) !important; background:rgba(255,255,255,.045) !important; }
+.accept,.deliver,.std{ color:var(--green) !important;
+  background:linear-gradient(180deg, rgba(52,211,153,.10), rgba(52,211,153,.04)) !important;
+  border-color:rgba(52,211,153,.26) !important; }
+.ans .core,.core{ color:#a9f0dc !important; background:rgba(45,212,191,.12) !important; }
+.root,.risk{ color:#ffc9c9 !important; background:rgba(248,113,113,.10) !important; border-color:rgba(248,113,113,.24) !important; }
+.verify{ color:#a9f0dc !important; background:rgba(45,212,191,.10) !important; border-color:rgba(45,212,191,.22) !important; }
+.tipx{ color:#ffd9a3 !important; background:rgba(251,191,36,.10) !important; }
+.warn{ color:#ffd9a3 !important; background:rgba(251,191,36,.09) !important; border-color:rgba(251,191,36,.20) !important; }
+.note{ color:var(--ink2) !important; }
+
+/* ---------- 7. 表格 ---------- */
+table{ background:transparent !important; border:1px solid var(--glass-line) !important; border-radius:14px; }
+th{ background:rgba(255,255,255,.045) !important; color:var(--ink3) !important;
+    border-bottom:1px solid var(--line) !important; }
+td{ border-bottom:1px solid var(--line2) !important; color:var(--ink2) !important; }
+td b,td strong{ color:var(--ink) !important; }
+td.id{ color:var(--blue) !important; }
+tfoot td{ background:rgba(255,255,255,.045) !important; color:var(--ink) !important; }
+.blk-h,.wk-h,.mod-h,.day-h,.cal-h{ background:rgba(255,255,255,.04) !important; }
+
+/* ---------- 8. 表单 ---------- */
+textarea,input[type=text],input[type=search],.search input{
+  background:rgba(0,0,0,.30) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:var(--ink) !important;
+  border-radius:11px !important;
+}
+textarea::placeholder,input::placeholder{ color:#5e6d88 !important; }
+textarea:focus,input:focus{
+  border-color:rgba(79,140,255,.65) !important;
+  box-shadow:0 0 0 3px rgba(79,140,255,.16) !important;
+  background:rgba(0,0,0,.40) !important;
+}
+
+input[type=checkbox],.chk input,.tasks input{
+  background:rgba(255,255,255,.06) !important;
+  border-color:rgba(255,255,255,.28) !important;
+}
+input[type=checkbox]:checked,.chk input:checked,.tasks input:checked{
+  background:linear-gradient(150deg,#34d399,#0ea47a) !important;
+  border-color:#34d399 !important;
+}
+
+/* ---------- 9. 按钮 / 标签 ---------- */
+.btn{ background:rgba(255,255,255,.06) !important; border-color:rgba(255,255,255,.14) !important; color:var(--ink2) !important; }
+.btn:hover{ background:rgba(255,255,255,.11) !important; border-color:rgba(255,255,255,.26) !important; color:#fff !important; }
+.btn.primary{ background:linear-gradient(150deg,#2f6bff,#5b8cff) !important; border-color:transparent !important; color:#fff !important; }
+
+.tab{ background:rgba(255,255,255,.05) !important; border-color:rgba(255,255,255,.12) !important; }
+.tab.on{ background:linear-gradient(150deg,#2f6bff,#5b8cff) !important; color:#fff !important; border-color:transparent !important; }
+.back{ background:rgba(255,255,255,.05) !important; border-color:rgba(255,255,255,.12) !important; }
+.back:hover{ background:rgba(79,140,255,.22) !important; color:#fff !important; }
+
+.pill,.tag,.badge,.lvl,.hrs,.cost{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  color:var(--ink3) !important;
+}
+.pill.mod{ background:rgba(45,212,191,.14) !important; color:#7ff0dd !important; border-color:rgba(45,212,191,.26) !important; }
+.badge{ background:rgba(52,211,153,.16) !important; color:#7ef0c4 !important; border-color:rgba(52,211,153,.26) !important; }
+
+/* ---------- 10. 日历 ---------- */
+.cell{
+  background:rgba(255,255,255,.045) !important;
+  color:var(--ink2) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+}
+.cell:hover:not(.blank):not(.future){
+  background:rgba(79,140,255,.16) !important;
+  border-color:rgba(79,140,255,.45) !important;
+}
+.cell.out,.cell.future{ color:#4b5a72 !important; background:rgba(255,255,255,.02) !important; }
+.cell.today{ border-color:#4f8cff !important; color:#8fb7ff !important;
+  box-shadow:0 0 0 1px rgba(79,140,255,.35), 0 0 24px -6px rgba(79,140,255,.55) !important; }
+.cell.on{
+  background:linear-gradient(155deg,#4f8cff,#2f6bff) !important;
+  border-color:rgba(140,180,255,.9) !important;
+  color:#fff !important;
+  box-shadow:0 10px 26px -12px rgba(47,107,255,.95), 0 0 0 1px rgba(255,255,255,.18) inset !important;
+}
+.cell.on::before{ background:rgba(255,255,255,.7) !important; }
+
+/* ---------- 11. 进度 ---------- */
+.bar{ background:rgba(255,255,255,.08) !important; }
+.bar i{ background:linear-gradient(90deg,#4f8cff,#2dd4bf) !important;
+  box-shadow:0 0 18px -4px rgba(79,140,255,.9); }
+
+/* ---------- 12. 粘性栏 ---------- */
+.topbar,.navbar,.tabs,.bar,.search{
+  background:rgba(7,11,20,.72) !important;
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-color:rgba(255,255,255,.09) !important;
+}
+
+/* ---------- 13. 动效 ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .hero > *{ animation:signal-in .8s var(--ease-out) both; }
+  .hero > *:nth-child(1){ animation-delay:.05s; }
+  .hero > *:nth-child(2){ animation-delay:.11s; }
+  .hero > *:nth-child(3){ animation-delay:.18s; }
+  .hero > *:nth-child(4){ animation-delay:.25s; }
+  .hero > *:nth-child(5){ animation-delay:.32s; }
+
+  @keyframes signal-in{
+    from{ opacity:0; transform:translateY(14px); filter:blur(8px); }
+    to  { opacity:1; transform:none; filter:blur(0); }
+  }
+
+  .now .dot::after{ animation:breathe 2.8s var(--ease-out) infinite; }
+  @keyframes breathe{
+    0%,100%{ transform:scale(.85); opacity:.55; }
+    50%    { transform:scale(1.2); opacity:.15; }
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+}
+
+/* ---------- 14. 浏览器表面 ---------- */
+::selection{ background:rgba(79,140,255,.42); color:#fff; }
+::-webkit-scrollbar{ width:12px; height:12px; }
+::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.16); border-radius:99px; border:3px solid transparent;
+  background-clip:padding-box;
+}
+::-webkit-scrollbar-thumb:hover{ background:rgba(255,255,255,.30); background-clip:padding-box; }
+:focus-visible{ outline:2px solid #6ea2ff; outline-offset:2px; border-radius:5px; }
+a{ color:var(--blue); }
+a:hover{ color:var(--blue-deep); }
+
+/* ---------- 15. 细节 ---------- */
+.hero-art{ opacity:.16 !important; }
+.eyebrow{ display:none !important; }
+.mod::before,.card::before,.pillar::before{ content:none !important; display:none !important; }
+.now{ background:rgba(255,255,255,.07) !important; border:1px solid rgba(255,255,255,.18) !important; }
+.now .dot{ background:#34d399 !important; box-shadow:none !important; position:relative; }
+.now .dot::after{
+  content:""; position:absolute; inset:-6px; border-radius:50%;
+  background:radial-gradient(circle, rgba(52,211,153,.4), transparent 70%);
+}
+.sec .no,.blk-h .n,.mod-n,.wkn,.num,.idx{
+  background:rgba(79,140,255,.18) !important; color:#9cc0ff !important;
+}
+
+/* ---------- 16. 响应式 ---------- */
+@media (max-width:1000px){
+  .facts{ grid-template-columns:repeat(auto-fit, minmax(128px,1fr)) !important; }
+}
+@media (max-width:560px){
+  .facts{ grid-template-columns:repeat(2,1fr) !important; }
+  .wrap{ padding:20px 14px 72px !important; }
+  .hero{ border-radius:20px; }
+}
+
+/* ---------- 17. 打印：回到纸面 ---------- */
+@media print{
+  body{ background:#fff !important; color:#111 !important; }
+  body::before,body::after{ display:none !important; }
+  .hero{ background:#fff !important; color:#111 !important; border:1px solid #ddd !important; box-shadow:none !important; }
+  .hero h1{ color:#111 !important; -webkit-text-fill-color:#111 !important; background:none !important; }
+  .hero .lead{ color:#333 !important; }
+  .card,.mod,.week,.term,.proj,.day,.blk,.cal,.fld,.st,.note,details,table{
+    background:#fff !important; border:1px solid #ddd !important; box-shadow:none !important;
+    backdrop-filter:none !important;
+  }
+  .topbar,.navbar,.tabs,.search,.bar,.hit,.nav-b,.today-b,.btn{ display:none !important; }
+}
+
+/* ---------- 18. 强调卡（打卡）保留彩色玻璃 ---------- */
+.card.feat{
+  background-image:
+    radial-gradient(120% 160% at 88% -20%, rgba(79,140,255,.55), transparent 60%),
+    linear-gradient(135deg, rgba(47,107,255,.42), rgba(45,212,191,.22)) !important;
+  border-color:rgba(130,175,255,.42) !important;
+  box-shadow:0 1px 0 rgba(255,255,255,.18) inset, 0 26px 60px -34px rgba(47,107,255,.9) !important;
+}
+.card.feat:hover{ border-color:rgba(160,195,255,.62) !important; }
+.card.feat h3{ color:#fff !important; }
+.featsub{ color:#d3e2ff !important; }
+
+/* ---------- 19. 修正：内容最大宽度 & 进度条与筛选栏命名冲突 ---------- */
+.wrap{
+  max-width:1680px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+.app{
+  max-width:1680px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+/* 题库的筛选栏 .bar 是粘性容器；进度条 .bar 只是轨道，二者同名 */
+.bar{ background:rgba(255,255,255,.08) !important; backdrop-filter:none !important; }
+.bar:has(.bar-in){
+  background:rgba(7,11,20,.72) !important;
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-bottom:1px solid rgba(255,255,255,.09) !important;
+}
+.bar-in{ background:transparent !important; border:0 !important; }
+
+/* ---------- 20. 暗色打磨：更多颜色与层次 ---------- */
+.topbar-in{ max-width:1680px !important; }
+
+/* 玻璃再亮一档，避免整屏发死 */
+.card,.mod,.week,.term,.proj,.fld,.blk,.day,.cal,.st,.note,.diag .item,.pillar,
+.allocate,.daycard,.check,.pr,.adv,.fl,.list,.steps,.flow,.cp,.wki,details,.ms,
+.deliver div,.daily,.std,.hit{
+  background-image:
+    linear-gradient(152deg, rgba(255,255,255,.105) 0%, rgba(255,255,255,.038) 44%,
+                    rgba(255,255,255,.07) 100%) !important;
+  background-color:rgba(17,24,40,.52) !important;
+}
+
+/* 周次导航、标签胶囊 */
+.nav a,.nav-b,.today-b{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:var(--ink2) !important;
+}
+.nav a:hover,.nav-b:hover,.today-b:hover{
+  background:rgba(79,140,255,.22) !important;
+  border-color:rgba(79,140,255,.45) !important;
+  color:#fff !important;
+}
+
+/* 主 CTA 与补充入口 */
+.cta{ box-shadow:0 18px 40px -20px rgba(47,107,255,.9) !important; }
+.supp-link{
+  background:rgba(255,255,255,.05) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:var(--ink2) !important;
+}
+.supp-link:hover{ background:rgba(79,140,255,.18) !important; color:#fff !important; }
+.supp-link span{ color:var(--ink4) !important; }
+
+/* 打卡按钮 */
+.hit{ background:linear-gradient(150deg,#2f6bff,#5b8cff) !important; color:#fff !important; border:0 !important; }
+.hit.done{
+  background:rgba(52,211,153,.14) !important;
+  color:#7ef0c4 !important;
+  border:1px solid rgba(52,211,153,.35) !important;
+}
+
+/* 章节标题：整行细线 + 一小段渐变，撑住横向结构 */
+.sec{
+  position:relative;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.sec::after{
+  content:""; position:absolute; left:0; bottom:-1px;
+  width:140px; height:1px;
+  background:linear-gradient(90deg,#4f8cff,rgba(45,212,191,.6),transparent);
+}
+
+/* 周块与天块的层级 */
+.week{ border-radius:20px; }
+.day{ border-radius:15px; }
+.day-h{ border-bottom:1px solid rgba(255,255,255,.07) !important; }
+.std{ border-top:1px solid rgba(52,211,153,.24) !important; }
+
+/* 空状态与占位 */
+::placeholder{ color:#55637d !important; }
+
+/* ---------- 21. 玻璃的"受光边"：上缘更亮，像真实玻璃 ---------- */
+.card,.mod,.week,.term,.proj,.fld,.blk,.day,.cal,.st,.note,.diag .item,.pillar,
+.allocate,.daycard,.check,.pr,.adv,.fl,.list,.steps,.flow,.cp,.wki,details,.ms,
+.daily,.hit{
+  border-top-color:rgba(255,255,255,.26) !important;
+  border-bottom-color:rgba(255,255,255,.08) !important;
+}
+.card:hover,.proj:hover,.wki:hover,.adv:hover,.pr:hover,.st:hover{
+  border-top-color:rgba(255,255,255,.40) !important;
+}
+
+/* ---------- 22. 粘性栏内层跟随内容宽度 ---------- */
+.bar-in{ max-width:1680px !important; margin-left:auto !important; margin-right:auto !important; }
+.nav{ max-width:1680px; }
+
+/* ---------- 23. 提示条（周报页） ---------- */
+.tip{
+  color:#ffd9a3 !important;
+  background:rgba(251,191,36,.09) !important;
+  border:1px solid rgba(251,191,36,.22) !important;
+}
+.tip b{ color:#ffe3b0 !important; }
+
+/* ---------- 24. 首屏插画的定位（暗色版遗漏，补回） ---------- */
+.hero{ position:relative; }
+.hero-art{
+  position:absolute !important;
+  right:-26px; top:-34px;
+  width:210px !important; height:210px !important;
+  opacity:.16 !important;
+  pointer-events:none;
+  z-index:-1;
+}
+@media (max-width:900px){ .hero-art{ display:none !important; } }
+
+/* ---------- 25. 修正：表格里的 .num 不是徽标 ---------- */
+td.num, th.num{
+  background:transparent !important;
+  color:var(--ink3) !important;
+  border-radius:0 !important;
+  padding:8px 10px !important;
+}
+
+/* ---------- 26. 补齐遗漏的浅底组件 ---------- */
+.rule,.method,.item,.node,.it,.star,.key{
+  background-image:
+    linear-gradient(152deg, rgba(255,255,255,.085) 0%, rgba(255,255,255,.03) 45%,
+                    rgba(255,255,255,.055) 100%) !important;
+  background-color:rgba(17,24,40,.52) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  border-top-color:rgba(255,255,255,.24) !important;
+  color:var(--ink2) !important;
+  border-radius:14px;
+  box-shadow:var(--shadow-1);
+}
+.node{
+  min-width:96px;
+  text-align:center;
+  box-shadow:0 8px 20px -16px rgba(0,0,0,.9) !important;
+}
+.node b{ color:var(--ink) !important; }
+.node span{ color:var(--ink4) !important; }
+.node.mcu{
+  background-image:linear-gradient(160deg,#2f6bff,#4f8cff) !important;
+  border-color:rgba(140,180,255,.6) !important;
+}
+.node.mcu b,.node.mcu span{ color:#fff !important; }
+.node.pw{
+  background-image:linear-gradient(160deg, rgba(251,191,36,.18), rgba(251,191,36,.08)) !important;
+  border-color:rgba(251,191,36,.34) !important;
+}
+.star{ border-radius:9px; }
+.star.on{
+  background-image:linear-gradient(150deg,#fbbf24,#f59e0b) !important;
+  color:#1a1206 !important; border-color:rgba(251,191,36,.8) !important;
+}
+.key,.chip.key{
+  background:rgba(79,140,255,.16) !important;
+  color:#bcd3ff !important;
+  border-color:rgba(79,140,255,.3) !important;
+}
+.rule b,.method b{ color:var(--ink) !important; }
+.rule span,.method span{ color:var(--ink3) !important; }
+
+/* ---------- 27. 目录胶囊 / 级别徽标 / 行内代码 ---------- */
+.toc a,.toc-in a{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:var(--ink2) !important;
+}
+.toc a:hover{ background:rgba(79,140,255,.2) !important; color:#fff !important; border-color:rgba(79,140,255,.45) !important; }
+.lv{
+  background:rgba(255,255,255,.06) !important;
+  color:var(--ink3) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+}
+.lv.core{
+  background:rgba(52,211,153,.14) !important;
+  color:#7ef0c4 !important;
+  border-color:rgba(52,211,153,.28) !important;
+}
+code{
+  background:rgba(255,255,255,.09) !important;
+  color:#9fd0ff !important;
+  border-radius:5px;
+  padding:1px 5px;
+}
+
+/* ---------- 28. 周报侧栏 ---------- */
+.wki .dot{ background:rgba(255,255,255,.18) !important; }
+.wki.has .dot{ background:#34d399 !important; }
+.side-nav a{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:var(--ink3) !important;
+}
+.side-nav a:hover{ background:rgba(79,140,255,.2) !important; color:#fff !important; border-color:rgba(79,140,255,.4) !important; }
+
+/* ---------- 29. 路线图的标签与项目徽章 ---------- */
+.chip,.chips span{
+  background:rgba(255,255,255,.055) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  color:var(--ink2) !important;
+}
+.chip.key{
+  background:rgba(79,140,255,.16) !important;
+  border-color:rgba(79,140,255,.30) !important;
+  color:#bcd3ff !important;
+}
+/* 注意：路线图里的 .proj 是绿色徽章，项目库里的 .proj 是卡片 —— 用父级区分 */
+.projects .proj{
+  background:rgba(52,211,153,.13) !important;
+  border:1px solid rgba(52,211,153,.28) !important;
+  color:#7ef0c4 !important;
+  border-radius:999px !important;
+  box-shadow:none !important;
+}
+
+/* ---------- 30. 模块字母徽标 ---------- */
+.letter{ background:rgba(79,140,255,.16) !important; color:#bcd3ff !important; }
+.mod.g .letter{ background:rgba(52,211,153,.15) !important; color:#7ef0c4 !important; }
+.mod.o .letter{ background:rgba(251,191,36,.15) !important; color:#ffd9a3 !important; }
+
+/* ============================================================
+   31. 强化版：更厚的玻璃 + 更亮的光斑
+   ============================================================ */
+
+/* 31.1 光斑：四团极光，更亮、更慢 */
+body::before{
+  background:
+    radial-gradient(40% 36% at 20% 14%, rgba(59,130,246,.58), transparent 62%),
+    radial-gradient(34% 30% at 82% 20%, rgba(45,212,191,.40), transparent 60%),
+    radial-gradient(44% 38% at 46% 86%, rgba(139,92,246,.42), transparent 62%),
+    radial-gradient(26% 24% at 6% 74%, rgba(251,191,36,.14), transparent 60%);
+  filter: blur(58px) saturate(150%);
+  animation: aurora 24s ease-in-out infinite alternate;
+}
+body::after{
+  background-image:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size:48px 48px;
+}
+
+/* 31.2 内容区上方的漂移光球 */
+.wrap{ position:relative; z-index:0; }
+.wrap::before{
+  content:"";
+  position:absolute; left:-6%; right:-6%; top:-6%; height:64vh;
+  z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(closest-side at 26% 38%, rgba(79,140,255,.34), transparent 72%),
+    radial-gradient(closest-side at 74% 26%, rgba(45,212,191,.24), transparent 70%),
+    radial-gradient(closest-side at 52% 78%, rgba(168,85,247,.22), transparent 72%);
+  filter:blur(64px);
+  animation: drift 30s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%  { transform:translate3d(-1.5%,0,0) scale(1); }
+  100%{ transform:translate3d(2%,2.5%,0) scale(1.08); }
+}
+
+/* 31.3 玻璃本体：更厚 */
+.card,.mod,.week,.term,.proj,.fld,.blk,.day,.cal,.st,.note,.diag .item,.pillar,
+.allocate,.daycard,.check,.pr,.adv,.fl,.list,.steps,.flow,.cp,.wki,details,.ms,
+.deliver div,.daily,.std,.hit,.rule,.method,.node,.item{
+  background-image:
+    linear-gradient(152deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,.055) 42%,
+                    rgba(255,255,255,.12) 100%),
+    radial-gradient(130% 90% at 18% -10%, rgba(255,255,255,.12), transparent 58%) !important;
+  background-color:rgba(20,28,46,.44) !important;
+  border:1px solid rgba(255,255,255,.17) !important;
+  border-top-color:rgba(255,255,255,.44) !important;
+  border-bottom-color:rgba(255,255,255,.10) !important;
+  backdrop-filter:blur(30px) saturate(185%) !important;
+  -webkit-backdrop-filter:blur(30px) saturate(185%) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.20) inset,
+    0 -1px 0 rgba(255,255,255,.05) inset,
+    0 20px 50px -26px rgba(0,0,0,1),
+    0 0 46px -26px rgba(79,140,255,.45) !important;
+}
+
+/* 31.4 悬停：光扫过 + 描边发亮 */
+.card:hover,.proj:hover,.adv:hover,.wki:hover,.diag .item:hover,
+.pillar:hover,.pr:hover,.st:hover,.day:hover,.rule:hover,.method:hover{
+  background-position:100% 60%, 0 0 !important;
+  border-color:rgba(255,255,255,.30) !important;
+  border-top-color:rgba(255,255,255,.62) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.30) inset,
+    0 28px 64px -28px rgba(0,0,0,1),
+    0 0 70px -24px rgba(79,140,255,.75) !important;
+  transform:translateY(-3px);
+}
+
+/* 31.5 命中光：卡片左上角一团随悬停亮起的高光 */
+.card,.mod,.proj,.wki,.adv,.pr,.fl,.st,.rule,.method{ position:relative; overflow:hidden; }
+.card::after,.mod::after,.proj::after,.wki::after,.adv::after,
+.pr::after,.fl::after,.st::after,.rule::after,.method::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:radial-gradient(460px circle at 12% -12%, rgba(255,255,255,.16), transparent 62%);
+  opacity:0;
+  transition:opacity .45s cubic-bezier(.16,1,.3,1);
+}
+.card:hover::after,.mod:hover::after,.proj:hover::after,.wki:hover::after,
+.adv:hover::after,.pr:hover::after,.fl:hover::after,.st:hover::after,
+.rule:hover::after,.method:hover::after{ opacity:1; }
+
+/* 31.6 Hero：双层光晕 + 内缘高光 */
+.hero{
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.28) inset,
+    0 44px 100px -44px rgba(0,0,0,1),
+    0 0 120px -50px rgba(79,140,255,.75);
+}
+.hero::after{
+  background:
+    radial-gradient(circle at 70% 30%, rgba(79,140,255,.55), transparent 58%),
+    radial-gradient(circle at 20% 80%, rgba(45,212,191,.30), transparent 60%);
+  filter:blur(24px);
+  width:520px; height:520px; right:-140px; top:-180px;
+}
+
+/* 31.7 数据条与强调卡更透亮 */
+.fact,.stat{
+  background:rgba(255,255,255,.11) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  backdrop-filter:blur(14px) saturate(160%);
+  box-shadow:0 1px 0 rgba(255,255,255,.22) inset;
+}
+.card.feat{
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.34) inset,
+    0 30px 70px -34px rgba(47,107,255,1),
+    0 0 90px -30px rgba(79,140,255,.8) !important;
+}
+
+/* 31.8 降低动效时保持静态 */
+@media (prefers-reduced-motion:reduce){
+  .wrap::before{ animation:none !important; }
+}
+
+/* ---------- 32. 指针交互 ---------- */
+.ptr-glow{
+  position:fixed; left:0; top:0;
+  width:560px; height:560px;
+  margin:-280px 0 0 -280px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:-1;
+  background:radial-gradient(circle,
+    rgba(79,140,255,.26) 0%,
+    rgba(45,212,191,.12) 42%,
+    transparent 68%);
+  filter:blur(26px);
+  opacity:0;
+  transition:opacity .5s cubic-bezier(.16,1,.3,1);
+  will-change:transform;
+  mix-blend-mode:screen;
+}
+.ptr-glow.on{ opacity:1; }
+
+/* 卡片高光跟随光标 */
+.card::after,.mod::after,.proj::after,.wki::after,.adv::after,
+.pr::after,.fl::after,.st::after,.rule::after,.method::after{
+  background:radial-gradient(260px circle at var(--mx, 18%) var(--my, -12%),
+              rgba(255,255,255,.24), rgba(255,255,255,.06) 45%, transparent 66%) !important;
+  opacity:0;
+  transition:opacity .4s cubic-bezier(.16,1,.3,1);
+}
+.card:hover::after,.mod:hover::after,.proj:hover::after,.wki:hover::after,
+.adv:hover::after,.pr:hover::after,.fl:hover::after,.st:hover::after,
+.rule:hover::after,.method:hover::after,
+.is-hover::after{ opacity:1 !important; }
+
+/* 链接与按钮的指针反馈 */
+a,button,.tab,.back,.btn,.hit,.nav-b,.today-b{ cursor:pointer; }
+a:hover{ text-decoration-thickness:.09em; }
+.btn:hover,.hit:hover,.tab:hover,.back:hover,.nav-b:hover,.today-b:hover{
+  box-shadow:0 10px 30px -14px rgba(79,140,255,.75);
+}
+.day:hover,details:hover{ border-top-color:rgba(255,255,255,.5) !important; }
+.card .ic,.card svg.ic{ transition:transform .28s cubic-bezier(.16,1,.3,1), color .28s; }
+.card:hover .ic{ transform:translateY(-2px) scale(1.08); color:#8fb7ff !important; }
+.card.o:hover .ic{ color:#fbbf24 !important; }
+.card.t:hover .ic{ color:#2dd4bf !important; }
+
+/* ---------- 33. 光斑强度微调 ---------- */
+.ptr-glow{
+  background:radial-gradient(circle,
+    rgba(120,180,255,.55) 0%,
+    rgba(45,212,191,.26) 38%,
+    transparent 72%);
+  filter:blur(36px);
+}
+
+/* ============================================================
+   34. 去掉光晕，强化可感知的悬停
+   ============================================================ */
+
+/* 34.1 关掉光标光斑与各处泛光 */
+.ptr-glow{ display:none !important; }
+body::before{
+  background:
+    radial-gradient(46% 42% at 24% 10%, rgba(59,130,246,.22), transparent 64%),
+    radial-gradient(42% 38% at 78% 16%, rgba(45,212,191,.14), transparent 62%),
+    radial-gradient(48% 44% at 50% 92%, rgba(124,58,237,.18), transparent 64%);
+  filter:blur(72px) saturate(110%);
+  opacity:.75;
+}
+.wrap::before{ display:none !important; }
+
+/* 34.2 卡片阴影：只留深度，不留彩光 */
+.card,.mod,.week,.term,.proj,.fld,.blk,.day,.cal,.st,.note,.diag .item,.pillar,
+.allocate,.daycard,.check,.pr,.adv,.fl,.list,.steps,.flow,.cp,.wki,details,.ms,
+.deliver div,.daily,.std,.hit,.rule,.method,.node,.item{
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.16) inset,
+    0 -1px 0 rgba(255,255,255,.04) inset,
+    0 16px 40px -24px rgba(0,0,0,.95) !important;
+}
+
+/* 34.3 Hero 不再泛蓝光 */
+.hero{
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.26) inset,
+    0 40px 90px -44px rgba(0,0,0,1) !important;
+}
+.hero::after{ display:none !important; }
+
+.card.feat{
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.28) inset,
+    0 30px 70px -36px rgba(0,0,0,1) !important;
+}
+
+/* 34.4 悬停：抬起来、边框提亮、底色变浅 —— 不用任何光晕 */
+.card,.mod,.proj,.st,.pr,.fl,.rule,.method,.diag .item,.item,.adv,.wki{
+  transition:
+    transform .2s cubic-bezier(.16,1,.3,1),
+    border-color .2s cubic-bezier(.16,1,.3,1),
+    background-color .2s cubic-bezier(.16,1,.3,1),
+    box-shadow .2s cubic-bezier(.16,1,.3,1) !important;
+}
+.card:hover,.mod:hover,.proj:hover,.st:hover,.pr:hover,.fl:hover,
+.rule:hover,.method:hover,.diag .item:hover,.item:hover,.adv:hover,.wki:hover{
+  transform:translateY(-5px) !important;
+  background-color:rgba(40,54,84,.72) !important;
+  border-color:rgba(255,255,255,.42) !important;
+  border-top-color:rgba(255,255,255,.78) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.34) inset,
+    0 34px 70px -30px rgba(0,0,0,1) !important;
+}
+
+/* 34.5 大容器：不位移，只提亮描边与底色（位移会晃眼睛） */
+.day,.week,.term,.blk,.fld,.note,.cal,.cp,.list,.steps,.flow,.allocate,.daycard,
+.check,.ms,.pillar,details{
+  transition:border-color .2s cubic-bezier(.16,1,.3,1),
+             background-color .2s cubic-bezier(.16,1,.3,1) !important;
+}
+.day:hover,.week:hover,.term:hover,.blk:hover,.fld:hover,.note:hover,.cal:hover,
+.cp:hover,.list:hover,.steps:hover,.flow:hover,.allocate:hover,.daycard:hover,
+.check:hover,.ms:hover,.pillar:hover,details:hover{
+  background-color:rgba(34,46,72,.6) !important;
+  border-color:rgba(255,255,255,.34) !important;
+  border-top-color:rgba(255,255,255,.6) !important;
+}
+
+/* 34.6 卡片里的文字与箭头跟着动 */
+.card .go,.card h3{ transition:color .2s, transform .2s cubic-bezier(.16,1,.3,1); }
+.card:hover .go{ color:#fff !important; transform:translateX(5px); }
+.card:hover h3{ color:#fff !important; }
+
+/* 34.7 光标高光收紧：只是玻璃上的反射，不是光晕 */
+.card::after,.mod::after,.proj::after,.wki::after,.adv::after,
+.pr::after,.fl::after,.st::after,.rule::after,.method::after{
+  background:radial-gradient(180px circle at var(--mx, 18%) var(--my, -12%),
+              rgba(255,255,255,.13), transparent 62%) !important;
+}
+
+/* 34.8 可点击卡片给指针；纯内容卡保持默认指针 */
+a.card,.card[href],a.mod,.proj a{ cursor:pointer; }
+
+/* ---------- 35. 修正类名冲突：总控台的 STEP 标签不是统计卡 ---------- */
+.fl .st{
+  background:none !important;
+  background-image:none !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  backdrop-filter:none !important;
+  font-size:10.5px;
+  letter-spacing:.14em;
+  color:var(--ink4);
+  margin-bottom:5px;
+}
+.fl .st:hover{ transform:none !important; }
+
+/* ============================================================
+   36. 高级感改造：字阶、留白、克制的描边、入场动画
+   ============================================================ */
+
+:root{
+  --fs-display:clamp(32px, 3.6vw, 54px);
+  --fs-h2:clamp(19px, 1.7vw, 25px);
+  --fs-h3:15.5px;
+  --fs-body:14.5px;
+  --fs-meta:12px;
+  --line-h:1.78;
+  --radius:20px;
+}
+
+/* 36.1 字体节奏 */
+body{
+  font-size:var(--fs-body);
+  line-height:var(--line-h);
+  letter-spacing:.004em;
+}
+.hero h1{
+  font-size:var(--fs-display);
+  line-height:1.04;
+  letter-spacing:-.035em;
+  font-weight:800;
+  max-width:16ch;
+}
+.hero .lead{
+  font-size:clamp(14px, 1.05vw, 16px);
+  line-height:1.7;
+  letter-spacing:.002em;
+  margin-top:18px;
+  color:#b9c9e8;
+}
+.sec h2{
+  font-size:var(--fs-h2);
+  letter-spacing:-.025em;
+  font-weight:750;
+  line-height:1.25;
+}
+.card h3,.mod h3,.proj h3{ font-size:var(--fs-h3); letter-spacing:-.01em; }
+.card p,.mod p,.proj p{ line-height:1.65; }
+
+/* 36.2 章节头：编辑感，而不是仪表盘编号 */
+.sec{
+  align-items:baseline;
+  gap:14px;
+  padding-bottom:14px;
+  margin-bottom:24px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.sec .no{
+  background:none !important;
+  color:rgba(255,255,255,.30) !important;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.14em;
+  padding:0 !important;
+  border-radius:0 !important;
+  min-width:22px;
+}
+.sec::after{
+  width:88px;
+  height:1px;
+  background:linear-gradient(90deg, rgba(255,255,255,.55), transparent);
+}
+.sec p{ font-size:var(--fs-meta); color:rgba(255,255,255,.38); letter-spacing:.01em; }
+
+/* 36.3 描边更克制：靠明暗分层，不靠线 */
+.card,.mod,.week,.term,.proj,.fld,.blk,.day,.cal,.st,.note,.diag .item,.pillar,
+.allocate,.daycard,.check,.pr,.adv,.fl,.list,.steps,.flow,.cp,.wki,details,.ms,
+.rule,.method,.node,.item{
+  border-color:rgba(255,255,255,.10) !important;
+  border-top-color:rgba(255,255,255,.30) !important;
+}
+.card .card,.mod .mod,.blk table,.deliver div{ border-color:rgba(255,255,255,.07) !important; }
+
+/* 36.4 数据条：数字放大、标签缩小 */
+.fact b,.stat b,.st b{ font-size:30px; letter-spacing:-.03em; font-weight:800; }
+.fact span,.stat span,.st span{ font-size:11px; letter-spacing:.06em; color:rgba(255,255,255,.45); }
+
+/* 36.5 入场：滚动到视口才出现，轻微错开 */
+.reveal{
+  opacity:0;
+  transform:translateY(22px);
+  filter:blur(8px);
+  transition:
+    opacity .85s cubic-bezier(.16,1,.3,1),
+    transform .85s cubic-bezier(.16,1,.3,1),
+    filter .85s cubic-bezier(.16,1,.3,1);
+  will-change:opacity, transform;
+}
+.reveal.in{
+  opacity:1;
+  transform:none;
+  filter:blur(0);
+  will-change:auto;
+}
+
+/* 36.6 标题之下的第一块内容给更多呼吸 */
+.sec + .grid,.sec + .mods,.sec + .terms,.sec + .projs,.sec + .pillars,.sec + .methods{
+  margin-top:26px !important;
+}
+
+/* 36.7 滚动条更细 */
+::-webkit-scrollbar{ width:10px; }
+::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.14); }
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{ opacity:1 !important; transform:none !important; filter:none !important; }
+}
+
+/* ---------- 37. 玻璃去掉顶部放射性亮块（那会显得很廉价） ---------- */
+.card,.mod,.week,.term,.proj,.fld,.blk,.day,.cal,.st,.note,.diag .item,.pillar,
+.allocate,.daycard,.check,.pr,.adv,.fl,.list,.steps,.flow,.cp,.wki,details,.ms,
+.deliver div,.daily,.std,.hit,.rule,.method,.node,.item{
+  background-image:
+    linear-gradient(162deg,
+      rgba(255,255,255,.075) 0%,
+      rgba(255,255,255,.030) 46%,
+      rgba(255,255,255,.052) 100%) !important;
+  background-color:rgba(22,30,48,.50) !important;
+  border-color:rgba(255,255,255,.09) !important;
+  border-top-color:rgba(255,255,255,.22) !important;
+}
+.card:hover,.mod:hover,.proj:hover,.st:hover,.pr:hover,.fl:hover,
+.rule:hover,.method:hover,.diag .item:hover,.item:hover,.adv:hover,.wki:hover{
+  background-color:rgba(38,52,82,.62) !important;
+  border-color:rgba(255,255,255,.30) !important;
+  border-top-color:rgba(255,255,255,.55) !important;
+}
+
+/* ---------- 38. 首屏排版：标题不硬折行，数据条更克制 ---------- */
+.hero h1{
+  max-width:none !important;
+  font-size:clamp(28px, 3.1vw, 46px);
+  line-height:1.08;
+  letter-spacing:-.032em;
+}
+.fact,.stat{
+  background:rgba(255,255,255,.045) !important;
+  border:0 !important;
+  border-radius:14px !important;
+  box-shadow:none !important;
+  padding:16px 18px !important;
+}
+.fact b,.stat b{ font-size:32px; }
+.fact span,.stat span{
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.42);
+}
+
+/* ---------- 39. 收敛色彩：只保留一个强调色，其余退成中性 ---------- */
+.pill,.tag,.lvl,.hrs,.badge,.cost,.wk-cnt,.date span{
+  background:rgba(255,255,255,.05) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  color:rgba(255,255,255,.55) !important;
+  font-weight:600;
+  letter-spacing:.02em;
+}
+.pill.mod{
+  background:rgba(255,255,255,.07) !important;
+  border-color:rgba(255,255,255,.12) !important;
+  color:rgba(255,255,255,.72) !important;
+}
+.badge{
+  background:rgba(255,255,255,.07) !important;
+  color:rgba(255,255,255,.66) !important;
+  border-color:rgba(255,255,255,.10) !important;
+}
+
+/* 完成标准保留绿色，但收一点饱和度 */
+.std,.accept,.deliver{
+  color:#57d8a4 !important;
+  background:rgba(52,211,153,.08) !important;
+  border-color:rgba(52,211,153,.18) !important;
+}
+
+/* 周目标：不再整行铺满 */
+.goal,.goal-line{
+  width:fit-content;
+  max-width:100%;
+  border-radius:10px !important;
+  background:rgba(255,255,255,.05) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  color:rgba(255,255,255,.66) !important;
+}
+
+/* 天卡片头部：去掉色块，只留一条发丝线 */
+.day-h{
+  background:transparent !important;
+  border-bottom:1px solid rgba(255,255,255,.06) !important;
+}
+.wk-h{ background:transparent !important; }
+
+/* 章节之间留更多空 */
+section{ margin-top:64px; }
+.week{ margin-top:20px; }
+
+/* ============================================================
+   40. Bento 版式（仅总控台）
+   ============================================================ */
+.bento{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  grid-auto-rows:minmax(156px, 1fr);
+  gap:14px !important;
+  grid-auto-flow:dense;
+}
+
+.bento .card{
+  padding:20px 20px 18px !important;
+  border-radius:22px !important;
+  justify-content:flex-start;
+  min-width:0;
+}
+
+.bento .card.feat{
+  grid-column:span 2; grid-row:span 2;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  gap:0 !important;
+  padding:26px 26px 22px !important;
+}
+.bento .card.big{ grid-column:span 2; }
+
+.bento .card h3{ font-size:15.5px; margin:0; }
+.bento .card.big h3{ font-size:19px; letter-spacing:-.022em; }
+
+.bento .card p{
+  font-size:12.8px; line-height:1.58;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.bento .card.big p{ -webkit-line-clamp:3; font-size:13.4px; line-height:1.6; }
+
+.bento .card .ic{ width:21px; height:21px; margin-bottom:2px; }
+.bento .card.big .ic{ width:26px; height:26px; }
+.bento .card .go{ margin-top:auto; padding-top:12px; }
+
+/* 打卡主卡：竖向构图 */
+.bento .card.feat .feat-l{ flex:0 0 auto; width:100%; }
+.bento .card.feat h3{ font-size:23px !important; letter-spacing:-.025em; }
+.bento .card.feat .feat-sub{ font-size:13px; margin-top:7px; color:rgba(255,255,255,.72) !important; }
+.bento .card.feat .go{ color:rgba(255,255,255,.85) !important; }
+.bento .card.feat .feat-r{
+  margin-top:auto; width:100%; padding-top:20px;
+  display:flex; justify-content:space-between; align-items:flex-end;
+}
+.bento .card.feat .feat-stat b{ font-size:46px; line-height:1; letter-spacing:-.045em; }
+.bento .card.feat .feat-stat span{
+  font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+}
+.bento .card.feat .strip i{ width:18px; height:18px; border-radius:5px; }
+
+@media (max-width:1100px){
+  .bento{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .bento .card.feat{ grid-column:span 2; grid-row:span 1; }
+  .bento .card.big{ grid-column:span 2; }
+}
+@media (max-width:560px){
+  .bento{ grid-template-columns:1fr !important; grid-auto-rows:auto; }
+  .bento .card, .bento .card.feat, .bento .card.big{ grid-column:span 1; grid-row:auto; }
+}
+
+/* ---------- 41. Bento 细节：打卡卡竖向构图 ---------- */
+.bento .card.feat .feat-r{
+  flex-direction:column-reverse;
+  align-items:flex-start;
+  gap:16px;
+}
+.bento .card.feat .feat-stat{ display:flex; align-items:baseline; gap:10px; }
+.bento .card.feat .feat-stat b{ font-size:64px; }
+.bento .card.feat .feat-stat span{ letter-spacing:.18em; }
+.bento .card.feat .strip{ gap:7px; }
+
+/* ---------- 42. 打卡卡里的 28 天热力图 ---------- */
+.bento .card.feat .mini{
+  display:grid;
+  grid-template-columns:repeat(7, minmax(0,1fr));
+  gap:6px;
+  width:100%;
+  max-width:300px;
+}
+.bento .card.feat .mini i{
+  display:block;
+  aspect-ratio:1/1;
+  border-radius:4px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.05);
+  transition:background .2s;
+}
+.bento .card.feat .mini i.on{
+  background:rgba(255,255,255,.88);
+  border-color:rgba(255,255,255,.95);
+}
+.bento .card.feat .mini i.tdy{
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.95);
+}
+.bento .card.feat .feat-r{ gap:14px; }
+
+/* ---------- 43. 打卡主卡：左右分栏，填满 2×2 ---------- */
+.bento .card.feat{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 268px;
+  grid-template-rows:auto 1fr;
+  align-content:space-between;
+  align-items:start;
+  gap:14px 30px;
+}
+.bento .card.feat .feat-l{ grid-column:1; grid-row:1; align-self:start; }
+.bento .card.feat .feat-r{
+  grid-column:2; grid-row:1 / span 2;
+  align-self:end;
+  width:100%;
+  margin:0 !important;
+  padding:0 !important;
+  gap:12px;
+}
+.bento .card.feat .mini{ max-width:none; }
+.bento .card.feat .feat-stat b{ font-size:56px; }
+
+@media (max-width:1100px){
+  .bento .card.feat{
+    grid-template-columns:minmax(0,1fr) 220px;
+  }
+  .bento .card.feat .feat-stat b{ font-size:44px; }
+}
+@media (max-width:560px){
+  .bento .card.feat{
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+  }
+  .bento .card.feat .feat-r{ grid-column:1; grid-row:auto; }
+}
+
+/* ---------- 44. 打卡主卡：左栏拉满，CTA 落到底部 ---------- */
+.bento .card.feat .feat-l{
+  grid-row:1 / span 2;
+  display:flex;
+  flex-direction:column;
+  align-self:stretch;
+}
+.bento .card.feat .feat-l .go{
+  margin-top:auto;
+  padding-top:22px;
+  font-size:12.5px;
+  letter-spacing:.02em;
+}
+.bento .card.feat .feat-sub{ margin-bottom:0; }
+
+/* ---------- 45. 移动端热力图不铺满整宽 ---------- */
+@media (max-width:560px){
+  .bento .card.feat .mini{ max-width:320px; }
+  .bento .card.feat .feat-stat b{ font-size:40px; }
+}
+
+/* ============================================================
+   46. 项目库：每份规格书内部用 Bento 网格
+   ============================================================ */
+.proj.on{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  align-items:start;
+}
+.proj.on > .ph{
+  grid-column:1 / -1;
+  margin-top:4px;
+  margin-bottom:2px;
+}
+.proj.on > .blk{
+  margin-top:0 !important;
+  grid-column:span 2;
+  border-radius:18px !important;
+}
+/* 需求规格、风险、交付物：整行 */
+.proj.on > .b-spec,
+.proj.on > .b-risk,
+.proj.on > .b-deliv{ grid-column:span 4; }
+
+/* 阶段计划给多一点高度，避免和软件分层挤在一起 */
+.proj.on > .b-stage{ grid-column:span 2; }
+
+@media (max-width:1100px){
+  .proj.on{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .proj.on > .blk,
+  .proj.on > .b-spec,
+  .proj.on > .b-risk,
+  .proj.on > .b-deliv,
+  .proj.on > .b-stage{ grid-column:span 2; }
+}
+@media (max-width:700px){
+  .proj.on{ grid-template-columns:1fr; }
+  .proj.on > .blk{ grid-column:span 1; }
+}
+
+/* ---------- 47. 项目库网格：按内容高度配对，行内等高 ---------- */
+.proj.on{ align-items:stretch; }
+.proj.on > .ph{ grid-row:1; }
+
+.proj.on > .b-spec { grid-column:1 / 5; grid-row:2; }
+.proj.on > .b-bom  { grid-column:1 / 3; grid-row:3; }
+.proj.on > .b-diag { grid-column:3 / 5; grid-row:3; }
+.proj.on > .b-stage{ grid-column:1 / 3; grid-row:4; }
+.proj.on > .b-soft { grid-column:3 / 5; grid-row:4; }
+.proj.on > .b-risk { grid-column:1 / 3; grid-row:5; }
+.proj.on > .b-deliv{ grid-column:3 / 5; grid-row:5; }
+
+/* 交付物在两个窄列里排成单列更顺 */
+.proj.on > .b-deliv .deliver{ grid-template-columns:1fr; }
+
+@media (max-width:1100px){
+  .proj.on > .b-spec,
+  .proj.on > .b-bom,
+  .proj.on > .b-diag,
+  .proj.on > .b-stage,
+  .proj.on > .b-soft,
+  .proj.on > .b-risk,
+  .proj.on > .b-deliv{
+    grid-column:1 / -1;
+    grid-row:auto;
+  }
+  /* 单列时格子高度由内容决定，height:100% 会把内容裁掉 */
+  .proj.on > .b-diag .blk-b,
+  .proj.on > .b-soft .blk-b,
+  .proj.on > .b-risk .blk-b{ height:auto !important; }
+}
+
+/* ---------- 48. 项目库：让内容在等高格里不空洞 ---------- */
+.proj.on > .b-diag .blk-b{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  height:100%;
+}
+.proj.on > .b-risk .blk-b{ display:flex; height:100%; box-sizing:border-box; }
+.proj.on > .b-risk .risk{ flex:1; }
+
+/* ---------- 49. 项目库：让编号从左到右读得通 ---------- */
+/* 只在 4 列布局下生效；窄屏交给上面的两列 / 单列规则 */
+@media (min-width:1101px){
+  .proj.on > .b-diag { grid-column:1 / 3; grid-row:3; }
+  .proj.on > .b-bom  { grid-column:3 / 5; grid-row:3; }
+  .proj.on > .b-soft { grid-column:1 / 3; grid-row:4; }
+  .proj.on > .b-stage{ grid-column:3 / 5; grid-row:4; }
+}
+
+/* ---------- 50. 项目库：矮格子里的内容撑开，不留空白 ---------- */
+.proj.on > .b-soft .blk-b{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  box-sizing:border-box;
+}
+.proj.on > .b-soft .blk-b table{
+  height:100%;
+  flex:1 1 auto;
+}
+.proj.on > .b-deliv .deliver{
+  height:100%;
+  align-content:space-between;
+}
+
+/* ---------- 51. 修正：软件分层不要拉伸表格行高 ---------- */
+.proj.on > .b-soft .blk-b{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  height:100%;
+}
+.proj.on > .b-soft .blk-b table{
+  height:auto !important;
+  flex:0 0 auto;
+}
+.proj.on > .b-deliv .deliver{
+  align-content:start;
+}
+
+/* ============================================================
+   52. 进度环（KPI）
+   配色取自 dataviz 参考色板，已用校验脚本在深色面通过
+   ============================================================ */
+.kpi-sec{ margin-top:38px; }
+
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:14px;
+}
+
+.kpi{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:20px;
+  border-radius:20px;
+  background-image:linear-gradient(162deg,
+    rgba(255,255,255,.075) 0%, rgba(255,255,255,.030) 46%, rgba(255,255,255,.052) 100%);
+  background-color:rgba(22,30,48,.50);
+  border:1px solid rgba(255,255,255,.10);
+  border-top-color:rgba(255,255,255,.24);
+  backdrop-filter:blur(30px) saturate(185%);
+  -webkit-backdrop-filter:blur(30px) saturate(185%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.16) inset,
+    0 16px 40px -24px rgba(0,0,0,.95);
+  transition:transform .2s cubic-bezier(.16,1,.3,1),
+             border-color .2s cubic-bezier(.16,1,.3,1),
+             background-color .2s cubic-bezier(.16,1,.3,1);
+}
+.kpi:hover{
+  transform:translateY(-4px);
+  border-color:rgba(255,255,255,.34);
+  border-top-color:rgba(255,255,255,.6);
+  background-color:rgba(38,52,82,.62);
+}
+
+.ring{ position:relative; width:96px; height:96px; flex:0 0 auto; }
+.ring svg{ width:100%; height:100%; display:block; }
+.ring circle{ fill:none; stroke-width:8; }
+.ring .track{ stroke:rgba(255,255,255,.07); }
+.ring .bar{
+  stroke-linecap:round;
+  transform:rotate(-90deg);
+  transform-origin:50% 50%;
+  stroke-dasharray:263.89;
+  stroke-dashoffset:263.89;
+  transition:stroke-dashoffset 1.15s cubic-bezier(.16,1,.3,1);
+}
+
+/* 数字用文字色，不用系列色 */
+.ring .pct{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  font-size:23px; font-weight:800; letter-spacing:-.03em;
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.ring .pct span{ font-size:11px; font-weight:700; color:var(--ink4); margin-left:1px; }
+
+.kpi-txt{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+.kpi .lbl{ font-size:13px; font-weight:600; color:var(--ink2); letter-spacing:.01em; }
+.kpi .frac{ font-size:11.5px; color:var(--ink4); font-variant-numeric:tabular-nums; }
+
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+@media (max-width:1100px){
+  .kpi-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+}
+@media (max-width:560px){
+  .kpi{ flex-direction:column; align-items:flex-start; gap:12px; padding:16px; }
+  .ring{ width:76px; height:76px; }
+  .ring .pct{ font-size:18px; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ring .bar{ transition:none !important; }
+}
+
+/* ---------- 53. 修正：环内数字与百分号同一行 ---------- */
+.ring .pct{
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  line-height:1;
+}
+.ring .pct span{
+  font-size:11px;
+  transform:translateY(-6px);
+}
+
+/* ---------- 54. 进度环再放大一点 ---------- */
+.ring{ width:104px; height:104px; }
+.ring .track{ stroke:rgba(255,255,255,.10); }
+.ring .pct{ font-size:26px; }
+.ring .pct span{ font-size:12px; transform:translateY(-7px); }
+@media (max-width:560px){
+  .ring{ width:80px; height:80px; }
+  .ring .pct{ font-size:19px; }
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>学习资源库 · 文档 / 课程 / 书单 / 工具</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+    --line:#dde5f4; --line2:#eef2fa;
+    --blue:#1d4ed8; --blue-soft:#eef3ff;
+    --teal:#0f766e; --teal-soft:#e9faf6;
+    --green:#0b7a5a; --green-soft:#e9f9f2;
+    --amber:#b45309; --amber-soft:#fff8e8;
+    --bg:#f5f7fc;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:70px}
+  body{margin:0;color:var(--ink);line-height:1.7;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(900px 460px at 4% -8%,#e4edff 0%,transparent 58%),
+               radial-gradient(800px 400px at 100% 1%,#e5f7f3 0%,transparent 52%),var(--bg);
+    -webkit-font-smoothing:antialiased}
+
+  .wrap{max-width:960px;margin:0 auto;padding:30px 20px 90px}
+
+  .hero{background:linear-gradient(125deg,#0b1e3f 0%,#1d4ed8 58%,#0f766e 132%);
+    border-radius:20px;padding:30px 32px 26px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 24px 54px -30px rgba(9,30,74,.7)}
+  .hero::after{content:"";position:absolute;right:-70px;top:-100px;width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.17),transparent 62%)}
+  .eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.32em;opacity:.66}
+  .hero h1{margin:0;font-size:clamp(21px,3vw,29px);font-weight:800}
+  .hero .lead{margin:10px 0 0;max-width:620px;font-size:13.5px;opacity:.92}
+
+  .toc{display:flex;gap:7px;flex-wrap:wrap;margin-top:20px}
+  .toc a{font-size:12px;text-decoration:none;color:var(--blue);background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:5px 12px}
+  .toc a:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  section{margin-top:32px}
+  .sec{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+  .sec .no{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#fff;background:var(--blue);
+    border-radius:6px;padding:2px 8px}
+  .sec h2{margin:0;font-size:16.5px;font-weight:800}
+  .sec p{margin:0;font-size:12.3px;color:var(--ink4)}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px 17px;
+    box-shadow:0 8px 22px -26px rgba(15,23,42,.55);display:flex;flex-direction:column;gap:6px}
+  .card .top{display:flex;align-items:flex-start;gap:9px}
+  .card h3{margin:0;font-size:13.8px;font-weight:800;flex:1;line-height:1.45}
+  .card .lv{font-size:10px;border-radius:999px;padding:1px 7px;background:#f5f8fd;color:var(--ink4);white-space:nowrap}
+  .card .lv.core{background:var(--green-soft);color:var(--green)}
+  .card p{margin:0;font-size:12.6px;color:var(--ink2);line-height:1.6}
+  .card .meta{font-size:11.5px;color:var(--ink4);margin-top:auto}
+  .card a{color:var(--blue);text-decoration:none;font-size:12.3px;word-break:break-all}
+  .card a:hover{text-decoration:underline}
+
+  .list{background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+  .row{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line2);font-size:12.9px;
+    align-items:flex-start}
+  .row:last-child{border-bottom:none}
+  .row .k{flex:0 0 96px;color:var(--ink3);font-size:12px;padding-top:1px}
+  .row .v{flex:1;color:var(--ink2);line-height:1.6}
+  .row .v b{color:var(--ink);font-weight:700}
+  .row .v code{background:#f1f5fd;border-radius:4px;padding:1px 5px;font-size:11.8px;
+    font-family:ui-monospace,Consolas,monospace;color:#1e3a8a}
+
+  .steps{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px 20px}
+  .steps ol{margin:0;padding-left:20px;font-size:13px;color:var(--ink2)}
+  .steps li{margin-bottom:9px;line-height:1.6}
+  .steps li b{color:var(--ink)}
+  .steps .hl{background:var(--amber-soft);border-radius:6px;padding:1px 5px;color:#7c4a03}
+
+  .warn{margin-top:14px;background:var(--amber-soft);border:1px solid #f6e2bd;border-radius:11px;
+    padding:12px 15px;font-size:12.5px;color:#8a5a2b;line-height:1.6}
+  .warn b{color:#7c4a03}
+
+  .foot{margin-top:30px;text-align:center;font-size:11.5px;color:var(--ink4)}
+  .back{display:inline-block;margin-bottom:12px;font-size:12px;color:var(--blue);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  @media (max-width:760px){
+    .cards{grid-template-columns:1fr}
+    .row .k{flex-basis:76px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:18px 13px 70px}
+    .hero{padding:22px 18px}
+  }
+  @media print{body{background:#fff}.card{break-inside:avoid}}
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="学习总控台.html">← 返回总控台</a>
+
+  <header class="hero">
+    <h1>学习资源库</h1>
+    <p class="lead">按「官方文档 → 中文课程 → 书 → 工具」的顺序用。顺序反了，你会花两年时间看二手知识。</p>
+  </header>
+
+  <nav class="toc">
+    <a href="#doc">官方文档</a>
+    <a href="#video">中文课程</a>
+    <a href="#book">书单</a>
+    <a href="#tool">工具链</a>
+    <a href="#how">怎么读手册</a>
+  </nav>
+
+  <!-- 文档 -->
+  <section id="doc">
+    <div class="sec"><span class="no">01</span><h2>官方文档</h2><p>第一手资料，永远优先</p></div>
+    <div class="cards">
+
+      <article class="card">
+        <div class="top"><h3>STM32 Reference Manual</h3><span class="lv core">必读</span></div>
+        <p>每个外设的寄存器定义、时序、工作模式。配寄存器时逐位对照，不要凭记忆。按型号查 RM 编号（如 RM0008 / RM0090）。</p>
+        <div class="meta">获取：ST 官网 → 对应型号 → Reference Manual（PDF）</div>
+        <a href="https://www.st.com" target="_blank" rel="noopener">www.st.com</a>
+      </article>
+
+      <article class="card">
+        <div class="top"><h3>STM32 Datasheet</h3><span class="lv core">必读</span></div>
+        <p>引脚定义、电气参数、绝对最大额定值、封装尺寸。算限流电阻、查 IO 最大电流就靠它。</p>
+        <div class="meta">获取：与 Reference Manual 在同一个产品页</div>
+      </article>
+
+      <article class="card">
+        <div class="top"><h3>FreeRTOS 官方文档</h3><span class="lv core">必读</span></div>
+        <p>任务、队列、信号量、内存管理的权威说明。API 用法看官方，比任何二手教程都准。</p>
+        <div class="meta">另见 GitHub 上的源码与例程</div>
+        <a href="https://www.freertos.org" target="_blank" rel="noopener">www.freertos.org</a>
+      </article>
+
+      <article class="card">
+        <div class="top"><h3>Linux 内核文档</h3><span class="lv">进阶</span></div>
+        <p>驱动模型、设备树绑定、子系统文档。查 compatible 属性、GPIO/I2C 子系统的用法都在这里。</p>
+        <a href="https://docs.kernel.org" target="_blank" rel="noopener">docs.kernel.org</a>
+      </article>
+
+      <article class="card">
+        <div class="top"><h3>ARM Cortex-M 架构手册</h3><span class="lv">进阶</span></div>
+        <p>异常模型、NVIC、内存映射、指令集。想真正理解中断与栈，绕不开它。</p>
+        <a href="https://www.arm.com" target="_blank" rel="noopener">www.arm.com</a>
+      </article>
+
+      <article class="card">
+        <div class="top"><h3>器件 Datasheet（传感器/芯片）</h3><span class="lv core">必读</span></div>
+        <p>每个 I2C/SPI 器件的寄存器表、时序要求、上电时序。调试总线问题时的唯一依据。</p>
+        <div class="meta">获取：立创商城 / 芯片厂商官网，搜型号 + datasheet</div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 视频 -->
+  <section id="video">
+    <div class="sec"><span class="no">02</span><h2>中文视频课程</h2><p>入门用，别当唯一来源</p></div>
+    <div class="list">
+      <div class="row"><span class="k">STM32 入门</span><span class="v"><b>江协科技（原江科大自协）STM32 教程</b>：讲得细、节奏稳，适合零基础。<br>搜索关键词：<code>江协科技 STM32</code></span></div>
+      <div class="row"><span class="k">STM32 进阶</span><span class="v"><b>正点原子 / 野火</b>：配套开发板与例程齐全，寄存器版和 HAL 版都有。<br>搜索关键词：<code>正点原子 STM32 寄存器</code> / <code>野火 STM32</code></span></div>
+      <div class="row"><span class="k">RTOS</span><span class="v"><b>FreeRTOS 源码分析</b>类课程：先看官方文档，再看源码解析。<br>搜索关键词：<code>FreeRTOS 源码 任务调度</code></span></div>
+      <div class="row"><span class="k">嵌入式 Linux</span><span class="v"><b>韦东山</b>的嵌入式 Linux 系列：从驱动到系统移植，体系完整。<br>搜索关键词：<code>韦东山 嵌入式Linux 驱动</code></span></div>
+      <div class="row"><span class="k">硬件基础</span><span class="v"><b>硬件工程师基础</b>类课程：器件、电源、PCB 布局。<br>搜索关键词：<code>硬件工程师 入门 电源设计</code></span></div>
+    </div>
+    <div class="warn"><b>用法：</b>视频只用来「建立第一印象」。看完一节必须立刻在板子上复现，否则等于没看。真正做事时查手册，不查视频。</div>
+    <p style="margin:14px 0 0;font-size:12.5px;color:var(--ink3);line-height:1.7">
+      这里只给方向。具体每个模块该看哪一门、只看哪几章、哪些先跳过，见
+      <a href="学练双线.html#theory" style="color:#8fb7ff;text-decoration:none;border-bottom:1px solid rgba(143,183,255,.35)">学练双线 · 七条链配哪些课</a>。
+    </p>
+  </section>
+
+  <!-- 书 -->
+  <section id="book">
+    <div class="sec"><span class="no">03</span><h2>书单</h2><p>四本打底，两本进阶，不必全买</p></div>
+    <div class="cards">
+      <article class="card">
+        <div class="top"><h3>《C 和指针》</h3><span class="lv core">M2 配套</span></div>
+        <p>指针与数组讲得最透的一本。做完书中例题，C 语言深水区就过了。</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>《C 陷阱与缺陷》</h3><span class="lv core">M2 配套</span></div>
+        <p>薄，但每一页都能救你一次。笔试里的坑大半来自这里。</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>《ARM Cortex-M3 权威指南》</h3><span class="lv core">M3 配套</span></div>
+        <p>中断、异常、栈、启动流程讲得最清楚。理解内核必读。</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>《Mastering STM32》</h3><span class="lv">M3–M6</span></div>
+        <p>英文，但把外设原理和 HAL 用法结合得最好。适合当参考书。</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>《嵌入式 C 语言自我修养》</h3><span class="lv">进阶</span></div>
+        <p>讲嵌入式里 C 的特殊用法与坑：位域、内存布局、编译优化。</p>
+      </article>
+      <article class="card">
+        <div class="top"><h3>《Linux 设备驱动程序》</h3><span class="lv">M10</span></div>
+        <p>驱动开发的经典（LDD3）。版本偏老，但内核模型的思想没过时。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 工具 -->
+  <section id="tool">
+    <div class="sec"><span class="no">04</span><h2>工具链</h2><p>装好这一套，两年不用换</p></div>
+    <div class="list">
+      <div class="row"><span class="k">IDE</span><span class="v"><b>STM32CubeIDE</b>（免费）或 <b>Keil MDK</b>；进阶用 <b>VSCode + Cortex-Debug</b>。<br>建议：先用 CubeIDE 上手，熟悉后迁到 VSCode。</span></div>
+      <div class="row"><span class="k">调试</span><span class="v"><b>ST-Link</b> + <b>OpenOCD</b> / <b>pyOCD</b>；GDB 命令行调试必须会。</span></div>
+      <div class="row"><span class="k">逻辑分析仪</span><span class="v"><b>PulseView</b>（配合 ¥50 的 8 通道分析仪）+ <b>sigrok</b> 解码插件。<br>I2C/SPI/UART 问题的第一定位工具。</span></div>
+      <div class="row"><span class="k">串口</span><span class="v"><b>MobaXterm</b> / <b>SSCOM</b> / <b>minicom</b>（Linux）。带时间戳和十六进制显示很重要。</span></div>
+      <div class="row"><span class="k">EDA</span><span class="v"><b>嘉立创 EDA</b>（在线，打样免费/低价）或 <b>KiCad</b>（开源，专业）。</span></div>
+      <div class="row"><span class="k">版本管理</span><span class="v"><b>Git</b> + GitHub / Gitee。至少会：提交、分支、合并、回滚。</span></div>
+      <div class="row"><span class="k">构建</span><span class="v"><b>Make</b>（手写 Makefile）+ <b>CMake</b>。脱离 IDE 也能编译，是工程能力的门槛。</span></div>
+      <div class="row"><span class="k">Linux 调试</span><span class="v"><b>gdb</b>、<b>strace</b>、<b>valgrind</b>、<b>dmesg</b>、<b>addr2line</b>。</span></div>
+      <div class="row"><span class="k">文档阅读</span><span class="v">PDF 阅读器要能<b>搜索 + 加书签 + 导出笔记</b>。把手册当活文档，不是当小说读。</span></div>
+    </div>
+  </section>
+
+  <!-- 怎么读 -->
+  <section id="how">
+    <div class="sec"><span class="no">05</span><h2>怎么读手册</h2><p>这一节比前面所有资源都重要</p></div>
+    <div class="steps">
+      <ol>
+        <li><b>先读目录，再看章节结构。</b>Reference Manual 通常按「概述 → 功能描述 → 寄存器」组织，先建立地图。</li>
+        <li><b>只读你需要的那一节。</b>不要从头读到尾——1000 页的手册，你只需要其中 20 页。</li>
+        <li><b>先看「功能框图」和「时序图」。</b>图能在一分钟内让你明白这个外设的数据怎么流动。</li>
+        <li><b>再对照寄存器表逐位配置。</b>每个位是什么意思、什么条件下有效，手册里都写了。看不懂英文就查单词，别跳。</li>
+        <li><b>写代码时把手册那页开着。</b>配一个寄存器就核对一个，别凭记忆。<span class="hl">这一步能省掉你 80% 的调试时间。</span></li>
+        <li><b>读到「Note / Caution」一定停下来。</b>厂家专门标出来的，都是有人踩过的坑。</li>
+      </ol>
+    </div>
+    <div class="warn">
+      <b>关于英文：</b>手册是这行的母语。前三个月会慢，第四个月开始你会发现中文教程反而更绕。
+      建议：每遇到一个不认识的术语就记到笔记里，两个月就能积累出你自己的词汇表。
+    </div>
+  </section>
+
+  <p class="foot">学习资源库 · 官方文档优先，视频只用来建立第一印象</p>
+</div>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

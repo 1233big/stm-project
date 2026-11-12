@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>嵌入式软硬件全栈学习计划 · 2026.11 → 2029.06</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+    --line:#dde5f4; --line2:#eef2fa;
+    --blue:#1d4ed8; --blue-soft:#eef3ff;
+    --teal:#0f766e; --teal-soft:#e9faf6;
+    --amber:#b45309; --amber-soft:#fff8e8;
+    --green:#0b7a5a; --green-soft:#e9f9f2;
+    --bg:#f5f7fc;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:70px}
+  body{
+    margin:0;color:var(--ink);line-height:1.68;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(1000px 500px at 4% -8%,#e4edff 0%,transparent 58%),
+               radial-gradient(900px 460px at 100% 1%,#e3f7f2 0%,transparent 52%),
+               var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:40px 22px 90px}
+
+  /* sticky nav */
+  .navbar{position:sticky;top:0;z-index:30;background:rgba(245,247,252,.86);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);margin:0;padding:9px 22px}
+  .navbar-in{max-width:1120px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+  .navbar-in::-webkit-scrollbar{display:none}
+  .navbar a{font-size:12.5px;color:var(--ink3);text-decoration:none;padding:5px 11px;border-radius:999px;white-space:nowrap}
+  .navbar a:hover{background:#fff;color:var(--blue);box-shadow:0 2px 8px rgba(15,23,42,.06)}
+
+  /* hero */
+  .hero{background:linear-gradient(125deg,#071e4a 0%,#1d4ed8 52%,#0f766e 125%);
+    border-radius:22px;padding:38px 38px 32px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 24px 54px -28px rgba(9,30,74,.66)}
+  .hero::after{content:"";position:absolute;right:-100px;top:-130px;width:340px;height:340px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.2),transparent 62%)}
+  .eyebrow{margin:0 0 9px;font-size:12px;letter-spacing:.32em;opacity:.68}
+  .hero h1{margin:0;font-size:clamp(24px,3.3vw,35px);font-weight:800;letter-spacing:.02em}
+  .hero .lead{margin:12px 0 0;max-width:680px;font-size:14.5px;opacity:.93}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:11px;margin-top:26px}
+  .fact{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:11px;padding:12px 13px}
+  .fact b{display:block;font-size:21px;font-weight:800;line-height:1.2}
+  .fact span{font-size:11.5px;opacity:.8}
+
+  /* section */
+  section{margin-top:42px}
+  .sec{display:flex;align-items:baseline;gap:11px;margin-bottom:15px;flex-wrap:wrap}
+  .sec .no{font-size:11.5px;font-weight:800;color:var(--blue);background:var(--blue-soft);border-radius:7px;padding:2px 8px;letter-spacing:.06em}
+  .sec h2{margin:0;font-size:18.5px;font-weight:800;letter-spacing:.02em}
+  .sec p{margin:0;font-size:12.8px;color:var(--ink3)}
+
+  /* capability pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .pillar{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;
+    box-shadow:0 10px 24px -24px rgba(15,23,42,.55);position:relative;overflow:hidden}
+  .pillar::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:var(--blue)}
+  .pillar.hw::before{background:var(--amber)}
+  .pillar.eng::before{background:var(--teal)}
+  .pillar h3{margin:6px 0 10px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px}
+  .pillar h3 i{font-style:normal;font-size:11px;font-weight:700;color:var(--ink4);letter-spacing:.1em}
+  .pillar ul{margin:0;padding:0;list-style:none;font-size:12.8px;color:var(--ink2)}
+  .pillar li{padding-left:15px;position:relative;margin-bottom:6px;line-height:1.55}
+  .pillar li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:#c4d2ec}
+  .pillar.hw li::before{background:#f2cf9b}
+  .pillar.eng li::before{background:#a9dcd2}
+
+  /* method */
+  .methods{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .method{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px}
+  .method b{display:block;font-size:13.5px;margin-bottom:5px}
+  .method span{font-size:12.3px;color:var(--ink3);line-height:1.55;display:block}
+
+  /* modules */
+  .mods{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+  .mod{background:#fff;border:1px solid var(--line);border-radius:15px;padding:0;overflow:hidden;
+    box-shadow:0 10px 26px -26px rgba(15,23,42,.6);display:flex;flex-direction:column}
+  .mod-h{display:flex;align-items:center;gap:10px;padding:14px 17px;border-bottom:1px solid var(--line2);background:linear-gradient(180deg,#fbfcff,#fff)}
+  .mod-n{width:27px;height:27px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:800;
+    background:var(--blue-soft);color:var(--blue);flex:0 0 auto}
+  .mod.hw .mod-n{background:var(--amber-soft);color:var(--amber)}
+  .mod.eng .mod-n{background:var(--teal-soft);color:var(--teal)}
+  .mod-h h3{margin:0;font-size:15px;font-weight:800;flex:1;letter-spacing:.01em}
+  .mod-h .hrs{font-size:11.5px;color:var(--ink3);background:#f5f8fd;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .mod-b{padding:14px 17px 15px;display:flex;flex-direction:column;gap:11px;flex:1}
+  .goal{margin:0;font-size:12.8px;color:#1e3a8a;background:var(--blue-soft);border-radius:8px;padding:8px 11px;line-height:1.55}
+  .mod.hw .goal{color:#7c4a03;background:var(--amber-soft)}
+  .mod.eng .goal{color:#0b5c46;background:var(--teal-soft)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cols.one{grid-template-columns:1fr}
+  .col h4{margin:0 0 5px;font-size:10.5px;letter-spacing:.16em;color:var(--ink4);font-weight:800}
+  .col ul{margin:0;padding:0;list-style:none;font-size:12.5px;color:var(--ink2)}
+  .col li{position:relative;padding-left:13px;margin-bottom:3.5px;line-height:1.5}
+  .col li::before{content:"·";position:absolute;left:2px;color:#b8c6e4;font-weight:800}
+  .accept{margin-top:auto;font-size:12.4px;color:var(--green);background:var(--green-soft);
+    border:1px solid #cdeee0;border-radius:8px;padding:8px 11px;line-height:1.5}
+  .accept b{font-weight:800}
+
+  /* 进阶方向分隔 */
+  .mod-split{grid-column:1 / -1;margin:8px 0 -3px;padding:15px 19px;border-radius:13px;
+    border:1px dashed rgba(255,255,255,.18);background:rgba(255,255,255,.025);
+    font-size:12.6px;color:var(--ink3);line-height:1.68}
+  .mod-split b{display:block;font-size:12px;letter-spacing:.1em;color:var(--ink2);
+    margin-bottom:6px;font-weight:800;font-family:var(--font-mono,ui-monospace,monospace)}
+  .pill-dir{font-size:10px;padding:2px 8px;border-radius:999px;white-space:nowrap;
+    border:1px solid rgba(255,255,255,.16);color:var(--ink3);background:rgba(255,255,255,.05)}
+
+  /* timeline */
+  .terms{display:flex;flex-direction:column;gap:12px}
+  .term{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 8px 22px -24px rgba(15,23,42,.5);display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:start}
+  .term .when{font-size:14px;font-weight:800;line-height:1.4}
+  .term .when small{display:block;font-size:11.5px;color:var(--ink3);font-weight:400;margin-top:3px;letter-spacing:.02em}
+  .term .what{display:flex;flex-direction:column;gap:6px}
+  .trow{display:flex;gap:9px;font-size:12.8px;align-items:flex-start}
+  .trow .tag2{flex:0 0 38px;font-size:11px;font-weight:800;border-radius:5px;padding:1px 0;text-align:center;margin-top:2px}
+  .tag2.m{background:var(--blue-soft);color:var(--blue)}
+  .tag2.d{background:var(--green-soft);color:var(--green)}
+  .tag2.k{background:var(--amber-soft);color:var(--amber)}
+  .trow .d2{flex:1;color:var(--ink2);line-height:1.55}
+  .trow .d2 b{color:var(--ink);font-weight:700}
+
+  /* projects */
+  .projs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .proj{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;
+    box-shadow:0 10px 26px -26px rgba(15,23,42,.55);display:flex;flex-direction:column;gap:8px}
+  .proj .ph{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .proj h3{margin:0;font-size:14.5px;font-weight:800;line-height:1.4}
+  .proj .lvl{font-size:11px;color:var(--ink3);background:#f5f8fd;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .proj p{margin:0;font-size:12.5px;color:var(--ink2);line-height:1.55}
+  .proj .kv{font-size:12.3px;color:var(--ink3)}
+  .proj .kv b{color:var(--ink);font-weight:700}
+  .proj .out{margin-top:auto;font-size:12.4px;font-weight:700;color:var(--green)}
+
+  /* week template */
+  .weeksplit{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
+  .allocate{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px}
+  .allocrow{display:flex;align-items:center;gap:12px;margin-bottom:13px}
+  .allocrow .nm{flex:0 0 108px;font-size:12.8px;color:var(--ink2);font-weight:600}
+  .allocrow .track{flex:1;height:9px;background:var(--line2);border-radius:99px;overflow:hidden}
+  .allocrow .track i{display:block;height:100%;border-radius:99px}
+  .allocrow .pc{flex:0 0 52px;text-align:right;font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums}
+  .daycard{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px}
+  .daycard h4{margin:0 0 10px;font-size:13px;letter-spacing:.08em;color:var(--ink3);font-weight:800}
+  .daycard table{width:100%;border-collapse:collapse;font-size:12.6px}
+  .daycard td{padding:6px 0;border-bottom:1px dashed var(--line2);vertical-align:top}
+  .daycard td:first-child{width:58px;color:var(--ink3);font-weight:700}
+  .daycard tr:last-child td{border-bottom:none}
+
+  /* checklist */
+  .check{background:#fff;border:1px solid var(--line);border-radius:16px;padding:6px 20px 18px;
+    box-shadow:0 10px 26px -26px rgba(15,23,42,.5)}
+  .check h3{margin:18px 0 6px;font-size:11.5px;letter-spacing:.16em;color:var(--ink4);font-weight:800}
+  .chk{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line2);cursor:pointer}
+  .chk:last-child{border-bottom:none}
+  .chk input{appearance:none;-webkit-appearance:none;width:17px;height:17px;border:2px solid #c3d0ea;border-radius:5px;
+    margin:3px 0 0;flex:0 0 auto;cursor:pointer;position:relative;background:#fff;transition:.15s}
+  .chk input:checked{background:var(--green);border-color:var(--green)}
+  .chk input:checked::after{content:"";position:absolute;left:4.5px;top:1px;width:4.5px;height:9px;border:solid #fff;
+    border-width:0 2px 2px 0;transform:rotate(44deg)}
+  .chk span{font-size:13.2px;color:var(--ink2);line-height:1.55}
+  .chk input:checked + span{color:#a3b1c7;text-decoration:line-through}
+  .progress{display:flex;align-items:center;gap:12px;padding:16px 0 2px}
+  .bar{flex:1;height:8px;background:var(--line2);border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1d4ed8,#0f766e);border-radius:99px;transition:width .3s}
+  .progress b{font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+
+  .warn{margin-top:34px;background:#fffaf0;border:1px solid #f6e2bd;border-radius:14px;padding:18px 20px;font-size:13px;color:#8a5a2b;line-height:1.65}
+  .warn b{color:#7c4a03}
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--ink4)}
+  .back{display:inline-block;margin-bottom:14px;font-size:12.5px;color:var(--blue);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .cta{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:12px 20px;
+    background:linear-gradient(100deg,#0b7a5a,#14b8a6);color:#fff;border-radius:12px;
+    font-size:13.5px;font-weight:700;text-decoration:none;box-shadow:0 12px 26px -18px rgba(11,122,90,.9);transition:.18s}
+  .cta:hover{transform:translateY(-1px);box-shadow:0 16px 30px -18px rgba(11,122,90,.95)}
+  .cta span{font-weight:400;font-size:12px;opacity:.85}
+
+  @media (max-width:1000px){
+    .methods{grid-template-columns:repeat(2,1fr)}
+    .terms .term{grid-template-columns:1fr;gap:10px}
+    .weeksplit{grid-template-columns:1fr}
+    .hero{padding:32px 26px}
+  }
+  @media (max-width:820px){
+    .pillars{grid-template-columns:1fr}
+    .mods{grid-template-columns:1fr}
+    .projs{grid-template-columns:1fr}
+    .hero{padding:28px 20px}
+  }
+  @media (max-width:560px){
+    .wrap{padding:20px 13px 70px}
+    .navbar{padding:9px 13px}
+    .cols{grid-template-columns:1fr}
+    .methods{grid-template-columns:1fr}
+  }
+  @media print{
+    body{background:#fff}
+    .navbar{display:none}
+    .mod,.term,.proj{break-inside:avoid;box-shadow:none}
+  }
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+
+<div class="navbar">
+  <div class="navbar-in">
+    <a href="学习总控台.html" style="color:#1d4ed8;font-weight:700">← 总控台</a>
+    <a href="#cap">能力地图</a>
+    <a href="#method">学习法</a>
+    <a href="#mods">14 个模块</a>
+    <a href="#timeline">三年时间轴</a>
+    <a href="#projects">三个项目</a>
+    <a href="#week">每周怎么排</a>
+    <a href="#checklist">能力自测</a>
+    <a href="15周逐周任务清单.html" style="color:#0b7a5a;font-weight:700">15 周清单 →</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <a class="back" href="AI嵌入式机器人成长路线图.html">← 返回主路线图</a>
+    <a class="back" href="学练双线.html">学练双线 →</a>
+  </div>
+
+  <header class="hero">
+    <h1>嵌入式软硬件全栈学习计划</h1>
+    <p class="lead">目标不是"上完课"，是毕业时能独立完成一个工程：自己画板、自己写固件、自己写上位机、自己调试、自己交付。软件和硬件两条线同步推进，每个模块都有可验证的产出。</p>
+    <div class="facts">
+      <div class="fact"><b>31</b><span>个月</span></div>
+      <div class="fact"><b>14</b><span>模块</span></div>
+      <div class="fact"><b>3</b><span>递进项目</span></div>
+      <div class="fact"><b>≈1200</b><span>计划学时</span></div>
+      <div class="fact"><b>25h</b><span>每周投入</span></div>
+    </div>
+  </header>
+
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <a class="cta" href="15周逐周任务清单.html">→ 从这里开始：15 周逐周任务清单 <span>2026.11 → 2027.02 · 每周任务与交付物</span></a>
+    <a class="cta" href="105天逐日任务表.html" style="background:linear-gradient(100deg,#1d4ed8,#3b82f6);box-shadow:0 12px 26px -18px rgba(29,78,216,.9)">105 天逐日任务表 <span>每天 3–5 小时 · 含完成标准</span></a>
+  </div>
+
+  <!-- 能力地图 -->
+  <section id="cap">
+    <div class="sec"><span class="no">01</span><h2>毕业时你应该能做到</h2><p>这三条线同时长，缺一条都不算"吃透"</p></div>
+    <div class="pillars">
+      <article class="pillar hw">
+        <h3>硬件线 <i>HARDWARE</i></h3>
+        <ul>
+          <li>拿到一块陌生板子，30 分钟内看懂它的电源、时钟、复位、接口布局</li>
+          <li>看数据手册能算出该用多大的限流电阻、去耦电容、上拉阻值</li>
+          <li>用嘉立创 EDA 独立完成原理图 → PCB → 打样 → 手焊 → 点亮</li>
+          <li>用万用表 / 逻辑分析仪 / 示波器定位"代码没问题但硬件不工作"</li>
+          <li>能判断一个电路方案在成本、功耗、可靠性上的取舍</li>
+        </ul>
+      </article>
+      <article class="pillar">
+        <h3>软件线 <i>SOFTWARE</i></h3>
+        <ul>
+          <li>裸机：从启动文件到中断向量表，能自己配时钟、外设、DMA</li>
+          <li>RTOS：多任务划分、优先级设计、任务间通信，能讲清每一处为什么</li>
+          <li>Linux：写应用、写驱动、看懂设备树，能定位内核 oops</li>
+          <li>协议：自己设计帧格式、CRC、超时重传，而不是照抄别人的</li>
+          <li>调试：HardFault 十分钟内定位到行号，不靠"改改试试"</li>
+        </ul>
+      </article>
+      <article class="pillar eng">
+        <h3>工程线 <i>ENGINEERING</i></h3>
+        <ul>
+          <li>分层架构：驱动层 / 业务层 / 应用层边界清晰，换芯片只改驱动</li>
+          <li>版本管理：Git 分支、提交规范、可回溯的每一次改动</li>
+          <li>构建：手写 Makefile、链接脚本、交叉编译，不依赖 IDE 魔法</li>
+          <li>文档：原理图、BOM、接口文档、测试记录、复盘报告齐全</li>
+          <li>交付：能在一个陌生环境里复现自己的项目</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- 学习法 -->
+  <section id="method">
+    <div class="sec"><span class="no">02</span><h2>四条学习方法</h2><p>方法不对，时间翻倍也没用</p></div>
+    <div class="methods">
+      <article class="method"><b>先跑通，再搞懂</b><span>任何新外设：先让 demo 出结果（看到波形/灯亮），再回头读手册问"为什么"。反过来容易卡死。</span></article>
+      <article class="method"><b>改着做，不是照着抄</b><span>看教程跑通后，必须自己改三个地方：换个引脚、加个功能、故意弄坏看报错。能改才算会。</span></article>
+      <article class="method"><b>用输出倒逼输入</b><span>每个模块结束写一页笔记：这个外设的原理、我踩的坑、下次怎么避免。写不出来就是没学会。</span></article>
+      <article class="method"><b>每周留一次"无教程时间"</b><span>关掉所有视频，只留数据手册，独立完成一个功能。这是从学生变成工程师的关键动作。</span></article>
+    </div>
+    <p style="margin:14px 0 0;font-size:12.6px;color:var(--ink3);line-height:1.65">
+      这四条讲的是"手怎么动"。理论怎么配、怎么和实践咬合——第二轮起改成先写预测再动手——见
+      <a href="学练双线.html" style="color:#8fb7ff;text-decoration:none;border-bottom:1px solid rgba(143,183,255,.35)">学练双线</a>。
+    </p>
+  </section>
+
+  <!-- 模块 -->
+  <section id="mods">
+    <div class="sec"><span class="no">03</span><h2>14 个学习模块</h2><p>前 11 个按顺序推进，最后两块是方向选择</p></div>
+    <div class="mods">
+
+      <article class="mod hw">
+        <div class="mod-h"><div class="mod-n">M1</div><h3>电路与电子基础</h3><span class="hrs">40 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：看懂任何一块开发板的原理图，知道每个元件为什么在那儿。</p>
+          <div class="cols">
+            <div class="col"><h4>硬件</h4><ul>
+              <li>欧姆定律、分压、限流</li><li>二极管 / 三极管 / MOSFET 开关</li>
+              <li>电容去耦、RC 时间常数</li><li>上拉下拉、推挽开漏</li>
+              <li>LDO 与 DCDC 的区别</li><li>晶振、复位、BOOT 电路</li>
+              <li>用万用表实测验证</li>
+            </ul></div>
+            <div class="col"><h4>软件</h4><ul>
+              <li>建立"代码 → 引脚 → 电压"的映射直觉</li>
+              <li>用逻辑分析仪看电平跳变</li>
+              <li>这一阶段不写复杂代码</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>不看教程，讲清开发板原理图每一部分的作用；用面包板搭一个 MOSFET 低边开关，实测电流与温升。</div>
+        </div>
+      </article>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M2</div><h3>C 语言与嵌入式编程</h3><span class="hrs">40 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：写得出不靠库、能被别人看懂的嵌入式 C。</p>
+          <div class="cols">
+            <div class="col"><h4>核心</h4><ul>
+              <li>指针、数组、函数指针</li><li>结构体与内存对齐</li>
+              <li>const / volatile / static / extern</li><li>位操作与位域</li>
+              <li>宏、条件编译、头文件组织</li>
+            </ul></div>
+            <div class="col"><h4>进阶</h4><ul>
+              <li>栈 / 堆 / .data / .bss 布局</li><li>环形缓冲区</li>
+              <li>状态机（switch / 表驱动）</li><li>回调函数与解耦</li>
+              <li>编码规范（简化版 MISRA）</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>手写环形缓冲、状态机、单链表，不查资料；画出自己程序的完整内存布局图。</div>
+        </div>
+      </article>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M3</div><h3>MCU 外设与底层驱动</h3><span class="hrs">120 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：不查教程，从寄存器层面把一个外设配明白。</p>
+          <div class="cols">
+            <div class="col"><h4>基础</h4><ul>
+              <li>启动流程与中断向量表</li><li>时钟树与分频</li>
+              <li>GPIO 八种模式</li><li>NVIC 优先级与临界区</li>
+              <li>看门狗</li>
+            </ul></div>
+            <div class="col"><h4>核心外设</h4><ul>
+              <li>定时器：PWM / 输入捕获 / 编码器</li><li>ADC：采样时间 / DMA / 注入</li>
+              <li>UART：DMA + 环形缓冲 + 协议帧</li><li>I2C：时序 / 上拉 / 时钟拉伸</li>
+              <li>SPI：四种模式 / DMA</li><li>DMA 通道与地址对齐</li>
+              <li>低功耗模式与唤醒</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>六个外设各有 demo + 逻辑分析仪波形截图；自己设计一个带帧头、长度、命令、CRC 的串口协议并实现对端解析。</div>
+        </div>
+      </article>
+
+      <article class="mod eng">
+        <div class="mod-h"><div class="mod-n">M4</div><h3>调试与故障定位</h3><span class="hrs">30 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：出问题时不再靠"改改试试"，而是能定位到根因。</p>
+          <div class="cols one">
+            <div class="col"><h4>能力</h4><ul>
+              <li>HardFault 异常栈回溯，从 LR / PC 找到出错行</li>
+              <li>GDB + OpenOCD：断点、观察点、内存查看、单步汇编</li>
+              <li>printf 重定向、SWO / ITM 输出</li>
+              <li>常见故障库：时钟没使能、引脚复用冲突、栈溢出、中断优先级、DMA 对齐、上电时序</li>
+              <li>用逻辑分析仪判断"是硬件还是软件"</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>故意制造 8 种典型 bug，每种都用工具定位到具体行号，并写下排查路径。</div>
+        </div>
+      </article>
+
+      <article class="mod hw">
+        <div class="mod-h"><div class="mod-n">M5</div><h3>硬件设计与打板</h3><span class="hrs">60 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：从零画一块能工作的板子，这是硬件能力的硬门槛。</p>
+          <div class="cols">
+            <div class="col"><h4>设计</h4><ul>
+              <li>嘉立创 EDA / KiCad 基本操作</li><li>原理图 → 封装 → PCB</li>
+              <li>电源设计：LDO 选型、输入保护</li><li>去耦电容布置</li>
+              <li>晶振与地平面</li><li>走线宽度与载流</li>
+            </ul></div>
+            <div class="col"><h4>制造</h4><ul>
+              <li>Gerber 与 DFM 检查</li><li>嘉立创打样流程</li>
+              <li>手焊 0603 / QFP</li><li>热风枪拆焊 QFN</li>
+              <li>上电前检查与限流上电</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>独立画出并打样一块最小系统板（MCU + 电源 + 下载口 + 至少一个外设），焊接后能烧录运行。</div>
+        </div>
+      </article>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M6</div><h3>RTOS 实时系统</h3><span class="hrs">60 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：把裸机的 while(1) 重构为可维护的多任务系统。</p>
+          <div class="cols one">
+            <div class="col"><h4>能力</h4><ul>
+              <li>任务、调度、优先级、时间片</li>
+              <li>信号量 / 互斥量 / 队列 / 事件组 / 任务通知</li>
+              <li>优先级反转与优先级继承，死锁的四个条件</li>
+              <li>栈大小估算与溢出检测</li>
+              <li>ISR 与内核交互原则（ISR 里只做最短的事）</li>
+              <li>内存管理与静态分配优先</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>做采集 + 显示 + 通信三任务系统，讲清每个任务优先级与栈大小的依据；现场复现一次优先级反转并演示修复。</div>
+        </div>
+      </article>
+
+      <article class="mod eng">
+        <div class="mod-h"><div class="mod-n">M7</div><h3>工程化与通信协议</h3><span class="hrs">40 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：代码能给别人接手，项目能复现、能交付。</p>
+          <div class="cols">
+            <div class="col"><h4>工程</h4><ul>
+              <li>分层架构：HAL / 驱动 / 业务 / 应用</li><li>手写 Makefile、CMake</li>
+              <li>链接脚本 .ld 与内存段</li><li>Git 分支模型与提交规范</li>
+              <li>代码评审清单</li>
+            </ul></div>
+            <div class="col"><h4>协议</h4><ul>
+              <li>帧结构设计（帧头/长度/命令/CRC）</li><li>超时重传与流控</li>
+              <li>Modbus RTU</li><li>CAN 帧格式与仲裁</li>
+              <li>协议状态机实现</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>把前面所有 demo 重构进一个分层工程，写接口文档；别人按文档能在 30 分钟内跑起来。</div>
+        </div>
+      </article>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M8</div><h3>无线、显示与物联网</h3><span class="hrs">60 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：设备能显示、能联网、能被远程控制。</p>
+          <div class="cols">
+            <div class="col"><h4>人机界面</h4><ul>
+              <li>LVGL 控件、样式、页面切换</li><li>事件与回调机制</li>
+              <li>触摸驱动与坐标校准</li><li>界面刷新与性能</li>
+            </ul></div>
+            <div class="col"><h4>联网</h4><ul>
+              <li>BLE 广播 / 连接 / 特征值</li><li>WiFi 配网与断线重连</li>
+              <li>TCP / UDP 基础</li><li>MQTT 发布订阅与遗嘱</li>
+              <li>JSON 编解码</li><li>OTA 升级思路</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>做一个带屏、能联网、手机可远程控制的设备；拔网线后能自动重连并上报状态。</div>
+        </div>
+      </article>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M9</div><h3>Linux 应用开发</h3><span class="hrs">80 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：能在 Linux 上写一个真正可用的上位机或服务程序。</p>
+          <div class="cols">
+            <div class="col"><h4>系统</h4><ul>
+              <li>命令行、权限、进程管理</li><li>Shell 脚本</li>
+              <li>系统调用：open/read/write/ioctl/mmap</li>
+              <li>pthread 线程与同步</li>
+              <li>socket：TCP / UDP / 串口</li>
+            </ul></div>
+            <div class="col"><h4>工程</h4><ul>
+              <li>CMake 与交叉编译</li><li>日志分级</li>
+              <li>配置文件解析</li><li>守护进程与信号处理</li>
+              <li>gdb / strace / valgrind</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>写一个 Linux 上位机：串口/网口控制板子，带配置、日志、异常重连，能连续跑 24 小时不崩。</div>
+        </div>
+      </article>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M10</div><h3>Linux 驱动开发</h3><span class="hrs">80 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：能给一块自定义硬件写驱动，这是嵌入式 Linux 岗的分水岭。</p>
+          <div class="cols one">
+            <div class="col"><h4>能力</h4><ul>
+              <li>内核模块编译与加载卸载</li>
+              <li>字符设备：file_operations、read/write/ioctl</li>
+              <li>设备树：节点、属性、compatible 匹配</li>
+              <li>platform 驱动模型、probe 流程</li>
+              <li>中断处理：上半部 / 下半部</li>
+              <li>并发与锁：自旋锁、互斥量、原子操作</li>
+              <li>调试：printk、/proc、/sys、dmesg、oops 分析</li>
+              <li>GPIO / I2C / SPI 子系统</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>写一个完整字符设备驱动，通过设备树匹配，支持 ioctl 控制；故意制造一次内核 oops 并独立定位到函数。</div>
+        </div>
+      </article>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M11</div><h3>电机控制与机器人方向</h3><span class="hrs">60 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：把前面所有能力汇到一个"会动的"系统上，这是机器人岗的门票。</p>
+          <div class="cols">
+            <div class="col"><h4>控制</h4><ul>
+              <li>编码器测速</li><li>PID：位置 / 速度 / 电流环</li>
+              <li>参数整定方法</li><li>FOC 基本原理</li>
+              <li>死区、限幅、抗积分饱和</li>
+            </ul></div>
+            <div class="col"><h4>机器人</h4><ul>
+              <li>坐标系与齐次变换</li><li>正/逆运动学</li>
+              <li>轨迹插补</li><li>串口协议对接上位机</li>
+              <li>简单视觉定位（可选）</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>闭环控制一个电机，转速阶跃响应无超调或超调 &lt; 10%；机械臂能按指令到达指定坐标，重复精度可测。</div>
+        </div>
+      </article>
+
+      <article class="mod eng">
+        <div class="mod-h"><div class="mod-n">M12</div><h3>求职准备</h3><span class="hrs">60 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：把三年做的事，变成别人愿意给你 offer 的证据。</p>
+          <div class="cols">
+            <div class="col"><h4>硬准备</h4><ul>
+              <li>LeetCode 150 题</li><li>C 语言八股 100 问</li>
+              <li>嵌入式八股：启动/中断/RTOS/时序</li>
+              <li>项目复盘文档</li>
+            </ul></div>
+            <div class="col"><h4>软准备</h4><ul>
+              <li>一页简历（STAR + 数字）</li>
+              <li>三分钟讲项目</li>
+              <li>GitHub 项目首页</li>
+              <li>模拟面试 ×3</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>被陌生人问"你做过什么"，能在 3 分钟内让对方听懂并想追问；14 条能力自测全部能给出证据。</div>
+        </div>
+      </article>
+
+      <div class="mod-split">
+        <b>进阶方向 · 第三学年起</b>
+        下面两块决定你走"嵌入式软件"还是"机器人算法"。至少深入一个，另一个知道边界就行——
+        两块都只泛读，等于两块都不会。它们安排在核心模块之后，是因为都需要 M11 的运动学打底。
+      </div>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M13</div><h3>具身智能与大模型控制</h3><span class="pill-dir">方向</span><span class="hrs">120 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：让机械臂听懂一句话并抓到东西，而不是只在仿真里跑通。</p>
+          <div class="cols">
+            <div class="col"><h4>原理</h4><ul>
+              <li>三种范式：端到端 VLA / 分层指令 / 遥操作示教</li>
+              <li>动作空间定义与归一化</li>
+              <li>模仿学习：行为克隆、DAgger 与分布偏移</li>
+              <li>强化学习：MDP、奖励设计、PPO 的直觉（不推公式）</li>
+              <li>sim2real gap 从哪来</li>
+            </ul></div>
+            <div class="col"><h4>实操</h4><ul>
+              <li>遥操作采集 50 条抓放数据</li>
+              <li>时间对齐、切分、数据增强</li>
+              <li>行为克隆策略训练 + 仿真验证</li>
+              <li>LLM 解析"语言 → 子目标"（function calling / MCP）</li>
+              <li>真机部署：推理延迟与控制频率</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>说一句"把红色方块放到左边"，机械臂 10 次成功 ≥6 次；能讲清失败案例是数据不足还是分布偏移造成的。</div>
+        </div>
+      </article>
+
+      <article class="mod">
+        <div class="mod-h"><div class="mod-n">M14</div><h3>机器视觉与 SLAM</h3><span class="pill-dir">方向</span><span class="hrs">200 h</span></div>
+        <div class="mod-b">
+          <p class="goal">目标：给机器人装上眼睛，和"我在哪"。</p>
+          <div class="cols">
+            <div class="col"><h4>视觉</h4><ul>
+              <li>C++ 核心：类、模板、STL、智能指针、CMake</li>
+              <li>相机模型与标定（内参、畸变）</li>
+              <li>ORB 特征、匹配、对极几何、PnP</li>
+              <li>点云：PCL、滤波、ICP 配准</li>
+              <li>数学补丁：矩阵、概率、最小二乘</li>
+            </ul></div>
+            <div class="col"><h4>SLAM 与融合</h4><ul>
+              <li>前端位姿估计、后端优化、回环检测</li>
+              <li>ORB-SLAM 的系统结构</li>
+              <li>单目尺度为什么不可观</li>
+              <li>IMU 预积分、EKF / UKF</li>
+              <li>松耦合 vs 紧耦合</li>
+            </ul></div>
+          </div>
+          <div class="accept"><b>验收：</b>相机标定重投影误差 &lt; 0.5 px；ORB-SLAM 跑通一段公开数据集并能逐段解释轨迹；自己写的 EKF 融合 IMU + 轮速，与真值对比。</div>
+        </div>
+      </article>
+
+      
+
+    </div>
+  </section>
+
+  <!-- 时间轴 -->
+  <section id="timeline">
+    <div class="sec"><span class="no">04</span><h2>三年时间轴</h2><p>模块、交付物、里程碑三线对齐</p></div>
+    <div class="terms">
+
+      <div class="term">
+        <div class="when">大二上剩余<br>2026.11 – 2027.01<small>约 10 周 · 250 h</small></div>
+        <div class="what">
+          <div class="trow"><span class="tag2 m">模块</span><span class="d2"><b>M1 电路基础</b>（W1–W5）→ <b>M3 外设前半</b>：GPIO / 中断 / 定时器 / UART（W5–W10）；<b>M2 语言</b>每天 40 min 贯穿</span></div>
+          <div class="trow"><span class="tag2 d">交付</span><span class="d2">GitHub 仓库 + 4 个外设 demo + 1 个综合小项目（OLED + 传感器 + 串口上位机）</span></div>
+          <div class="trow"><span class="tag2 k">里程碑</span><span class="d2">能独立讲清开发板原理图；逻辑分析仪抓出一次 I2C 时序问题</span></div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="when">寒假<br>2027.01 – 2027.02<small>约 5 周 · 150 h</small></div>
+        <div class="what">
+          <div class="trow"><span class="tag2 m">模块</span><span class="d2"><b>M5 硬件设计</b>：画板 → 打样 → 焊接 → 点亮；<b>M3 后半</b>：ADC / DMA / I2C / SPI</span></div>
+          <div class="trow"><span class="tag2 d">交付</span><span class="d2">一块自己画、自己焊、能跑的最小系统板</span></div>
+          <div class="trow"><span class="tag2 k">里程碑</span><span class="d2"><b>第一次打板成功</b>——这是和 90% 同学拉开差距的地方</span></div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="when">大二下<br>2027.02 – 2027.06<small>约 18 周 · 450 h</small></div>
+        <div class="what">
+          <div class="trow"><span class="tag2 m">模块</span><span class="d2"><b>M4 调试</b>深化 → <b>M6 RTOS</b> → <b>M7 工程化</b> → <b>M8 无线显示</b>起步</span></div>
+          <div class="trow"><span class="tag2 d">交付</span><span class="d2">分层架构工程 + 多任务系统 + 接口文档；<b>P1 项目完成</b></span></div>
+          <div class="trow"><span class="tag2 k">里程碑</span><span class="d2">电赛组队完成、方向确定；进实验室或找到带你的学长</span></div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="when">大二暑假<br>2027.07 – 2027.08<small>约 8 周 · 300 h</small></div>
+        <div class="what">
+          <div class="trow"><span class="tag2 m">模块</span><span class="d2"><b>电赛集训 + 国赛</b>（主）；<b>M8</b> 收尾</span></div>
+          <div class="trow"><span class="tag2 d">交付</span><span class="d2">一个能在 4 天 3 夜里做出来的完整系统</span></div>
+          <div class="trow"><span class="tag2 k">里程碑</span><span class="d2"><b>省级以上奖项</b>——简历第一行有了内容</span></div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="when">大三上<br>2027.09 – 2028.01<small>约 18 周 · 450 h</small></div>
+        <div class="what">
+          <div class="trow"><span class="tag2 m">模块</span><span class="d2"><b>M9 Linux 应用</b> → <b>M10 Linux 驱动</b> → <b>M11 电机控制</b>起步</span></div>
+          <div class="trow"><span class="tag2 d">交付</span><span class="d2">Linux 上位机 + 完整字符设备驱动；<b>P2 项目 v1</b>；刷题到 150</span></div>
+          <div class="trow"><span class="tag2 k">里程碑</span><span class="d2"><b>10 月开始投 2028 暑期实习</b>；拿到第一个面试</span></div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="when">大三下 + 暑假<br>2028.02 – 2028.08<small>约 6 个月</small></div>
+        <div class="what">
+          <div class="trow"><span class="tag2 m">模块</span><span class="d2"><b>M11</b> 收尾 + <b>M13 或 M14</b>（二选一，每周 8–10 h 与实习并行）；P2 / P3 结项</span></div>
+          <div class="trow"><span class="tag2 d">交付</span><span class="d2">实习经历 + 项目复盘文档 + 最终简历</span></div>
+          <div class="trow"><span class="tag2 k">里程碑</span><span class="d2"><b>一段 ≥2 个月实习</b>——秋招最硬的一张牌</span></div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="when">大四上<br>2028.09 – 2028.11<small>秋招</small></div>
+        <div class="what">
+          <div class="trow"><span class="tag2 k">里程碑</span><span class="d2">投递 → 笔试 → 面试 → <b>offer</b></span></div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="when">大四<br>2028.12 – 2029.06<small>约 28 周 · 400 h</small></div>
+        <div class="what">
+          <div class="trow"><span class="tag2 m">模块</span><span class="d2">把 <b>M13 / M14</b> 没做完的部分补完；<b>M12 求职</b> 收口（补录面试复盘）</span></div>
+          <div class="trow"><span class="tag2 d">交付</span><span class="d2">毕业设计 + 一份方向代表作（一段能讲清的 SLAM 轨迹，或一个抓取策略的成功率曲线）</span></div>
+          <div class="trow"><span class="tag2 k">里程碑</span><span class="d2">毕设选题与求职方向一致——别让毕设变成第二次浪费时间</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 项目 -->
+  <section id="projects">
+    <div class="sec"><span class="no">05</span><h2>三个递进项目</h2><p>P1 证明你能做，P2 证明你能做好，P3 证明你能做难</p>
+      <a href="项目库.html" style="margin-left:auto;font-size:12.5px;color:#0b7a5a;font-weight:700;text-decoration:none">查看完整规格书 →</a></div>
+    <div class="projs">
+      <article class="proj">
+        <div class="ph"><h3>P1 · 自画板数据采集终端</h3><span class="lvl">入门</span></div>
+        <p>自己画的小板 + 传感器采集 + OLED 显示 + 串口/Linux 上位机曲线。</p>
+        <div class="kv">时间 <b>10 周</b> · 成本 <b>≈150 元</b></div>
+        <div class="kv">技术：M1–M5、M9</div>
+        <div class="out">产出：板子 + 固件 + 上位机 + 测试记录</div>
+      </article>
+      <article class="proj">
+        <div class="ph"><h3>P2 · 无刷电机 FOC 驱动板</h3><span class="lvl">进阶</span></div>
+        <p>三电阻采样、PWM 死区、电流环 PI、上位机在线调参、波形显示。</p>
+        <div class="kv">时间 <b>12 周</b> · 成本 <b>≈200 元</b></div>
+        <div class="kv">技术：M3、M5、M6、M7、M11</div>
+        <div class="out">产出：转速波动可测、能演示低速平稳运行</div>
+      </article>
+      <article class="proj">
+        <div class="ph"><h3>P3 · 机械臂 / 竞赛系统</h3><span class="lvl">挑战</span></div>
+        <p>三轴机械臂 + 逆运动学 + 轨迹插补 + 视觉定位，或电赛获奖作品深化。</p>
+        <div class="kv">时间 <b>14 周</b> · 成本 <b>≈400 元</b></div>
+        <div class="kv">技术：M6–M11 综合</div>
+        <div class="out">产出：可重复演示的完整系统 + 复盘报告</div>
+      </article>
+    </div>
+    <p style="margin:16px 0 0;font-size:12.6px;color:var(--ink3);line-height:1.72">
+      P1–P3 是主线。走方向的同学再加一个：<b style="color:var(--ink)">P4 视觉里程计小车</b>（视觉 / SLAM 线，12 周）
+      或 <b style="color:var(--ink)">P5 MCP 机械臂</b>（具身智能线，10 周，需先完成 P3）。两份规格书都在
+      <a href="项目库.html" style="color:#8fb7ff;text-decoration:none;border-bottom:1px solid rgba(143,183,255,.35)">项目库</a>。
+    </p>
+  </section>
+
+  <!-- 每周 -->
+  <section id="week">
+    <div class="sec"><span class="no">06</span><h2>每周 25 小时怎么花</h2><p>比例比总量更重要</p></div>
+    <div class="weeksplit">
+      <div class="allocate">
+        <div class="allocrow"><span class="nm">动手实验</span><div class="track"><i style="width:45%;background:linear-gradient(90deg,#1d4ed8,#3b82f6)"></i></div><span class="pc">45%</span></div>
+        <div class="allocrow"><span class="nm">系统学习</span><div class="track"><i style="width:30%;background:linear-gradient(90deg,#0f766e,#14b8a6)"></i></div><span class="pc">30%</span></div>
+        <div class="allocrow"><span class="nm">项目 / 竞赛</span><div class="track"><i style="width:15%;background:linear-gradient(90deg,#b45309,#f59e0b)"></i></div><span class="pc">15%</span></div>
+        <div class="allocrow"><span class="nm">笔试基本功</span><div class="track"><i style="width:10%;background:linear-gradient(90deg,#7c3aed,#a78bfa)"></i></div><span class="pc">10%</span></div>
+        <p style="margin:14px 0 0;font-size:12.5px;color:var(--ink3);line-height:1.6">
+          动手低于 40% 就是假学习。看视频时手边必须有板子和串口助手，边看边改。
+        </p>
+      </div>
+      <div class="daycard">
+        <h4>一周示例（25 h）</h4>
+        <table>
+          <tr><td>周一</td><td>2 h 看手册/视频 + 1 h 板子上复现</td></tr>
+          <tr><td>周二</td><td>3 h 动手：外设实验 / 改代码</td></tr>
+          <tr><td>周三</td><td>2 h 理论 + 1 h 刷题</td></tr>
+          <tr><td>周四</td><td>3 h 动手：项目 / 焊板</td></tr>
+          <tr><td>周五</td><td>2 h 理论 + 1 h 刷题</td></tr>
+          <tr><td>周六</td><td>5 h 连续块：整块时间做难的东西</td></tr>
+          <tr><td>周日</td><td>3 h 补漏 + 1 h 写周报与笔记</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 自测 -->
+  <section id="checklist">
+    <div class="sec"><span class="no">07</span><h2>能力自测清单</h2><p>每条都必须能拿出证据，勾选状态保存在本地</p></div>
+    <div class="check" id="cli">
+      <h3>硬件</h3>
+      <label class="chk"><input type="checkbox" data-id="h1"><span>能独立讲解一块陌生开发板的原理图（电源、时钟、复位、接口）</span></label>
+      <label class="chk"><input type="checkbox" data-id="h2"><span>能根据负载电流算出限流电阻与走线宽度</span></label>
+      <label class="chk"><input type="checkbox" data-id="h3"><span>从原理图到打样到焊接，独立做完一块能跑的板</span></label>
+      <label class="chk"><input type="checkbox" data-id="h4"><span>用逻辑分析仪定位过一次"软件没问题、硬件不工作"的问题</span></label>
+
+      <h3>软件</h3>
+      <label class="chk"><input type="checkbox" data-id="s1"><span>不看教程，靠参考手册配好一个没用过的外设</span></label>
+      <label class="chk"><input type="checkbox" data-id="s2"><span>手写环形缓冲与状态机，不查资料</span></label>
+      <label class="chk"><input type="checkbox" data-id="s3"><span>能讲清 RTOS 优先级反转，并在项目里解决过</span></label>
+      <label class="chk"><input type="checkbox" data-id="s4"><span>自己设计过一套带 CRC 的通信协议并对端解析成功</span></label>
+      <label class="chk"><input type="checkbox" data-id="s5"><span>HardFault 十分钟内定位到行号</span></label>
+      <label class="chk"><input type="checkbox" data-id="s6"><span>写过 Linux 字符设备驱动，并定位过一次内核 oops</span></label>
+
+      <h3>工程</h3>
+      <label class="chk"><input type="checkbox" data-id="e1"><span>项目是分层的，换芯片只改驱动层</span></label>
+      <label class="chk"><input type="checkbox" data-id="e2"><span>能手写 Makefile 与链接脚本，不依赖 IDE</span></label>
+      <label class="chk"><input type="checkbox" data-id="e3"><span>别人按你的文档能在 30 分钟内把项目跑起来</span></label>
+      <label class="chk"><input type="checkbox" data-id="e4"><span>每个项目都有原理图、BOM、测试记录、复盘报告</span></label>
+
+      <h3>就业</h3>
+      <label class="chk"><input type="checkbox" data-id="j1"><span>有一个从 0 到 1 的项目，能连续讲 30 分钟</span></label>
+      <label class="chk"><input type="checkbox" data-id="j2"><span>LeetCode 150 题 + 嵌入式八股能连续答 20 题</span></label>
+      <label class="chk"><input type="checkbox" data-id="j3"><span>有一个省级以上竞赛奖项</span></label>
+      <label class="chk"><input type="checkbox" data-id="j4"><span>有一段 ≥2 个月的相关实习</span></label>
+
+      <h3>方向（二选一，选一个做到）</h3>
+      <label class="chk"><input type="checkbox" data-id="d1"><span>能用自己录的数据训一个策略，并在真机上跑通抓取</span></label>
+      <label class="chk"><input type="checkbox" data-id="d2"><span>能讲清行为克隆为什么会在没见过的位置失败（分布偏移）</span></label>
+      <label class="chk"><input type="checkbox" data-id="d3"><span>能独立标定相机，把重投影误差压到 0.5 px 以内</span></label>
+      <label class="chk"><input type="checkbox" data-id="d4"><span>能跑通一个 SLAM 系统，并解释一段轨迹为什么漂了</span></label>
+
+      <div class="progress">
+        <div class="bar"><i id="fill"></i></div>
+        <b id="num">0 / 22</b>
+      </div>
+    </div>
+  </section>
+
+  <div class="warn">
+    <b>两条底线：</b>① 每个模块结束必须有「能演示的东西」，没有就别进下一个模块——跳过去的坑会在项目里加倍还回来。
+    ② 每周固定写一次周报（做了什么 / 卡在哪 / 下周干什么），秋招面试时这份记录就是你的项目故事库。
+  </div>
+
+  <p class="foot">嵌入式软硬件全栈学习计划 · 2026.11 → 2029.06 · 配合主路线图与就业补充路线使用</p>
+</div>
+
+<script>
+(function () {
+  var KEY = 'fullstack-plan-checklist-v1';
+  var box = Array.prototype.slice.call(document.querySelectorAll('#cli input[type=checkbox]'));
+  var fill = document.getElementById('fill');
+  var num = document.getElementById('num');
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+
+  function render() {
+    var done = box.filter(function (b) { return b.checked; }).length;
+    fill.style.width = (done / box.length * 100) + '%';
+    num.textContent = done + ' / ' + box.length;
+  }
+  box.forEach(function (b) {
+    if (saved[b.dataset.id]) b.checked = true;
+    b.addEventListener('change', function () {
+      saved[b.dataset.id] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+      render();
+    });
+  });
+  render();
+})();
+</script>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

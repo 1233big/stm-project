@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题库 · C / 嵌入式 / RTOS / Linux</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+    --line:#dde5f4; --line2:#eef2fa;
+    --blue:#1d4ed8; --blue-soft:#eef3ff;
+    --teal:#0f766e; --teal-soft:#e9faf6;
+    --green:#0b7a5a; --green-soft:#e9f9f2;
+    --amber:#b45309; --amber-soft:#fff8e8;
+    --bg:#f5f7fc;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:130px}
+  body{margin:0;color:var(--ink);line-height:1.7;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(900px 460px at 4% -8%,#e4edff 0%,transparent 58%),
+               radial-gradient(800px 400px at 100% 1%,#e5f7f3 0%,transparent 52%),var(--bg);
+    -webkit-font-smoothing:antialiased}
+
+  .wrap{max-width:900px;margin:0 auto;padding:30px 20px 90px}
+
+  .hero{background:linear-gradient(125deg,#0b1e3f 0%,#1d4ed8 58%,#0f766e 132%);
+    border-radius:20px;padding:30px 32px 26px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 24px 54px -30px rgba(9,30,74,.7)}
+  .hero::after{content:"";position:absolute;right:-70px;top:-100px;width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.17),transparent 62%)}
+  .eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.32em;opacity:.66}
+  .hero h1{margin:0;font-size:clamp(21px,3vw,29px);font-weight:800}
+  .hero .lead{margin:10px 0 0;max-width:620px;font-size:13.5px;opacity:.92}
+  .stats{display:flex;gap:18px;margin-top:18px;flex-wrap:wrap}
+  .stats span{font-size:12px;opacity:.9}
+  .stats b{font-size:17px;font-weight:800;margin-right:4px}
+
+  .bar{position:sticky;top:0;z-index:30;background:rgba(245,247,252,.94);backdrop-filter:blur(10px);
+    margin:0 -20px;padding:11px 20px;border-bottom:1px solid var(--line)}
+  .bar-in{max-width:900px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;align-items:center}
+  .bar-in::-webkit-scrollbar{display:none}
+  .tab{font-size:12.5px;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;
+    color:var(--ink3);cursor:pointer;white-space:nowrap;font-family:inherit;transition:.14s}
+  .tab:hover{color:var(--blue);border-color:#bcd0f5}
+  .tab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  .cnt{margin-left:auto;font-size:11.5px;color:var(--ink4);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  .list{margin-top:20px}
+  details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;
+    box-shadow:0 6px 18px -24px rgba(15,23,42,.6);overflow:hidden}
+  details[open]{border-color:#c7d8fb}
+  summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:flex-start;gap:11px;
+    font-size:13.6px;font-weight:700;transition:.12s}
+  summary::-webkit-details-marker{display:none}
+  summary:hover{background:#fbfcff}
+  summary .no{flex:0 0 auto;font-size:10.5px;font-weight:800;color:var(--blue);background:var(--blue-soft);
+    border-radius:6px;padding:2px 7px;margin-top:3px;font-variant-numeric:tabular-nums}
+  summary .qt{flex:1;line-height:1.5}
+  summary .arw{color:#b9c6de;font-size:11px;transition:.2s;margin-top:4px}
+  details[open] summary .arw{transform:rotate(90deg)}
+  details[open] summary{background:#f8fbff;border-bottom:1px solid var(--line2)}
+
+  .ans{padding:13px 16px 16px;font-size:13px;color:var(--ink2)}
+  .ans .core{background:var(--teal-soft);border-left:3px solid #7fd6c2;border-radius:0 8px 8px 0;
+    padding:8px 12px;margin-bottom:10px;font-size:13px;color:#0b5c46;font-weight:600;line-height:1.6}
+  .ans ul{margin:0 0 8px;padding-left:18px}
+  .ans li{margin-bottom:4px}
+  .ans li b{color:var(--ink);font-weight:700}
+  .ans p{margin:0 0 8px}
+  .ans code{background:#f1f5fd;border-radius:4px;padding:1px 5px;font-size:12px;
+    font-family:ui-monospace,Consolas,monospace;color:#1e3a8a}
+  .ans .tipx{margin-top:8px;font-size:12.3px;color:var(--amber);background:var(--amber-soft);
+    border-radius:8px;padding:7px 11px;line-height:1.55}
+  .hidden{display:none !important}
+
+  .foot{margin-top:30px;text-align:center;font-size:11.5px;color:var(--ink4)}
+  .back{display:inline-block;margin-bottom:12px;font-size:12px;color:var(--blue);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  @media (max-width:600px){
+    .wrap{padding:18px 13px 70px}
+    .hero{padding:22px 18px}
+    .bar{margin:0 -13px;padding:10px 13px}
+    summary{font-size:13px;padding:11px 13px}
+    .ans{padding:12px 13px 14px}
+  }
+  @media print{
+    body{background:#fff}
+    .bar{display:none}
+    details{break-inside:avoid;box-shadow:none}
+  }
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="学习总控台.html">← 返回总控台</a>
+
+  <header class="hero">
+    <h1>嵌入式面试题库</h1>
+    <p class="lead">按主题分类，每题先给「一句话核心」，再给展开要点。背答案没用，把核心句用自己的话讲出来才有用。</p>
+    <div class="stats">
+      <span><b id="tq">0</b>道题</span>
+      <span><b>6</b>类主题</span>
+      <span><b>3</b>轮复习</span>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in" id="tabs">
+      <button class="tab on" data-c="all">全部</button>
+      <button class="tab" data-c="C">C 语言</button>
+      <button class="tab" data-c="MCU">嵌入式</button>
+      <button class="tab" data-c="RTOS">RTOS</button>
+      <button class="tab" data-c="OS">Linux</button>
+      <button class="tab" data-c="P">项目</button>
+      <button class="tab" data-c="R">反问</button>
+      <span class="cnt" id="cnt"></span>
+    </div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <p class="foot">面试题库 · 建议闭卷自测，答不上来的标记后再看答案</p>
+</div>
+
+<script>
+const BANK = [
+/* ---------------- C ---------------- */
+{c:"C", q:"const 和 #define 有什么区别？", core:"const 有类型、有作用域、能调试；#define 只是文本替换。",
+ pts:["const 由编译器做类型检查，写错类型会报错；宏不会。","const 有作用域，可以是局部常量；宏是全局的文本替换。","const 变量在调试器里能看到值和地址；宏在预处理阶段就没了。","const 可以取地址、传指针（比如 <code>const char *</code>）；宏不行。","现代做法：常量用 const / constexpr，小函数用 static inline 替代宏。"], tip:"追问：const 修饰指针有几种写法？—— const int *p（指向的值不能改）、int * const p（指针本身不能改）、const int * const p（都不能改）。"},
+
+{c:"C", q:"volatile 的作用是什么？什么时候必须用？", core:"告诉编译器「这个值可能在你的视线之外被改变」，禁止把它优化进寄存器。",
+ pts:["<b>硬件寄存器</b>：值由外设改变，编译器不知道。","<b>中断与主循环共享的变量</b>：主循环里循环等待标志位，不加 volatile 会被优化成死循环。","<b>多线程/多任务共享变量</b>（配合原子或锁）。","注意：volatile <b>不保证原子性</b>，也不解决竞态，别拿它当锁用。"], tip:"经典陷阱：<code>while(flag);</code> 里 flag 不加 volatile，开优化后编译器认为 flag 没变，直接死循环。"},
+
+{c:"C", q:"static 的三个作用", core:"局部变量延长生命周期；全局变量/函数限制在本文件内。",
+ pts:["修饰局部变量：从栈挪到静态区，函数返回后值还在，只初始化一次。","修饰全局变量：链接属性变成本文件私有，避免多文件同名冲突。","修饰函数：只能本文件调用，相当于模块私有函数。","嵌入式里大量用 static 做模块封装，这是好习惯。"], tip:""},
+
+{c:"C", q:"指针和数组有什么区别？", core:"数组名是地址常量，指针是变量。",
+ pts:["sizeof：数组得到整个数组大小，指针得到指针大小（4/8 字节）。","<code>&arr</code> 与 <code>arr</code> 值相同但类型不同（数组指针 vs 元素指针）。","指针可以自增、可以重新赋值；数组名不行。","作为函数参数传递时，数组会退化成指针，长度信息丢失。"], tip:""},
+
+{c:"C", q:"结构体内存对齐是怎么算的？", core:"按最大成员的对齐值对齐，成员之间可能插入填充字节。",
+ pts:["每个成员的偏移必须是它自身对齐值的整数倍。","结构体总大小是最大对齐值的整数倍。","调整成员顺序（大到小排）能减少填充。","<code>#pragma pack(1)</code> 可以取消对齐，但可能影响访问效率甚至触发非对齐异常。","协议解析时常用 pack(1) 按字节严格对应。"], tip:"例：char a; int b; → 8 字节（a 后面 3 字节填充）。"},
+
+{c:"C", q:"怎么判断大小端？", core:"看低地址存放的是低字节还是高字节。",
+ pts:["常用方法：用 union 存一个 int，读第一个字节。","<code>int x=1; char *p=(char*)&x; *p==1 就是小端。</code>","网络字节序是大端，通信时要转换（htons / ntohl）。"], tip:""},
+
+{c:"C", q:"宏定义的坑有哪些？", core:"参数多次求值、没有类型检查、运算符优先级。",
+ pts:["参数要加括号：<code>#define SQ(x) ((x)*(x))</code>，否则 SQ(a+1) 会错。","<code>MAX(i++, j)</code> 会让 i 自增两次。","宏里不要用分号结尾，会破坏 if-else 结构。","能用 static inline 函数就别用宏。"], tip:""},
+
+{c:"C", q:"函数指针有什么用？", core:"实现回调、状态机跳转表、驱动抽象层。",
+ pts:["<b>回调</b>：注册中断处理、事件通知。","<b>状态机</b>：函数指针数组，用状态值直接索引，比 switch 更清晰。","<b>驱动抽象</b>：同一套上层接口，底层换芯片只换函数指针集合（类似 C 里的多态）。","<b>命令表</b>：协议命令码映射到处理函数。"], tip:"能举出项目里实际用过的例子，比背定义加分。"},
+
+{c:"C", q:"野指针和悬空指针怎么避免？", core:"野指针是没初始化的，悬空指针是 free 之后还在用的。",
+ pts:["指针定义时就初始化成 NULL。","free / 释放后立刻置 NULL。","使用前判空。","数组访问前检查下标范围。","嵌入式里少用动态内存，用静态池或固定数组，能从根上避免一大类问题。"], tip:""},
+
+{c:"C", q:"嵌入式为什么不推荐用 malloc？", core:"碎片不可控、执行时间不确定、失败难处理。",
+ pts:["长时间运行后内存碎片化，最终分配失败。","malloc 的执行时间不确定，破坏实时性。","失败返回 NULL，很多代码不检查。","替代方案：静态分配、固定大小内存池、RTOS 的 heap_1~heap_5 按需选择。"], tip:""},
+
+{c:"C", q:"memcpy 和 memmove 的区别", core:"源和目的重叠时只能用 memmove。",
+ pts:["memcpy 不处理重叠，重叠时结果未定义。","memmove 会判断方向，从后往前拷或先拷到临时区。","嵌入式里环形缓冲区常需要 memmove 处理回绕。"], tip:""},
+
+{c:"C", q:"位操作：置位、清零、取反、判断某位", core:"与、或、异或、取反四个套路。",
+ pts:["置位：<code>reg |= (1 << n);</code>","清零：<code>reg &= ~(1 << n);</code>","取反：<code>reg ^= (1 << n);</code>","判断：<code>if (reg & (1 << n))</code>","连续位：<code>reg = (reg & ~(0xF << 4)) | (v << 4);</code>"], tip:"这是笔试必考，必须能秒写。"},
+
+{c:"C", q:"union 有什么用？", core:"多个成员共用同一块内存，用来省空间或做类型转换。",
+ pts:["省内存：同一时刻只有一个成员有效。","类型双关：把 float 按字节 / 整数查看。","协议解析：把字节流按结构体字段解释。","注意：写入一个成员后读另一个成员，结果依赖平台字节序。"], tip:""},
+
+{c:"C", q:"位域是什么？有什么坑？", core:"用位来定义结构体成员，节省空间但布局依赖编译器。",
+ pts:["<code>struct { unsigned a:3; unsigned b:5; }</code>","硬件寄存器映射时非常方便。","坑：位域跨越存储单元的行为未定义，不同编译器布局可能不同。","跨平台协议里不要用位域，用位移操作更可靠。"], tip:""},
+
+{c:"C", q:"指针数组和数组指针的区别", core:"指针数组是「数组，元素是指针」；数组指针是「指针，指向数组」。",
+ pts:["<code>int *a[10]</code>：10 个 int 指针。","<code>int (*a)[10]</code>：一个指针，指向含 10 个 int 的数组。","判断口诀：先看优先级，[] 高于 *。","字符串表常用指针数组：<code>const char *names[]</code>。"], tip:""},
+
+{c:"C", q:"const 修饰指针的三种写法", core:"const 在 * 左边修饰值，在 * 右边修饰指针本身。",
+ pts:["<code>const int *p</code>：不能通过 p 改值。","<code>int * const p</code>：p 本身不能改指向。","<code>const int * const p</code>：都不能改。","口诀：const 离谁近就锁谁。"], tip:""},
+
+{c:"C", q:"inline 和宏的区别", core:"inline 有类型检查和作用域，宏是文本替换。",
+ pts:["inline 展开后仍受编译器类型检查。","inline 只是建议，编译器可以不展开。","嵌入式中大量小函数用 static inline 放头文件，兼顾效率与类型安全。"], tip:""},
+
+{c:"C", q:"递归在嵌入式里有什么风险？", core:"栈深度不可控，容易栈溢出。",
+ pts:["每次递归都压栈，深度大时直接踩穿栈。","栈溢出后表现是随机 HardFault 或变量莫名改变，极难查。","替代：改成循环 + 显式栈（数组模拟）。","必须用时，估算最大深度并留足余量。"], tip:""},
+
+{c:"C", q:"全局变量没初始化时值是多少？局部变量呢？", core:"全局在 .bss 里被清零；局部是随机值。",
+ pts:["全局/静态变量：未初始化放在 .bss，启动时清零。","已初始化且非零：放在 .data，从 Flash 拷到 RAM。","局部变量：在栈上，值是上次残留的数据，必须手动初始化。","常量字符串：在 .rodata / Flash 里。"], tip:""},
+
+{c:"C", q:"从源码到可执行文件经历了哪几步？", core:"预处理 → 编译 → 汇编 → 链接。",
+ pts:["预处理：展开宏、包含头文件、条件编译。","编译：C 转汇编。","汇编：汇编转机器码（.o 目标文件）。","链接：合并目标文件与库，分配地址，生成 .elf/.bin/.hex。","嵌入式里链接脚本（.ld）决定代码放 Flash 还是 RAM。"], tip:"能顺带说出 .map 文件的作用会加分。"},
+
+{c:"C", q:"map 文件有什么用？", core:"告诉你每个函数和数据被放在了哪个地址、占了多大。",
+ pts:["查代码/数据各段的大小，判断 Flash 和 RAM 够不够。","查某个函数是否被链接进去（没被调用的会被丢弃）。","定位栈、堆的使用边界。","排查某段数据是否越界到别的段。"], tip:""},
+
+/* ---------------- MCU ---------------- */
+{c:"MCU", q:"MCU 从上电到执行 main 发生了什么？", core:"取向量表 → Reset_Handler → 初始化数据段 → 调 main。",
+ pts:["上电复位，从向量表第 0 项取出初始栈指针 MSP。","从第 1 项取出 Reset_Handler 地址并跳转。","Reset_Handler 里把 .data 从 Flash 拷到 RAM，把 .bss 清零。","调用 SystemInit 配置时钟。","跳转到 main。"], tip:"这是必考题，要能画图讲。"},
+
+{c:"MCU", q:"中断向量表是干什么的？", core:"一张「中断号 → 处理函数地址」的映射表，放在 Flash 起始处。",
+ pts:["前两项固定是初始 MSP 和 Reset_Handler。","每个中断源占一个表项，按固定顺序排列。","函数名必须与启动文件里的弱符号名一致，否则链接到默认死循环。","可以重定位（Bootloader 场景要改 SCB->VTOR）。"], tip:""},
+
+{c:"MCU", q:"中断响应的完整过程", core:"保存现场 → 取向量 → 执行 ISR → 恢复现场。",
+ pts:["CPU 完成当前指令。","硬件自动压栈（R0-R3、R12、LR、PC、xPSR）。","从向量表取 ISR 地址并跳转。","执行 ISR，结束时清除中断标志。","硬件出栈恢复现场，继续主程序。"], tip:""},
+
+{c:"MCU", q:"抢占优先级和子优先级的区别？", core:"抢占决定能否打断；子优先级只在同时挂起时决定谁先执行。",
+ pts:["高抢占优先级可以打断正在执行的低抢占优先级 ISR。","子优先级不能打断，只影响排队顺序。","FreeRTOS 里要特别注意：中断优先级数值不能高于 configMAX_SYSCALL_INTERRUPT_PRIORITY。"], tip:"这条是 RTOS 项目最常见的坑。"},
+
+{c:"MCU", q:"中断服务函数里不能做什么？", core:"不能阻塞、不能长时间占用、不能调用非 ISR 版本的 RTOS API。",
+ pts:["不能延时等待。","不能调用阻塞型 API（如 vTaskDelay）。","不能做耗时运算，重活丢给任务。","必须尽快清中断标志。","共享变量要加 volatile，必要时加临界区。"], tip:""},
+
+{c:"MCU", q:"堆和栈在 MCU 上分别在哪、多大？", core:"栈从 RAM 顶部向下生长，堆从 .bss 之后向上生长，中间是自由区。",
+ pts:["栈大小在启动文件或链接脚本里定义（常见 0x400 ~ 0x1000）。","栈溢出会踩到堆或全局变量，现象随机。","可以用「填充魔数」法测栈用量：启动前填 0xAA，跑一段时间看还剩多少没被覆盖。"], tip:""},
+
+{c:"MCU", q:"讲讲时钟树", core:"从时钟源出发，经 PLL 倍频，再分频给各总线与外设。",
+ pts:["时钟源：内部 RC（HSI）、外部晶振（HSE）、低速时钟（LSI/LSE）。","PLL 倍频得到 SYSCLK。","AHB / APB1 / APB2 各自分频。","外设时钟要单独使能，忘了就是「寄存器写了没反应」。","改主频必须同步改串口波特率、定时器参数、Flash 等待周期。"], tip:""},
+
+{c:"MCU", q:"GPIO 有哪几种模式？", core:"输入、输出、复用、模拟，各自再分推挽/开漏。",
+ pts:["输入：浮空、上拉、下拉。","输出：推挽、开漏。","复用：推挽、开漏。","模拟：给 ADC 用。"], tip:""},
+
+{c:"MCU", q:"推挽和开漏的区别？", core:"推挽能主动输出高和低；开漏只能拉低，高电平靠外部上拉。",
+ pts:["推挽：驱动能力强，不能线与。","开漏：可以多个器件接同一根线（I2C 必须用开漏），电平由外部上拉决定。","开漏还能做电平转换：上拉到 5V 就能输出 5V 信号。"], tip:""},
+
+{c:"MCU", q:"上拉电阻和下拉电阻有什么用？", core:"给引脚一个确定的默认电平，防止悬空。",
+ pts:["按键：上拉 + 按下接地，是最常见接法。","I2C：必须外接上拉，阻值影响上升沿。","开漏输出：没有上拉就出不了高电平。","阻值太小费电，太大上升沿慢，常用 4.7k–10k。"], tip:""},
+
+{c:"MCU", q:"UART、I2C、SPI 有什么区别？怎么选？", core:"UART 点对点异步；I2C 两线多设备；SPI 四线高速。",
+ pts:["UART：两根线，不需要时钟，常用来调试与连模组。","I2C：两根线（SDA/SCL），可挂多个设备，速率 100k–400k，适合传感器。","SPI：四根线（SCK/MOSI/MISO/CS），全双工，速率可达几十 MHz，适合屏和 Flash。","选型：距离远用 UART/RS485；省线用 I2C；要快用 SPI。"], tip:""},
+
+{c:"MCU", q:"I2C 的时序和特点", core:"起始、地址、应答、数据、停止；支持多主仲裁。",
+ pts:["起始：SCL 高时 SDA 由高变低。","停止：SCL 高时 SDA 由低变高。","每传输 8 位后跟一个 ACK 位（从机拉低 SDA）。","多主时靠线与仲裁，谁发 0 谁赢。","常见故障：上拉缺失、地址写错、总线锁死。"], tip:""},
+
+{c:"MCU", q:"SPI 的四种模式", core:"由 CPOL 和 CPHA 组合而成，决定空闲电平和采样沿。",
+ pts:["CPOL=0：空闲时 SCK 低；CPOL=1：空闲高。","CPHA=0：第一个边沿采样；CPHA=1：第二个边沿采样。","四种组合必须与从机手册一致，错了就读回全 0 或全 FF。","实践中先用模式 0 试，不通再逐个试。"], tip:""},
+
+{c:"MCU", q:"DMA 是什么？有什么好处？", core:"外设与内存之间直接搬运数据，不占用 CPU。",
+ pts:["CPU 只需要配置好源、目的、长度，剩下硬件完成。","适合串口收发、ADC 采样、SPI 刷屏等大批量数据。","要注意：通道与外设的固定映射、地址是否自增、对齐要求。","搬运完成后可以产生中断，通知 CPU 处理。"], tip:""},
+
+{c:"MCU", q:"ADC 采样时间为什么影响精度？", core:"采样时间太短，采样电容来不及充到被测电压。",
+ pts:["ADC 内部有采样保持电容，需要时间充电。","信号源内阻越高，需要越长的采样时间。","时间太短 → 读数偏低、跳变大。","另外参考电压稳定性、地线噪声也直接影响精度。"], tip:""},
+
+{c:"MCU", q:"PWM 的原理？怎么调频率和占空比？", core:"定时器计数，与比较值比较，输出高低电平。",
+ pts:["频率 = 时钟 / ((PSC+1)(ARR+1))。","占空比 = CCR / (ARR+1)。","调频改 PSC 或 ARR，调占空比改 CCR。","舵机用 50Hz + 0.5–2.5ms 脉宽。"], tip:""},
+
+{c:"MCU", q:"看门狗怎么用？", core:"定时喂狗，程序跑飞不喂就复位。",
+ pts:["独立看门狗用内部低速时钟，主时钟挂了也能工作。","窗口看门狗要求在规定时间窗口内喂，能发现「喂太快」。","喂狗要放在主循环，不要放中断里——中断还活着不代表主逻辑正常。","调试时可以临时关闭，量产后必须开。"], tip:""},
+
+{c:"MCU", q:"低功耗模式有哪几种？怎么选？", core:"睡眠、停止、待机，功耗越低唤醒越慢、上下文丢失越多。",
+ pts:["Sleep：只关 CPU，外设还在跑，唤醒最快。","Stop：关大部分时钟，保留 RAM，唤醒后继续跑。","Standby：几乎全关，唤醒相当于复位。","选择依据：多久唤醒一次、唤醒后要不要保留状态。"], tip:""},
+
+{c:"MCU", q:"Flash 读写有什么注意点？", core:"按页/扇区擦除，写之前必须先擦。",
+ pts:["擦除粒度是页或扇区，不能按字节擦。","写之前必须先擦成 0xFF。","擦写次数有限（通常 1 万次），要做磨损均衡或换 EEPROM。","擦写期间 CPU 取指会停顿，注意中断响应。","Flash 里的数据要加校验（CRC）防止位翻转。"], tip:""},
+
+{c:"MCU", q:"Bootloader 和 OTA 的思路", core:"先跑 Boot 判断要不要升级，再跳转到 App。",
+ pts:["Flash 分区：Bootloader 区 + App 区 + 备份区（可选）。","上电先跑 Boot，检查升级标志或固件校验。","通过串口/网络接收新固件，写入备份区。","校验通过后拷贝到 App 区，改跳转地址，重启。","注意 App 的向量表要重定位（SCB->VTOR）。"], tip:""},
+
+/* ---------------- RTOS ---------------- */
+{c:"RTOS", q:"为什么用 RTOS，而不是裸机大循环？", core:"把复杂逻辑拆成可预测的任务，响应更确定、代码更好维护。",
+ pts:["裸机靠状态机 + 标志位，功能一多就难维护。","RTOS 用任务划分职责，每个任务独立编写。","优先级保证关键任务的实时性。","代价：RAM 开销、调度开销、学习成本。","简单项目裸机更合适，别为了用而用。"], tip:""},
+
+{c:"RTOS", q:"任务有哪几种状态？", core:"运行、就绪、阻塞、挂起。",
+ pts:["运行：正在占用 CPU。","就绪：可以运行，等待调度。","阻塞：等待事件或延时中，不参与调度。","挂起：被显式挂起，连调度都不参与。","理解状态迁移能帮你定位「任务为什么不动」。"], tip:""},
+
+{c:"RTOS", q:"信号量、互斥量、队列有什么区别？", core:"信号量做同步，互斥量保护资源，队列传数据。",
+ pts:["<b>二值信号量</b>：任务与中断之间同步（ISR 释放，任务获取）。","<b>计数信号量</b>：管理多个同类资源。","<b>互斥量</b>：保护共享资源，带优先级继承，只能在任务中用。","<b>队列</b>：传递数据，拷贝值而不是传指针更安全。","<b>任务通知</b>：最轻量，一对一。","<b>事件组</b>：一个任务等多个事件。"], tip:""},
+
+{c:"RTOS", q:"什么是优先级反转？怎么解决？", core:"低优先级任务持锁时被中优先级抢占，导致高优先级任务被间接拖延。",
+ pts:["场景：H 等 L 持有的锁，M 抢占 L，H 只能等 M 跑完。","解决：互斥量带优先级继承，临时把 L 提升到 H 的优先级。","也有优先级天花板方案。","用二值信号量做互斥就享受不到继承，这是常见错误。"], tip:""},
+
+{c:"RTOS", q:"死锁的四个必要条件", core:"互斥、占有并等待、不可剥夺、循环等待。",
+ pts:["破坏循环等待最实用：规定全局加锁顺序。","锁的持有时间尽量短。","不要嵌套拿锁。","中断里不要拿可能被任务持有的锁。"], tip:""},
+
+{c:"RTOS", q:"任务栈大小怎么确定？", core:"先给一个保守值，再用高水位标记调优。",
+ pts:["栈里要放局部变量、函数调用返回地址、中断嵌套现场。","用 <code>uxTaskGetStackHighWaterMark()</code> 看历史最小剩余量。","留 30% 以上余量，别卡着边界。","大数组、大结构体不要放局部变量，改 static 或全局。"], tip:""},
+
+{c:"RTOS", q:"ISR 里怎么和任务通信？", core:"用 FromISR 版本的 API，传一个「是否需要切换任务」的标志。",
+ pts:["<code>xQueueSendFromISR</code>、<code>xSemaphoreGiveFromISR</code>。","退出 ISR 时根据 <code>xHigherPriorityTaskWoken</code> 决定是否立即切换。","ISR 里绝对不能调用会阻塞的 API。","中断优先级数值要低于 configMAX_SYSCALL_INTERRUPT_PRIORITY。"], tip:""},
+
+{c:"RTOS", q:"临界区和关中断的区别？", core:"临界区是保护共享数据的短片段，实现方式可能是关中断或加锁。",
+ pts:["关中断会影响所有中断响应，时间必须极短。","RTOS 提供 <code>taskENTER_CRITICAL()</code>，内部会保存中断状态。","保护时间长的资源用互斥量，不要长时间关中断。","中断里改共享变量也要保护。"], tip:""},
+
+{c:"RTOS", q:"时间片轮转是什么？", core:"同优先级的多个任务按固定时间片轮流执行。",
+ pts:["只在同优先级任务之间发生。","由 configUSE_TIME_SLICING 控制。","对实时性没有帮助，只是让同优先级任务公平分享 CPU。"], tip:""},
+
+{c:"RTOS", q:"任务划分的原则", core:"按「职责」和「实时性」划分，而不是按「代码模块」划分。",
+ pts:["高实时性、短周期的放高优先级（采样、控制）。","低优先级做慢活（日志、显示刷新、通信上报）。","任务之间用队列解耦，不要直接互相调用。","任务数量别太多，每个任务都有栈开销。"], tip:""},
+
+/* ---------------- Linux ---------------- */
+{c:"OS", q:"进程和线程的区别？", core:"进程有独立地址空间；线程共享进程的地址空间。",
+ pts:["进程切换开销大（要换页表）；线程切换开销小。","进程间通信要借助 IPC；线程间直接读写共享变量，但要加锁。","一个进程崩溃不影响其他进程；一个线程崩溃整个进程挂掉。"], tip:""},
+
+{c:"OS", q:"进程间通信有哪些方式？", core:"管道、消息队列、共享内存、信号量、Socket。",
+ pts:["管道：父子进程，单向。","消息队列：有格式的消息。","共享内存：最快，但要自己做同步。","信号量：同步用，不传数据。","Socket：可跨机器。"], tip:""},
+
+{c:"OS", q:"字符设备驱动的框架", core:"注册设备号 → 实现 file_operations → 用户态通过 /dev 访问。",
+ pts:["分配设备号：<code>alloc_chrdev_region</code> / <code>register_chrdev_region</code>。","初始化 cdev 并绑定 file_operations。","实现 open / read / write / ioctl / release。","创建设备节点（class_create + device_create 自动生成 /dev 下节点）。","用 <code>copy_to_user</code> / <code>copy_from_user</code> 访问用户空间。"], tip:""},
+
+{c:"OS", q:"设备树是干什么的？", core:"把硬件描述从内核代码里抽出来，同一份内核支持不同板子。",
+ pts:["描述 CPU、内存、外设地址、中断号、GPIO 等硬件信息。","驱动通过 <code>compatible</code> 属性与设备树节点匹配。","启动时内核解析 dtb，生成设备节点。","好处：改硬件只改 dts，不用重编内核。"], tip:""},
+
+{c:"OS", q:"platform 驱动模型的 probe 什么时候被调用？", core:"驱动与设备匹配成功时。",
+ pts:["注册 platform_driver 时，内核遍历 platform_device。","通过 name 或 compatible 匹配。","匹配成功后调用 probe，在里面拿资源（地址、中断、GPIO）。","资源用 devm_ 系列函数申请，卸载时自动释放。"], tip:""},
+
+{c:"OS", q:"内核里为什么不能随便睡眠？", core:"中断上下文和持有自旋锁时不能睡眠，会导致死锁或调度异常。",
+ pts:["中断上下文没有任务结构，睡了没法被唤醒。","自旋锁不可抢占，睡了别人永远拿不到锁。","能睡眠的场景用互斥量；不能睡的场景用自旋锁。","判断依据：当前是否在进程上下文、是否持有自旋锁。"], tip:""},
+
+{c:"OS", q:"copy_to_user 为什么必须有？", core:"内核不能直接解引用用户态指针，安全和地址空间都不同。",
+ pts:["用户态指针可能非法，直接访问会内核崩溃。","copy_ 系列函数会做地址合法性检查。","返回值要检查，失败要返回 -EFAULT。","大块数据用 mmap 或 DMA 更高效。"], tip:""},
+
+{c:"OS", q:"内核 oops 怎么分析？", core:"看 dmesg 里的 PC、LR、调用栈，用 addr2line 定位到行。",
+ pts:["dmesg 找到 <code>Unable to handle kernel NULL pointer dereference</code> 之类的信息。","记下 PC 值。","用 <code>addr2line -e vmlinux -f -i 0xffff...</code> 定位函数与行号。","看调用栈还原现场。","加 printk 或 ftrace 进一步确认。"], tip:""},
+
+{c:"OS", q:"交叉编译是什么？", core:"在 x86 机器上编译出 ARM 可执行文件。",
+ pts:["用目标平台的工具链（如 arm-linux-gnueabihf-gcc）。","要注意：架构、字节序、C 库版本（glibc/musl）都要匹配。","CMake 里通过 toolchain 文件指定编译器和 sysroot。","静态链接可以规避库版本问题，但体积大。"], tip:""},
+
+/* ---------------- 项目 ---------------- */
+{c:"P", q:"介绍一下你的项目", core:"背景 → 目标 → 我的职责 → 关键技术 → 结果（带数字）→ 复盘。",
+ pts:["30 秒版本：一句话说清做了什么、解决了什么问题。","3 分钟版本：展开技术选型与难点。","准备一张架构图，讲的时候能指。","结果一定要有数字：功耗、响应时间、成功率、代码量。","结尾留一个「如果重做会怎么改」，显示你有反思。"], tip:"别说「我们做了一个……」而不说「我负责了……」。"},
+
+{c:"P", q:"项目里最有挑战的部分是什么？", core:"选一个「技术上有深度 + 你有独立判断」的点，不要选「加班赶进度」。",
+ pts:["结构：问题现象 → 我的分析 → 试过的方案 → 最终方案与原因 → 结果。","体现排查能力比体现技术名词更重要。","准备一个「一开始判断错了，后来怎么纠正」的细节，更真实。"], tip:""},
+
+{c:"P", q:"为什么这么设计？有没有别的方案？", core:"展示你比较过方案，而不是抄了一个。",
+ pts:["列出 2–3 个候选方案。","说明各自优劣（成本、功耗、复杂度、开发周期）。","说明选择依据，以及这个选择的代价。","承认局限：如果约束变了，我会换方案。"], tip:"面试官最怕听到「教程就这么写的」。"},
+
+{c:"P", q:"遇到过最难查的 bug 是什么？", core:"选一个「现象诡异 + 定位过程清晰」的，重点讲方法不是结论。",
+ pts:["现象要具体：偶发、上电 30 分钟后、只在低温下……","讲你如何缩小范围（二分、加 GPIO、逻辑分析仪）。","讲排除掉的假设，比讲结论更能体现能力。","最后说清根因和如何防止复发。"], tip:""},
+
+{c:"P", q:"怎么测试你的代码？", core:"分层测试：单元、模块、系统、异常、长时间。",
+ pts:["单元：每个驱动单独写测试函数。","模块：外设之间的联动。","系统：整体功能与性能指标。","异常：拔线、断电、错误包、极限值。","长时间：连续跑 24 小时看是否死机或内存增长。"], tip:""},
+
+{c:"P", q:"代码是怎么组织的？", core:"分层：驱动层 / 业务层 / 应用层，接口清晰。",
+ pts:["bsp/ 放硬件相关，换芯片只改这里。","app/ 放业务逻辑，不直接碰寄存器。","main 只做初始化和调度。","公共模块（协议、滤波、日志）单独成目录。","用 Git 管理，有清晰的提交记录。"], tip:""},
+
+{c:"P", q:"你为什么选择嵌入式方向？", core:"讲具体触发点 + 做过什么验证 + 现在还愿意做什么。",
+ pts:["避免空话（「我对硬件感兴趣」）。","讲一个具体经历：第一次点灯、第一次调通电机。","讲你为了这个方向做了什么（项目、比赛、自学）。","讲你对这个行业未来的判断（AI + 边缘设备）。"], tip:""},
+
+{c:"P", q:"你了解我们公司做什么吗？", core:"说出主营业务 + 产品线 + 你应聘岗位在其中的位置。",
+ pts:["面试前 30 分钟看官网和招聘 JD。","说清岗位职责与你项目经验的对应关系。","准备一个「我能马上上手什么、需要学什么」的诚实回答。"], tip:""},
+
+{c:"P", q:"你的缺点是什么？", core:"说一个真实的、不影响岗位核心能力的、并且你在改进的。",
+ pts:["避免「我太追求完美」这种假答案。","好的例子：硬件经验偏少，所以我刻意多打板。","给出正在采取的具体行动。"], tip:""},
+
+{c:"P", q:"如果项目延期了你会怎么办？", core:"先保住核心功能，再谈扩展；及时同步而不是硬扛。",
+ pts:["明确最小可用版本（MVP）。","评估哪个功能可以砍、哪个不能砍。","提前告知，而不是最后一刻才说。","复盘延期原因，是估算问题还是技术问题。"], tip:""},
+
+{c:"P", q:"你最大的优势是什么？", core:"用一个具体事实证明，不要用形容词。",
+ pts:["说一个能力 + 一个例子 + 一个结果。","例如：定位问题快——I2C 偶发失败，我用逻辑分析仪抓了三次波形定位到上拉问题。","与岗位要求对齐。"], tip:""},
+
+{c:"P", q:"为什么不考研？", core:"给一个有说服力的现实理由，不要贬低读研。",
+ pts:["讲你更想早点进入工程实践，且已经用项目验证了方向。","讲你对目标岗位的调研结论（本科可投、以项目论）。","如果被追问「以后会不会后悔」，说清你的备选路径。"], tip:""},
+
+/* ---------------- 反问 ---------------- */
+{c:"R", q:"你有什么想问我们的？", core:"问能体现你想长期做好的问题，不要一上来问薪资。",
+ pts:["「这个岗位新人前三个月主要做什么？」","「团队现在最大的技术挑战是什么？」","「新人有没有导师带？代码评审是怎么做的？」","「这个岗位一年后做得好的话，会是什么样子？」","「产品主要面向什么客户，对可靠性要求到什么级别？」"], tip:"准备 3 个问题，按面试氛围选一个问。"},
+
+{c:"R", q:"面试官问「你还有补充吗」", core:"这是最后一次加分机会，说一个没讲到的亮点。",
+ pts:["补一个项目里的技术细节。","补一个与你岗位相关的自学成果。","表达明确的入职意愿和可到岗时间。"], tip:""},
+
+{c:"R", q:"被问到不会的问题怎么办", core:"先承认，再给出你的思考路径，最后说你会怎么去查。",
+ pts:["不要硬编答案，面试官一眼能看出来。","可以说：「这块我没深入用过，我的理解是……，不确定的部分我会查手册确认。」","展示学习方法比展示知识更重要。"], tip:""}
+];
+
+/* ---------- render ---------- */
+const list = document.getElementById('list');
+const tabs = document.getElementById('tabs');
+const cnt = document.getElementById('cnt');
+let curCat = 'all';
+
+function render() {
+  list.innerHTML = '';
+  const items = BANK.filter(x => curCat === 'all' || x.c === curCat);
+  items.forEach((x, i) => {
+    const d = document.createElement('details');
+    d.innerHTML =
+      `<summary><span class="no">${String(i+1).padStart(2,'0')}</span><span class="qt">${x.q}</span><span class="arw">▶</span></summary>
+       <div class="ans">
+         <div class="core">${x.core}</div>
+         <ul>${x.pts.map(p => `<li>${p}</li>`).join('')}</ul>
+         ${x.tip ? `<div class="tipx">💡 ${x.tip}</div>` : ''}
+       </div>`;
+    list.appendChild(d);
+  });
+  cnt.textContent = items.length + ' 题';
+  document.getElementById('tq').textContent = BANK.length;
+}
+
+tabs.addEventListener('click', e => {
+  const b = e.target.closest('.tab');
+  if (!b) return;
+  Array.prototype.forEach.call(tabs.querySelectorAll('.tab'), t => t.classList.remove('on'));
+  b.classList.add('on');
+  curCat = b.dataset.c;
+  render();
+});
+
+render();
+</script>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>105 天逐日任务表 · 2026.11.02 → 2027.02.14</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+    --line:#dde5f4; --line2:#eef2fa;
+    --blue:#1d4ed8; --blue-soft:#eef3ff;
+    --teal:#0f766e; --teal-soft:#e9faf6;
+    --amber:#b45309; --amber-soft:#fff8e8;
+    --green:#0b7a5a; --green-soft:#e9f9f2; --green-line:#cdeee0;
+    --bg:#f5f7fc;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:86px}
+  body{margin:0;color:var(--ink);line-height:1.68;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(1000px 500px at 4% -8%,#e4edff 0%,transparent 58%),
+               radial-gradient(900px 460px at 100% 1%,#e5f7f3 0%,transparent 52%),var(--bg);
+    -webkit-font-smoothing:antialiased}
+
+  .wrap{max-width:980px;margin:0 auto;padding:30px 20px 90px}
+
+  /* sticky top */
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(245,247,252,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);margin:0 -20px;padding:9px 20px}
+  .topbar-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:12px}
+  .topbar .lbl{font-size:11.5px;color:var(--ink3);white-space:nowrap}
+  .bar{flex:1;height:7px;background:var(--line2);border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1d4ed8,#0f766e);border-radius:99px;transition:width .3s}
+  .topbar .pct{font-size:12px;font-weight:800;color:var(--ink2);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .topbar button{border:1px solid var(--line);background:#fff;color:var(--ink3);font-size:11.5px;
+    border-radius:999px;padding:4px 11px;cursor:pointer;font-family:inherit}
+  .topbar button:hover{color:var(--blue);border-color:#bcd0f5}
+
+  /* hero */
+  .hero{background:linear-gradient(125deg,#071e4a 0%,#1d4ed8 54%,#0f766e 128%);
+    border-radius:20px;padding:32px 34px 28px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 24px 54px -30px rgba(9,30,74,.7)}
+  .hero::after{content:"";position:absolute;right:-80px;top:-110px;width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.18),transparent 62%)}
+  .eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.32em;opacity:.66}
+  .hero h1{margin:0;font-size:clamp(22px,3.1vw,31px);font-weight:800;letter-spacing:.02em}
+  .hero .lead{margin:10px 0 0;max-width:620px;font-size:13.6px;opacity:.92}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:9px;margin-top:22px}
+  .fact{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 12px}
+  .fact b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+  .fact span{font-size:11px;opacity:.8}
+
+  /* week nav */
+  .nav{margin-top:18px;display:flex;flex-wrap:wrap;gap:6px}
+  .nav a{font-size:11.5px;text-decoration:none;color:var(--ink3);background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:4px 10px;transition:.15s}
+  .nav a:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  /* week block */
+  .week{margin-top:26px}
+  .wkhead{display:flex;align-items:flex-start;gap:12px;padding:0 2px 10px;border-bottom:2px solid var(--line);flex-wrap:wrap}
+  .wkn{flex:0 0 auto;min-width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(150deg,#1d4ed8,#2563eb);color:#fff;font-weight:800;font-size:14px}
+  .wkt{flex:1;min-width:170px}
+  .wkt h2{margin:0;font-size:16px;font-weight:800}
+  .wkt .sub{font-size:11.5px;color:var(--ink4);margin-top:2px}
+  .wkside{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .pill{font-size:10.5px;border-radius:999px;padding:2px 8px;background:#fff;border:1px solid var(--line);color:var(--ink3);white-space:nowrap}
+  .pill.mod{background:var(--teal-soft);border-color:#cdeee0;color:var(--teal);font-weight:700}
+  .pill.cnt{font-variant-numeric:tabular-nums}
+
+  .goal{margin:10px 2px 4px;font-size:12.5px;color:#1e3a8a;background:var(--blue-soft);border-radius:8px;padding:7px 11px}
+
+  /* day card */
+  .day{background:#fff;border:1px solid var(--line);border-radius:13px;margin-top:9px;overflow:hidden;
+    box-shadow:0 8px 22px -26px rgba(15,23,42,.6)}
+  .day-h{display:flex;align-items:center;gap:11px;padding:11px 15px;border-bottom:1px solid var(--line2);background:#fbfcff;flex-wrap:wrap}
+  .date{flex:0 0 auto;text-align:center;min-width:48px;line-height:1.2}
+  .date b{display:block;font-size:13px;font-weight:800;color:var(--ink)}
+  .date span{font-size:10px;color:var(--ink4)}
+  .day-h h3{margin:0;font-size:13.8px;font-weight:700;flex:1;min-width:150px}
+  .hrs{font-size:11px;color:var(--ink3);background:#f3f7fd;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .day-b{padding:6px 15px 10px}
+  .day-b ul{list-style:none;margin:0;padding:0}
+  .day-b li{border-bottom:1px dashed var(--line2)}
+  .day-b li:last-child{border-bottom:none}
+  .day-b label{display:flex;gap:10px;align-items:flex-start;padding:6.5px 0;cursor:pointer}
+  input[type=checkbox]{appearance:none;-webkit-appearance:none;width:16px;height:16px;border:2px solid #c3d0ea;
+    border-radius:5px;margin:3px 0 0;flex:0 0 auto;background:#fff;position:relative;cursor:pointer;transition:.15s}
+  input[type=checkbox]:checked{background:var(--green);border-color:var(--green)}
+  input[type=checkbox]:checked::after{content:"";position:absolute;left:4px;top:0.5px;width:4.5px;height:9px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(44deg)}
+  .day-b span{font-size:12.8px;color:var(--ink2);line-height:1.55}
+  input:checked + span,input:checked ~ span{color:#a3b1c7;text-decoration:line-through}
+  .std{padding:8px 15px 11px;font-size:12.2px;color:var(--green);background:linear-gradient(180deg,#fff,#f7fdfa);
+    border-top:1px solid var(--green-line)}
+  .std b{font-weight:800}
+
+  .rest .day-h{background:#fffaf2}
+  .rest .hrs{background:#fff2df;color:#9a5b00}
+
+  .foot{margin-top:32px;text-align:center;font-size:11.5px;color:var(--ink4)}
+  .back{display:inline-block;margin-bottom:12px;font-size:12px;color:var(--blue);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  /* ---- 理 / 实 / 杂 标签 ---- */
+  .tg{display:inline-block;width:17px;height:17px;line-height:15px;text-align:center;
+    font-size:11px;font-style:normal;font-weight:700;border-radius:4px;margin-top:1px;
+    flex:0 0 auto;font-family:var(--font-mono,ui-monospace,monospace)}
+  .tg-l{color:#a8c9ff;background:rgba(57,135,229,.22);border:1px solid rgba(57,135,229,.45)}
+  .tg-p{color:#6fe0b2;background:rgba(25,158,112,.22);border:1px solid rgba(25,158,112,.45)}
+  .tg-n{color:#93a3bd;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16)}
+
+  /* ---- 筛选 ---- */
+  .filt{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0 2px}
+  .filt .fl-k{font-size:11.5px;color:var(--ink4);letter-spacing:.06em;margin-right:2px}
+  .filt button{border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.04);
+    color:var(--ink3);font-size:12px;border-radius:999px;padding:5px 13px;cursor:pointer;
+    font-family:inherit;font-variant-numeric:tabular-nums;transition:.16s;white-space:nowrap}
+  .filt button:hover{color:var(--ink);border-color:rgba(255,255,255,.28)}
+  .filt button.on{color:#fff;background:rgba(79,140,255,.22);border-color:rgba(79,140,255,.5)}
+  .filt button b{font-weight:700;opacity:.72;margin-left:3px}
+  .filt-note{margin:9px 0 0;font-size:11.8px;color:var(--ink4);line-height:1.65;max-width:90ch}
+  .filt-note b{color:var(--ink3);font-weight:700}
+  body.f-l .day-b li[data-t="实"],body.f-l .day-b li[data-t="杂"],
+  body.f-p .day-b li[data-t="理"],body.f-p .day-b li[data-t="杂"],
+  body.f-n .day-b li[data-t="理"],body.f-n .day-b li[data-t="实"]{display:none}
+  .day.hide{display:none}
+
+  @media (max-width:520px){
+    .filt{gap:6px}
+    .filt button{padding:5px 10px;font-size:11.5px}
+  }
+
+  @media (max-width:700px){
+    .hero{padding:24px 18px}
+    .wkn{min-width:40px;height:40px;font-size:13px}
+  }
+  @media (max-width:520px){
+    html,body{overflow-x:hidden}
+    .wrap{padding:16px 12px 70px}
+    .topbar{margin:0 -12px;padding:8px 12px}
+    .day-h,.day-b,.std{padding-left:12px;padding-right:12px}
+  }
+  @media print{
+    body{background:#fff}
+    .topbar,.nav{display:none}
+    .week{break-inside:avoid}
+    .day{box-shadow:none}
+  }
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <span class="lbl">105 天</span>
+    <div class="bar"><i id="fill"></i></div>
+    <span class="pct" id="pct">0 / 0</span>
+    <button id="reset">重置</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <a class="back" style="margin-bottom:0" href="学习总控台.html">总控台</a>
+    <a class="back" style="margin-bottom:0;color:#2563eb;border-color:#cfdcff" href="学练双线.html">学练双线</a>
+    <a class="back" style="margin-bottom:0" href="15周逐周任务清单.html">← 返回 15 周清单</a>
+    <a class="back" style="margin-bottom:0;color:#0b7a5a;border-color:#cdeee0" href="每周复盘-周报.html">每周复盘 →</a>
+    <a class="back" style="margin-bottom:0;color:#2563eb;border-color:#cfdcff" href="打卡日历.html">打卡日历 →</a>
+  </div>
+
+  <header class="hero">
+    <h1>105 天逐日任务表</h1>
+    <p class="lead">周一到周五各 3 小时，周六 5 小时（整块攻坚），周日 4 小时（收口 + 周报）。每天都有「完成标准」，做到了就是做到了。</p>
+    <div class="facts">
+      <div class="fact"><b>105</b><span>天</span></div>
+      <div class="fact"><b>15</b><span>周</span></div>
+      <div class="fact"><b>24h</b><span>每周</span></div>
+      <div class="fact"><b>≈375h</b><span>总投入</span></div>
+    </div>
+  </header>
+
+  <div class="filt" id="filt">
+    <span class="fl-k">只看</span>
+    <button data-f="all" class="on">全部<b></b></button>
+    <button data-f="理">理论<b></b></button>
+    <button data-f="实">实践<b></b></button>
+    <button data-f="杂">杂项<b></b></button>
+  </div>
+  <p class="filt-note">
+    <b>理</b> = 读、算、画、解释，产出是理解；<b>实</b> = 搭、焊、烧录、测、抓波形，产出是证据；
+    <b>杂</b> = 采购、建档、写周报，两边都不算——但它每周确实要花时间，别当成学习时间。
+  </p>
+
+  <nav class="nav" id="nav"></nav>
+  <div id="plan"></div>
+
+  <p class="foot">105 天逐日任务表 · 2026.11.02 → 2027.02.14</p>
+</div>
+
+<script>
+const PLAN = [
+{w:1, range:"11.02 – 11.08", theme:"把工位建起来，读懂开发板", mod:"M1",
+ goal:"能用万用表解释「这块板子怎么供电、怎么点亮一颗灯」。",
+ days:[
+ {d:"11.02",wd:"周一",h:"3h",t:"清点器材，安装开发环境",ta:["清点现有器材，列一张缺件清单","下单 8 通道 USB 逻辑分析仪（¥50 级，配 PulseView）","安装 Keil 或 STM32CubeIDE，新建一个空工程"],tp:"杂杂实",st:"能编译通过、能识别下载器"},
+ {d:"11.03",wd:"周二",h:"3h",t:"装工具链，建代码仓库",ta:["安装串口助手与 Git","建 GitHub 仓库 embedded-learning","写 README：学习目标 + 目录约定"],tp:"杂杂杂",st:"第一次 commit 推送成功"},
+ {d:"11.04",wd:"周三",h:"3h",t:"读懂电源与核心电路",ta:["打印开发板原理图（A3 或两张 A4 拼）","标出：电源入口、3.3V LDO、晶振、复位、BOOT、下载口","每部分旁边写一句「它是干什么的」"],tp:"杂理理",st:"能对着图说出这 6 个部分的作用"},
+ {d:"11.05",wd:"周四",h:"3h",t:"找到每一个引脚",ta:["标出所有 LED、按键对应的 MCU 引脚号","标出每个电源脚旁边的去耦电容","把标注图拍照存进笔记"],tp:"理理杂",st:"笔记里有一张完整的引脚标注图"},
+ {d:"11.06",wd:"周五",h:"3h",t:"第一次测量",ta:["万用表测 USB 5V 输入电压","测 LDO 输出 3.3V","重复 3 次，记录数值"],tp:"实实实",st:"测量表里有电压值和误差"},
+
+ {d:"11.07",wd:"周六",h:"5h",t:"点亮第一颗 LED",ta:["用二极管档测 LED 正向压降 Vf","写点亮程序并烧录","测 LED 两端电压、限流电阻两端电压"],tp:"实实实",st:"灯亮了，且有两组实测电压"},
+ {d:"11.08",wd:"周日",h:"4h",t:"算一遍，收口",ta:["手算限流电阻：(3.3−1.9)/5mA = 280Ω","对比板上实际用的 330Ω，解释为什么选大的","整理本周记录，写周报"],tp:"理理杂",st:"W1 交付物齐全：仓库 + 标注图 + 测量表"}
+]},
+
+{w:2, range:"11.09 – 11.15", theme:"欧姆定律用起来：分压与开关", mod:"M1",
+ goal:"任何小电路都能先算再搭，搭完能验证。",
+ days:[
+ {d:"11.09",wd:"周一",h:"3h",t:"分压电路：先算再做",ta:["设计一个 3.3V → 1.65V 分压","计算两个电阻的阻值，写出过程","面包板搭出来"],tp:"理理实",st:"实测输出与计算值误差 < 5%"},
+ {d:"11.10",wd:"周二",h:"3h",t:"换三组电阻重复验证",ta:["换 3 组不同阻值重复实验","记录计算值 vs 实测值"],tp:"实实",st:"三组数据表完成，能说出误差来源"},
+ {d:"11.11",wd:"周三",h:"3h",t:"MOSFET 低边开关",ta:["选一个逻辑电平 MOSFET，查 datasheet 的 Vgs(th) 与 Rds(on)","搭低边开关，GPIO 控制一条灯带或小电机"],tp:"理实",st:"能稳定开关，MOS 不发热"},
+ {d:"11.12",wd:"周四",h:"3h",t:"续流二极管与反电动势",ta:["给感性负载加上续流二极管","去掉二极管对比现象（或看波形）","写清不用会发生什么"],tp:"实实理",st:"能解释反电动势为什么会烧管"},
+ {d:"11.13",wd:"周五",h:"3h",t:"读 datasheet",ta:["查 GPIO 最大输出电流与总电流限制","弄清推挽与开漏的区别和各自用途","写成一页笔记"],tp:"理理理",st:"一页笔记，能直接讲给别人听"},
+ {d:"11.14",wd:"周六",h:"5h",t:"逻辑分析仪上手",ta:["安装 PulseView 并跑通驱动","抓一次 UART 波形（发 hello）","在波形上指出起始位、8 个数据位、停止位"],tp:"实实理",st:"能独立解码出一串字符"},
+ {d:"11.15",wd:"周日",h:"4h",t:"上拉电阻实验 + 收口",ta:["用 GPIO 翻转观察上升沿","换 4.7k / 10k 上拉对比波形","整理 3 份实验记录 + 误差分析 + 周报"],tp:"实实杂",st:"W2 交付物齐全"}
+]},
+
+{w:3, range:"11.16 – 11.22", theme:"C 深水区 + GPIO 八种模式", mod:"M2 / M3",
+ goal:"指针和内存不再是黑箱；GPIO 每种模式都知道什么时候用。",
+ days:[
+ {d:"11.16",wd:"周一",h:"3h",t:"指针实验（一）",ta:["数组名退化：sizeof 与 & 的差异","用指针和下标两种方式遍历数组","指针做函数参数修改调用方变量"],tp:"理实实",st:"3 个小程序跑通并能解释每行"},
+ {d:"11.17",wd:"周二",h:"3h",t:"指针实验（二）",ta:["二级指针改指针","函数指针：回调一个函数","函数指针数组实现一个小状态机"],tp:"实实实",st:"能解释函数指针数组为什么适合做状态机"},
+ {d:"11.18",wd:"周三",h:"3h",t:"结构体对齐",ta:["改成员顺序，用 sizeof 看大小变化","加 #pragma pack 再看一次","画出内存布局图"],tp:"实实理",st:"图能说明为什么要按大小排序成员"},
+ {d:"11.19",wd:"周四",h:"3h",t:"volatile 与编译器优化",ta:["在 HAL 源码里找出用了 volatile 的变量","解释不加 volatile 会出什么问题","写出 3 个必须用的场景"],tp:"理理理",st:"3 个场景能举例说明"},
+ {d:"11.20",wd:"周五",h:"3h",t:"GPIO 八种模式逐个过",ta:["配置输入/输出/复用/模拟 × 推挽/开漏","用万用表和逻辑分析仪观察差异","做一张「模式 / 用途 / 现象」表格"],tp:"实实理",st:"表格完成，每格都能解释"},
+ {d:"11.21",wd:"周六",h:"5h",t:"按键消抖：两种实现",ta:["延时消抖版（最朴素）","状态机消抖版（不阻塞）","对比两者在长按、连按下的表现"],tp:"实实实",st:"两种都稳定，能说出状态机版的优势"},
+ {d:"11.22",wd:"周日",h:"4h",t:"收口",ta:["整理 9 个 demo 到 c-basics/ 与 gpio/","写《GPIO 八种模式什么时候用》","提交 + 周报"],tp:"杂理杂",st:"仓库里每个 demo 都有一句说明"}
+]},
+
+{w:4, range:"11.23 – 11.29", theme:"时钟树与中断", mod:"M3",
+ goal:"知道程序从复位到 main 发生了什么，中断为什么能打断主循环。",
+ days:[
+ {d:"11.23",wd:"周一",h:"3h",t:"手绘时钟树",ta:["画 HSE → PLL → SYSCLK → AHB/APB1/APB2","标出每一级的频率","标出哪些外设挂在哪个总线上"],tp:"理理理",st:"图能讲清 5 分钟不卡壳"},
+ {d:"11.24",wd:"周二",h:"3h",t:"改时钟并验证",ta:["把系统时钟从 72MHz 改到 48MHz","用串口波特率是否错乱来验证","用延时函数点灯看快慢变化"],tp:"实实实",st:"现象明显变化，能证明真的改了"},
+ {d:"11.25",wd:"周三",h:"3h",t:"外部中断",ta:["按键触发外部中断点灯","加软件消抖","测中断响应时间"],tp:"实实实",st:"不误触发，响应及时"},
+ {d:"11.26",wd:"周四",h:"3h",t:"定时器中断",ta:["配置 1ms 定时中断","中断里累加计数，主循环串口打印","用秒表核对 1000 次是否是 1 秒"],tp:"实实实",st:"计时误差 < 1%"},
+ {d:"11.27",wd:"周五",h:"3h",t:"NVIC 优先级分组",ta:["设置优先级分组为 4 位抢占","给两个中断分配不同抢占优先级","搞清抢占优先级与子优先级的区别"],tp:"实实理",st:"能说出「谁能打断谁」"},
+ {d:"11.28",wd:"周六",h:"5h",t:"中断嵌套实验",ta:["高优先级中断打断低优先级 ISR","用 GPIO 翻转 + 逻辑分析仪抓波形","在波形上指出嵌套发生的位置"],tp:"实实理",st:"波形上能看到完整的嵌套过程"},
+ {d:"11.29",wd:"周日",h:"4h",t:"启动流程 + ISR 规范",ta:["画流程图：复位 → 取向量表 → Reset_Handler → SystemInit → main","写清楚 ISR 里该做什么、不该做什么","周报"],tp:"理理杂",st:"能背出启动流程，ISR 原则写满一页"}
+]},
+
+{w:5, range:"11.30 – 12.06", theme:"定时器与 PWM", mod:"M3",
+ goal:"能算出任何定时参数，并用仪器验证它是对的。",
+ days:[
+ {d:"11.30",wd:"周一",h:"3h",t:"定时器参数计算",ta:["写出定时公式：T = (PSC+1)(ARR+1)/fclk","算 1ms 中断的两组不同参数组合","实际配置并验证"],tp:"理理实",st:"计算笔记有公式、数值、验证结果"},
+ {d:"12.01",wd:"周二",h:"3h",t:"PWM 呼吸灯",ta:["配置一路 PWM 输出","循环改占空比做呼吸效果","调周期到肉眼不闪"],tp:"实实实",st:"呼吸平滑，无频闪"},
+ {d:"12.02",wd:"周三",h:"3h",t:"测量占空比",ta:["逻辑分析仪测实际占空比","对比代码里设置的值","换 3 个占空比各测一次"],tp:"实实实",st:"误差 < 2%，能说出偏差原因"},
+ {d:"12.03",wd:"周四",h:"3h",t:"输入捕获测频率",ta:["配置输入捕获","测一个外部方波的频率与占空比","与信号源（或另一路 PWM）核对"],tp:"实实实",st:"读数与设定值一致"},
+ {d:"12.04",wd:"周五",h:"3h",t:"PWM 驱动舵机",ta:["配置 50Hz、脉宽 0.5–2.5ms","写角度→脉宽的换算函数","让舵机转到 0°、90°、180°"],tp:"实实实",st:"三个角度都准确到位"},
+ {d:"12.05",wd:"周六",h:"5h",t:"扫角与抖动排查",ta:["0→180→0 连续扫角","观察抖动，测舵机供电电压跌落","找出抖动根因（多半是电源）"],tp:"实实理",st:"能说出抖动原因和解决办法"},
+ {d:"12.06",wd:"周日",h:"4h",t:"收口",ta:["保存 3 张波形截图并标注参数","整理定时器计算笔记","周报"],tp:"杂理杂",st:"W5 交付物齐全"}
+]},
+
+{w:6, range:"12.07 – 12.13", theme:"UART 与自己的通信协议", mod:"M3 / M7",
+ goal:"从「能收发字节」升级到「能设计一套可靠的帧协议」。",
+ days:[
+ {d:"12.07",wd:"周一",h:"3h",t:"UART 轮询版",ta:["轮询方式收发字符串","做回显测试","记录阻塞时主循环的表现"],tp:"实实实",st:"能回显，但知道它为什么不好"},
+ {d:"12.08",wd:"周二",h:"3h",t:"UART 中断版",ta:["改成接收中断","连续发 100 字节看是否丢包","加简单的缓冲"],tp:"实实实",st:"100 字节不丢"},
+ {d:"12.09",wd:"周三",h:"3h",t:"UART + DMA",ta:["DMA 接收 + 空闲中断","三种方式对比 CPU 占用","写成对比表"],tp:"实实理",st:"对比表能看出 DMA 的优势"},
+ {d:"12.10",wd:"周四",h:"3h",t:"手写接收环形缓冲",ta:["不用 HAL 回调，自己写环形缓冲","实现 is_empty / is_full / push / pop","高波特率压测"],tp:"实实实",st:"115200 持续灌数据不丢"},
+ {d:"12.11",wd:"周五",h:"3h",t:"设计协议帧",ta:["定帧格式：帧头2B + 长度1B + 命令1B + 数据N + CRC16 2B","画成表格，写清每个字段","实现 CRC16 位运算版"],tp:"理理实",st:"帧格式定稿，CRC 自测通过"},
+ {d:"12.12",wd:"周六",h:"5h",t:"解析状态机",ta:["实现 CRC16 查表版，验证与位运算一致","写解析状态机：半包、粘包、CRC 错误","三种异常各造一次数据验证"],tp:"实实实",st:"三种异常都能正确恢复"},
+ {d:"12.13",wd:"周日",h:"4h",t:"联调 + 协议文档",ta:["PC ↔ 板子双向收发跑通","故意发错包看容错","写协议文档 + 周报"],tp:"实实杂",st:"W6 交付物齐全"}
+]},
+
+{w:7, range:"12.14 – 12.20", theme:"ADC 与 DMA", mod:"M3",
+ goal:"理解采样不是读一个数那么简单，并掌握 DMA 搬运。",
+ days:[
+ {d:"12.14",wd:"周一",h:"3h",t:"ADC 单次转换",ta:["读电位器电压","原始值 → 电压换算","串口打印"],tp:"实实实",st:"数值随旋钮连续变化"},
+ {d:"12.15",wd:"周二",h:"3h",t:"ADC 连续转换",ta:["打开连续转换模式","测实际采样率","与理论值对比"],tp:"实实理",st:"能算出并验证采样率"},
+ {d:"12.16",wd:"周三",h:"3h",t:"ADC + DMA 循环",ta:["DMA 循环搬运多通道","CPU 不参与采样","做 8 点均值"],tp:"实实实",st:"主循环不被占用"},
+ {d:"12.17",wd:"周四",h:"3h",t:"采样时间实验",ta:["同一电压用 3 种采样时间各测 10 次","记录最大最小值与波动","画出对比表"],tp:"实实理",st:"能说出采样时间与精度的关系"},
+ {d:"12.18",wd:"周五",h:"3h",t:"精度核对",ta:["对比 ADC 读数与万用表实测","算误差百分比","排查误差来源（基准电压/走线）"],tp:"实理理",st:"误差 < 2%"},
+ {d:"12.19",wd:"周六",h:"5h",t:"两种滤波",ta:["实现滑动平均（窗口 8）","实现中值滤波（窗口 5）","对比延迟与平滑效果"],tp:"实实实",st:"两种都能跑，有对比结论"},
+ {d:"12.20",wd:"周日",h:"4h",t:"收口",ta:["整理精度对比表","写《ADC 精度为什么不准》","周报"],tp:"理理杂",st:"W7 交付物齐全"}
+]},
+
+{w:8, range:"12.21 – 12.27", theme:"I2C 与 SPI：用波形读懂总线", mod:"M3 / M4",
+ goal:"以后任何总线问题，都能靠逻辑分析仪定位到具体哪一位。",
+ days:[
+ {d:"12.21",wd:"周一",h:"3h",t:"I2C 读传感器",ta:["选 AHT20 或 BMP280","读 ID 寄存器验证通信","读温湿度/气压并打印"],tp:"理实实",st:"数据合理，不跳变"},
+ {d:"12.22",wd:"周二",h:"3h",t:"时序解码",ta:["用逻辑分析仪抓 I2C 波形","逐位指出起始、地址、ACK、数据、停止","对照手册时序图逐条匹配"],tp:"实理理",st:"能从头到尾讲一遍波形"},
+ {d:"12.23",wd:"周三",h:"3h",t:"★ 上拉电阻实验",ta:["4.7k → 10k，观察波形","直接去掉上拉，看通信失败","解释上升沿为什么变缓"],tp:"实实理",st:"能说清上拉电阻与速率的关系"},
+ {d:"12.24",wd:"周四",h:"3h",t:"SPI 驱动外设",ta:["驱动一块 SPI 屏或 SPI Flash","读写 ID","测一次连续读写吞吐"],tp:"实实实",st:"能读能写"},
+ {d:"12.25",wd:"周五",h:"3h",t:"SPI 时钟实测",ta:["逻辑分析仪测实际 SCK 频率","与代码配置值核对","测片选时序"],tp:"实实实",st:"数值对得上"},
+ {d:"12.26",wd:"周六",h:"5h",t:"CPOL/CPHA + 排查清单",ta:["理解四种模式的采样边沿","换两种模式验证现象差异","写《I2C 通信失败排查清单》≥8 条"],tp:"理实理",st:"清单每一条都能执行"},
+ {d:"12.27",wd:"周日",h:"4h",t:"收口",ta:["保存 I2C/SPI 波形截图","清单定稿","周报"],tp:"杂理杂",st:"W8 交付物齐全"}
+]},
+
+{w:9, range:"12.28 – 01.03", theme:"综合小项目 v1", mod:"M3 / M7",
+ goal:"第一次把驱动、业务、通信组装成一个完整应用。",
+ days:[
+ {d:"12.28",wd:"周一",h:"3h",t:"定需求，画框图",ta:["功能：OLED 显示 + 传感器 + 串口上报 + 按键翻页","画模块框图与数据流","列出用到的外设"],tp:"理理理",st:"框图清晰，别人能看懂"},
+ {d:"12.29",wd:"周二",h:"3h",t:"搭目录骨架",ta:["建 bsp/ app/ 与 main.c","写空函数占位","保证能编译"],tp:"实实实",st:"空框架能编译通过"},
+ {d:"12.30",wd:"周三",h:"3h",t:"OLED 驱动",ta:["移植或自己写 OLED 驱动","显示文字与数值","做一行状态栏"],tp:"实实实",st:"显示正常，刷新不闪"},
+ {d:"12.31",wd:"周四",h:"3h",t:"传感器 + 滤波",ta:["接入 W8 的传感器","复用 W7 的滤波","数据稳定后显示"],tp:"实实实",st:"显示值不抖动"},
+ {d:"01.01",wd:"周五",h:"3h",t:"按键状态机翻页",ta:["3 个页面循环切换","状态机实现，不用延时","加按键长按功能"],tp:"实实实",st:"切换顺畅，无跳页"},
+ {d:"01.02",wd:"周六",h:"5h",t:"串口上报 + PC 显示",ta:["复用 W6 协议帧","PC 端写个最简单的接收显示","实时刷新曲线或数值"],tp:"实实实",st:"板子上报，PC 实时显示"},
+ {d:"01.03",wd:"周日",h:"4h",t:"演示视频 + 周报",ta:["录一段 3 分钟演示","写清每个功能按哪个键","周报"],tp:"杂理杂",st:"v1 能连续演示 3 分钟"}
+]},
+
+{w:10, range:"01.04 – 01.10", theme:"项目打磨与笔记收口", mod:"M7",
+ goal:"把「能跑」变成「能交付」——这就是工程和作业的区别。",
+ days:[
+ {d:"01.04",wd:"周一",h:"3h",t:"参数掉电保存",ta:["把配置参数存进 Flash 或 EEPROM","上电读取并恢复","做磨损保护（简单计数）"],tp:"实实实",st:"断电重启参数还在"},
+ {d:"01.05",wd:"周二",h:"3h",t:"写 README",ta:["功能列表","接线图（拍照或画）","编译与烧录方法"],tp:"理理理",st:"别人照着能跑起来"},
+ {d:"01.06",wd:"周三",h:"3h",t:"写测试记录",ta:["测了哪些项、结果如何","记录发现的问题与修复","至少 10 条"],tp:"理理理",st:"测试记录有 10 条以上"},
+ {d:"01.07",wd:"周四",h:"3h",t:"整理笔记，列缺口",ta:["把前 9 周笔记过一遍","列出「还没搞懂」清单 ≥5 条","按优先级排序"],tp:"理理理",st:"清单成形，知道寒假补什么"},
+ {d:"01.08",wd:"周五",h:"3h",t:"专业课复习（保 GPA）",ta:["复习一门主课","做一套往年题"],tp:"理理",st:"别让期末翻车"},
+ {d:"01.09",wd:"周六",h:"5h",t:"重构 + 补漏",ta:["按缺口清单补 2 个最痛的","把 main.c 里的业务逻辑挪走","统一命名风格"],tp:"理实实",st:"代码结构清晰，main 不超过 100 行"},
+ {d:"01.10",wd:"周日",h:"4h",t:"发布 v1.1 + 周报",ta:["打 tag v1.1","更新仓库首页","周报"],tp:"杂杂杂",st:"W10 交付物齐全"}
+]},
+
+{w:11, range:"01.11 – 01.17", theme:"考试周：只维持手感", mod:"缓冲",
+ goal:"不碰新外设。GPA 也是部分企业的筛选门槛。",
+ days:[
+ {d:"01.11",wd:"周一",h:"1.5h",t:"保底节奏",ta:["40 分钟 C 深水区","30 分钟刷题","专业课"],tp:"理理理",st:"保持手感即可"},
+ {d:"01.12",wd:"周二",h:"1.5h",t:"保底节奏",ta:["40 分钟 C 深水区","30 分钟刷题","专业课"],tp:"理理理",st:"保持手感即可"},
+ {d:"01.13",wd:"周三",h:"1.5h",t:"保底节奏",ta:["40 分钟 C 深水区","30 分钟刷题","专业课"],tp:"理理理",st:"保持手感即可"},
+ {d:"01.14",wd:"周四",h:"1.5h",t:"保底节奏",ta:["40 分钟 C 深水区","30 分钟刷题","专业课"],tp:"理理理",st:"保持手感即可"},
+ {d:"01.15",wd:"周五",h:"1.5h",t:"保底节奏",ta:["40 分钟 C 深水区","30 分钟刷题","专业课"],tp:"理理理",st:"保持手感即可"},
+ {d:"01.16",wd:"周六",h:"2h",t:"考后回顾代码",ta:["把前 10 周代码过一遍","标出想重构的地方"],tp:"理理",st:"列出一张待重构清单"},
+ {d:"01.17",wd:"周日",h:"1h",t:"周报 + 排寒假计划",ta:["写周报","确认寒假画板的时间安排"],tp:"杂杂",st:"寒假计划确定"}
+]},
+
+{w:12, range:"01.18 – 01.24", theme:"选型与原理图", mod:"M5",
+ goal:"画出第一版能通过自查的原理图。",
+ days:[
+ {d:"01.18",wd:"周一",h:"3h",t:"选型",ta:["定 MCU（沿用手上的型号）","选 LDO、晶振、下载口","选一个 I2C 传感器座"],tp:"理理理",st:"选型表完成，每个器件有理由"},
+ {d:"01.19",wd:"周二",h:"3h",t:"嘉立创 EDA 上手",ta:["跟完官方入门教程","自己画一个电阻 + LED","导出一次 BOM 试试"],tp:"理实实",st:"能独立放置元件并连线"},
+ {d:"01.20",wd:"周三",h:"3h",t:"画电源部分",ta:["LDO 及其输入输出电容","每个电源脚 100nF 去耦","输入端加保护（保险丝/二极管）"],tp:"实实实",st:"电源部分完整"},
+ {d:"01.21",wd:"周四",h:"3h",t:"画 MCU 最小系统",ta:["所有电源脚与地","晶振与负载电容","复位电路、BOOT0 下拉、下载口"],tp:"实实实",st:"最小系统能独立工作"},
+ {d:"01.22",wd:"周五",h:"3h",t:"画外设 + 加网络标号",ta:["LED、按键、I2C 座","所有连线加网络标号","检查有没有悬空网络"],tp:"实实实",st:"图里没有无标号的线"},
+ {d:"01.23",wd:"周六",h:"5h",t:"引脚复用核对 + 晶振电容",ta:["对照 datasheet 逐脚核对复用冲突","晶振负载电容按 C = 2×(CL − Cstray) 计算","改掉所有冲突"],tp:"理理实",st:"没有引脚冲突"},
+ {d:"01.24",wd:"周日",h:"4h",t:"导出 + 周报",ta:["导出原理图 PDF","截图存档","周报"],tp:"杂杂杂",st:"原理图 v1 定稿"}
+]},
+
+{w:13, range:"01.25 – 01.31", theme:"评审与 PCB 布局", mod:"M5",
+ goal:"让别人帮你找出错误——这是最快的成长方式。",
+ days:[
+ {d:"01.25",wd:"周一",h:"3h",t:"自查清单",ta:["每个电源脚是否有 100nF","复位电容是否到位","BOOT0 是否 10k 下拉","下载口接线是否正确"],tp:"理理理理",st:"逐条打勾，问题记下来"},
+ {d:"01.26",wd:"周二",h:"3h",t:"★ 发出去求评审",ta:["发到论坛或给学长看","把原理图 + 说明一起发","逐条记录收到的意见"],tp:"杂杂杂",st:"至少拿到 5 条反馈"},
+ {d:"01.27",wd:"周三",h:"3h",t:"PCB 布局",ta:["顺序：电源 → 晶振 → MCU → 接口","晶振尽量贴近 MCU","接口放在板边"],tp:"实实实",st:"布局完成，走线不打架"},
+ {d:"01.28",wd:"周四",h:"3h",t:"走线",ta:["电源线加粗（按电流算）","信号线够用就行","地线尽量宽"],tp:"实实实",st:"DRC 无严重错误"},
+ {d:"01.29",wd:"周五",h:"3h",t:"铺地与检查",ta:["底层铺地","检查地平面有没有被割断","处理孤岛铜"],tp:"实实实",st:"地平面完整"},
+ {d:"01.30",wd:"周六",h:"5h",t:"3D 预览与封装核对",ta:["逐个检查封装方向","二极管、电解电容、IC 的 1 脚","确认丝印不压焊盘"],tp:"实实实",st:"方向全部正确"},
+ {d:"01.31",wd:"周日",h:"4h",t:"评审意见闭环 + 周报",ta:["逐条回复评审意见","改完再自查一遍","周报"],tp:"杂实杂",st:"意见全部闭环"}
+]},
+
+{w:14, range:"02.01 – 02.07", theme:"打样、采购、焊接", mod:"M5",
+ goal:"板子能通电、能烧程序、能点灯。",
+ days:[
+ {d:"02.01",wd:"周一",h:"3h",t:"导出 Gerber 并下单",ta:["导出 Gerber 与钻孔文件","做 DFM 检查","嘉立创下单 5 片"],tp:"实实杂",st:"订单已提交"},
+ {d:"02.02",wd:"周二",h:"3h",t:"采购 BOM",ta:["0603 电阻电容各买 10 倍冗余","核对封装与耐压","下单"],tp:"杂理杂",st:"物料齐，不会因为缺件卡住"},
+ {d:"02.03",wd:"周三",h:"3h",t:"等板期间：复习与备工具",ta:["复习焊接要点（QFP/QFN）","准备助焊剂、吸锡带、镊子","整理焊接顺序"],tp:"理杂理",st:"焊接流程写在纸上"},
+ {d:"02.04",wd:"周四",h:"3h",t:"★ 收货先测短路",ta:["板子到手不通电","万用表测 3.3V 与 GND 是否短路","测各电源域对地阻值"],tp:"杂实实",st:"确认无短路才敢上电"},
+ {d:"02.05",wd:"周五",h:"3h",t:"限流上电",ta:["电源限流设 100mA","上电测 3.3V","测 MCU 附近电压"],tp:"实实实",st:"电压正常且电流不异常"},
+ {d:"02.06",wd:"周六",h:"5h",t:"焊接（分段验证）",ta:["先焊电源部分 → 测电压","再焊 MCU → 测能否识别","最后焊外设"],tp:"实实实",st:"每一段都能验证通过"},
+ {d:"02.07",wd:"周日",h:"4h",t:"烧录点灯 + 问题记录",ta:["烧录点灯程序","记录焊接中出现的问题","周报"],tp:"实理杂",st:"灯亮了"}
+]},
+
+{w:15, range:"02.08 – 02.14", theme:"全功能验证与寒假复盘", mod:"M3 / M5",
+ goal:"板子上每个功能都被验证过；把两个月变成一份可复用的复盘。",
+ days:[
+ {d:"02.08",wd:"周一",h:"3h",t:"验证 LED 与按键",ta:["逐个点亮 LED","按键响应与消抖","记录测试结果"],tp:"实实实",st:"全部正常"},
+ {d:"02.09",wd:"周二",h:"3h",t:"验证串口与 I2C",ta:["串口收发与协议通信","I2C 读传感器","测上电时序是否正常"],tp:"实实实",st:"全部正常"},
+ {d:"02.10",wd:"周三",h:"3h",t:"补看门狗",ta:["开启独立看门狗","故意死循环看是否复位","测复位时间"],tp:"实实实",st:"能正确复位"},
+ {d:"02.11",wd:"周四",h:"3h",t:"低功耗实测",ta:["测 Sleep / Stop / Standby 三种模式电流","做一张电流对比表","测唤醒时间"],tp:"实理实",st:"有完整的数据表"},
+ {d:"02.12",wd:"周五",h:"3h",t:"问题记录整理",ta:["整理「不通 → 定位 → 修复」记录","至少 5 条","每条写清用了什么工具"],tp:"理理理",st:"记录表完成（面试素材）"},
+ {d:"02.13",wd:"周六",h:"5h",t:"寒假复盘",ta:["做了什么、没做成什么","哪些是「假会」——以为会其实不会","下学期计划"],tp:"理理理",st:"复盘文档写完"},
+ {d:"02.14",wd:"周日",h:"4h",t:"仓库归档 + 周报",ta:["硬件资料归档（原理图/PCB/BOM/焊接记录）","README 写清板子能做什么","周报"],tp:"杂理杂",st:"GitHub 仓库完整"}
+]}
+];
+
+/* ---------- render ---------- */
+const KEY = 'daily-plan-v1';
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+
+const navEl = document.getElementById('nav');
+const planEl = document.getElementById('plan');
+let total = 0;
+
+PLAN.forEach((wk) => {
+  const a = document.createElement('a');
+  a.href = '#w' + wk.w;
+  a.textContent = 'W' + wk.w;
+  navEl.appendChild(a);
+
+  const sec = document.createElement('section');
+  sec.className = 'week';
+  sec.id = 'w' + wk.w;
+
+  let body = '';
+  wk.days.forEach((day, di) => {
+    const isRest = wk.w === 11;
+    body += `<article class="day${isRest ? ' rest' : ''}">
+      <div class="day-h">
+        <div class="date"><b>${day.d}</b><span>${day.wd}</span></div>
+        <h3>${day.t}</h3>
+        <span class="hrs">${day.h}</span>
+      </div>
+      <div class="day-b"><ul>`;
+    day.ta.forEach((t, ti) => {
+      const id = `w${wk.w}d${di}t${ti}`;
+      const k = (day.tp || '')[ti] || '';
+      const cls = k === '理' ? 'tg-l' : (k === '实' ? 'tg-p' : 'tg-n');
+      const badge = k ? `<i class="tg ${cls}">${k}</i>` : '';
+      total++;
+      const ck = saved[id] ? ' checked' : '';
+      body += `<li data-t="${k}"><label><input type="checkbox" data-id="${id}"${ck}>${badge}<span>${t}</span></label></li>`;
+    });
+    body += `</ul></div>
+      <div class="std"><b>完成标准：</b>${day.st}</div>
+    </article>`;
+  });
+
+  sec.innerHTML = `
+    <div class="wkhead">
+      <div class="wkn">W${wk.w}</div>
+      <div class="wkt"><h2>${wk.theme}</h2><div class="sub">${wk.range}</div></div>
+      <div class="wkside"><span class="pill mod">${wk.mod}</span><span class="pill cnt" data-cnt>0/0</span></div>
+    </div>
+    <div class="goal">本周目标：${wk.goal}</div>
+    ${body}`;
+  planEl.appendChild(sec);
+});
+
+/* ---------- progress ---------- */
+const all = Array.prototype.slice.call(document.querySelectorAll('#plan input[type=checkbox]'));
+const fill = document.getElementById('fill');
+const pct = document.getElementById('pct');
+
+function render() {
+  let done = 0;
+  all.forEach(b => { if (b.checked) done++; });
+  fill.style.width = (done / all.length * 100) + '%';
+  pct.textContent = done + ' / ' + all.length;
+
+  document.querySelectorAll('.week').forEach(sec => {
+    const bs = Array.prototype.filter.call(sec.querySelectorAll('input'),
+      b => b.closest('li') && b.closest('li').offsetParent !== null);
+    const d = bs.filter(b => b.checked).length;
+    const tag = sec.querySelector('[data-cnt]');
+    if (tag) tag.textContent = d + '/' + bs.length;
+  });
+}
+
+all.forEach(b => {
+  b.addEventListener('change', () => {
+    saved[b.dataset.id] = b.checked;
+    try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+    render();
+  });
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  if (!confirm('清空所有勾选记录？')) return;
+  saved = {};
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  all.forEach(b => { b.checked = false; });
+  render();
+});
+
+/* ---------- 理 / 实 / 杂 筛选 ---------- */
+const FILT = { '理': 'f-l', '实': 'f-p', '杂': 'f-n' };
+const fbtns = Array.prototype.slice.call(document.querySelectorAll('#filt button'));
+
+function applyFilter(f) {
+  document.body.classList.remove('f-l', 'f-p', 'f-n');
+  if (FILT[f]) document.body.classList.add(FILT[f]);
+  fbtns.forEach(b => b.classList.toggle('on', b.dataset.f === f));
+
+  const days = Array.prototype.slice.call(document.querySelectorAll('.day'));
+  days.forEach(d => d.classList.remove('hide'));
+  days.forEach(d => {
+    const vis = Array.prototype.some.call(d.querySelectorAll('.day-b li'),
+      x => x.offsetParent !== null);
+    d.classList.toggle('hide', !vis);
+  });
+  render();
+}
+
+fbtns.forEach(b => b.addEventListener('click', () => applyFilter(b.dataset.f)));
+
+const counts = { '理': 0, '实': 0, '杂': 0 };
+PLAN.forEach(wk => wk.days.forEach(d => (d.tp || '').split('').forEach(c => {
+  if (counts[c] !== undefined) counts[c]++;
+})));
+fbtns.forEach(b => {
+  const n = b.dataset.f === 'all' ? total : counts[b.dataset.f];
+  b.querySelector('b').textContent = n;
+});
+
+render();
+</script>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

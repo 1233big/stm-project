@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>打卡日历 · 每天一格</title>
+<style>
+  :root{
+    --ink:#0b1220; --ink2:#2b3648; --ink3:#5b6b85; --ink4:#8b9ab3;
+    --line:#dfe6f5; --line2:#edf1fa;
+    --blue:#2563eb; --blue-soft:#eef3ff;
+    --green:#047857; --amber:#b45309;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;color:var(--ink);line-height:1.65;
+    font-family:var(--font-sans,-apple-system,"PingFang SC","Microsoft YaHei UI",sans-serif);
+    min-height:100vh;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:32px 20px 90px}
+
+  .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .back{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--blue);
+    text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  /* ---- 头部 ---- */
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+  .head h1{margin:0;font-size:clamp(21px,3vw,28px);font-weight:800;letter-spacing:-.02em}
+  .head .sub{margin:5px 0 0;font-size:13px;color:var(--ink3);max-width:52ch}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 18px;max-width:760px}
+  .st{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px 16px;
+    box-shadow:var(--shadow-1)}
+  .st b{display:block;font-size:26px;font-weight:800;line-height:1.1;letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums}
+  .st span{font-size:11.5px;color:var(--ink4)}
+  .st.hot b{color:var(--blue)}
+  .st.warm b{color:var(--amber)}
+
+  /* ---- 日历卡 ---- */
+  .cal{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 14px;
+    box-shadow:var(--shadow-2)}
+  .cal-h{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .cal-h .ym{font-size:16px;font-weight:800;letter-spacing:-.01em;flex:1}
+  .cal-h .ym small{display:block;font-size:11px;font-weight:500;color:var(--ink4);letter-spacing:.02em}
+  .nav-b{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:#fff;
+    cursor:pointer;display:grid;place-items:center;color:var(--ink3);transition:.16s}
+  .nav-b:hover{border-color:#bfd0ee;color:var(--blue);background:#fafcff}
+  .nav-b svg{width:15px;height:15px}
+  .today-b{font-size:11.5px;border:1px solid var(--line);background:#fff;color:var(--ink3);
+    border-radius:999px;padding:5px 12px;cursor:pointer;font-family:inherit;transition:.16s}
+  .today-b:hover{border-color:#bfd0ee;color:var(--blue)}
+
+  .wd{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+  .wd span{text-align:center;font-size:10.5px;letter-spacing:.1em;color:var(--ink4);font-weight:700;
+    padding-bottom:4px}
+  .wd span.wk{color:#b04a3f}
+
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+
+  .cell{
+    position:relative;aspect-ratio:1/1;border:1px solid transparent;border-radius:10px;
+    background:#f7f9fe;color:var(--ink2);font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+    font-family:inherit;cursor:pointer;transition:background .16s, color .16s,
+      border-color .16s, transform .16s, box-shadow .16s;
+    font-variant-numeric:tabular-nums;
+  }
+  .cell:hover:not(.blank){ background:#eef3ff; border-color:#c9d8f6; }
+  .cell.blank{ background:transparent; cursor:default; }
+  .cell.out{ color:#c2cbdb; background:#fbfcfe; }
+
+  /* 今天：描边 */
+  .cell.today{ border-color:var(--blue); color:var(--blue); font-weight:800; }
+  .cell.today::after{
+    content:""; position:absolute; bottom:5px; left:50%; transform:translateX(-50%);
+    width:4px; height:4px; border-radius:50%; background:var(--blue);
+  }
+
+  /* 已打卡：填充蓝色方格 */
+  .cell.on{
+    background:linear-gradient(160deg,#3b82f6,#2563eb);
+    color:#fff; border-color:#2563eb;
+    box-shadow:0 6px 14px -8px rgba(37,99,235,.85);
+  }
+  .cell.on::after{ content:none; }
+  .cell.on:hover{ background:linear-gradient(160deg,#2f74ef,#1d4ed8); }
+
+  /* 计划窗口内（105 天）小标记 */
+  .cell.plan:not(.on)::before{
+    content:""; position:absolute; top:6px; right:6px;
+    width:4px; height:4px; border-radius:50%; background:#c7d3e8;
+  }
+  .cell.on.plan::before{ background:rgba(255,255,255,.72); }
+
+  .cell.future{ color:#cbd4e3; background:#fbfcfe; cursor:not-allowed; }
+  .cell.future:hover{ background:#fbfcfe; border-color:transparent; }
+
+  /* ---- 今日打卡条 ---- */
+  .check{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    margin-top:16px;padding-top:16px;border-top:1px dashed var(--line)}
+  .check .tip{flex:1;min-width:180px;font-size:12.5px;color:var(--ink3)}
+  .check .tip b{color:var(--ink);font-weight:700}
+  .hit{
+    display:inline-flex;align-items:center;gap:9px;border:0;border-radius:12px;cursor:pointer;
+    background:linear-gradient(150deg,#2563eb,#1d4ed8);color:#fff;font-size:13.5px;font-weight:700;
+    padding:12px 20px;font-family:inherit;
+    box-shadow:0 10px 22px -12px rgba(37,99,235,.9);
+    transition:transform .16s, box-shadow .16s, opacity .16s;
+  }
+  .hit:hover{ transform:translateY(-1px); box-shadow:0 14px 28px -12px rgba(37,99,235,.95); }
+  .hit:active{ transform:translateY(0); }
+  .hit.done{
+    background:#fff;color:var(--green);border:1px solid #c9ecdd;
+    box-shadow:var(--shadow-1);
+  }
+  .hit svg{width:16px;height:16px}
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:11.5px;color:var(--ink4)}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;
+    vertical-align:-1px}
+
+  .note{margin-top:20px;background:#fff;border:1px solid var(--line);border-radius:13px;
+    padding:14px 17px;font-size:12.5px;color:var(--ink3);line-height:1.65;box-shadow:var(--shadow-1)}
+  .note b{color:var(--ink)}
+
+  /* 内容宽度上限：日历不需要铺满超宽屏 */
+  .head,.cal,.note{max-width:760px}
+
+  /* 宽屏：日历 + 右侧信息栏，撑满整行 */
+  @media (min-width:1100px){
+    .wrap{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 360px;
+      column-gap:28px;
+      align-items:start;
+    }
+    .top{ grid-column:1 / -1; }
+    .head{ grid-column:1 / -1; max-width:none; }
+    .cal{ grid-column:1; grid-row:3 / span 2; max-width:none; }
+    .stats{ grid-column:2; grid-row:3; grid-template-columns:1fr; max-width:none; margin:0 0 16px; }
+    .note{ grid-column:2; grid-row:4; max-width:none; margin-top:0; }
+    .st{ padding:16px 18px; }
+    .st b{ font-size:30px; }
+    .cell{ aspect-ratio:auto; height:clamp(64px, 7vw, 96px); }
+  }
+
+  @media (max-width:560px){
+    .wrap{padding:20px 13px 70px}
+    .stats{gap:7px}
+    .st{padding:11px 12px}
+    .st b{font-size:21px}
+    .cal{padding:14px 13px 12px}
+    .days,.wd{gap:4px}
+    .cell{font-size:12px;border-radius:8px}
+    .hit{width:100%;justify-content:center;order:2}
+  }
+  @media print{ body{background:#fff} .hit,.nav-b,.today-b{display:none} }
+</style>
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="学习总控台.html">← 总控台</a>
+    <a class="back" href="105天逐日任务表.html">逐日表</a>
+  </div>
+
+  <div class="head">
+    <div>
+      <h1>打卡日历</h1>
+      <p class="sub">每天学完点一下，方格变蓝。断一天不会归零，但连续天数会重算——这条线是你最好的进度条。</p>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="st hot"><b id="sTotal">0</b><span>累计打卡</span></div>
+    <div class="st warm"><b id="sStreak">0</b><span>连续天数</span></div>
+    <div class="st"><b id="sMonth">0</b><span>本月打卡</span></div>
+  </div>
+
+  <section class="cal">
+    <div class="cal-h">
+      <div class="ym">
+        <span id="ymTitle">2026 年 11 月</span>
+        <small id="ymSub">计划期</small>
+      </div>
+      <button class="nav-b" id="prev" aria-label="上个月">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="today-b" id="goToday">回到本月</button>
+      <button class="nav-b" id="next" aria-label="下个月">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="wd">
+      <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span>
+      <span class="wk">六</span><span class="wk">日</span>
+    </div>
+
+    <div class="days" id="grid"></div>
+
+    <div class="check">
+      <div class="tip"><b id="todayText">今天还没打卡</b><span id="todaySub"> · 学完再来点</span></div>
+      <button class="hit" id="hit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        今日打卡
+      </button>
+    </div>
+
+    <div class="legend">
+      <span><i style="background:linear-gradient(160deg,#3b82f6,#2563eb)"></i>已打卡</span>
+      <span><i style="border:1px solid var(--blue);background:#fff"></i>今天</span>
+      <span><i style="background:#f7f9fe;border:1px solid #e6edf9"></i>可补打卡</span>
+      <span><i style="background:#fbfcfe"></i>未来</span>
+      <span><i style="background:#c7d3e8;border-radius:50%"></i>105 天计划内</span>
+    </div>
+  </section>
+
+  <div class="note">
+    <b>怎么用：</b>点今天以前的任意方格可以补打卡，再点一次取消。数据存在这台电脑的浏览器里（localStorage），换设备或清缓存会丢——所以每周日填周报时，顺手把当周记进复盘里做备份。
+  </div>
+</div>
+
+<script>
+(function () {
+  var KEY = 'checkin-v1';
+  var PLAN_START = '2026-11-02';
+  var PLAN_END   = '2027-02-14';
+
+  var data = {};
+  try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { data = {}; }
+
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var view = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  function fmt(d) {
+    var y = d.getFullYear();
+    var m = ('0' + (d.getMonth() + 1)).slice(-2);
+    var dd = ('0' + d.getDate()).slice(-2);
+    return y + '-' + m + '-' + dd;
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+  }
+  function inPlan(key) { return key >= PLAN_START && key <= PLAN_END; }
+
+  function render() {
+    var y = view.getFullYear(), m = view.getMonth();
+    document.getElementById('ymTitle').textContent = y + ' 年 ' + (m + 1) + ' 月';
+
+    var inside = (fmt(view) >= PLAN_START.slice(0,7) + '-01');
+    document.getElementById('ymSub').textContent = inside ? '学习计划期' : '';
+
+    var first = new Date(y, m, 1);
+    var startPad = (first.getDay() + 6) % 7;          // 周一为 0
+    var days = new Date(y, m + 1, 0).getDate();
+
+    var g = document.getElementById('grid');
+    g.innerHTML = '';
+
+    for (var i = 0; i < startPad; i++) {
+      var b = document.createElement('div');
+      b.className = 'cell blank';
+      g.appendChild(b);
+    }
+
+    for (var d = 1; d <= days; d++) {
+      (function (day) {
+        var dt = new Date(y, m, day);
+        var key = fmt(dt);
+        var el = document.createElement('button');
+        el.type = 'button';
+        el.className = 'cell';
+        el.textContent = day;
+
+        if (key > fmt(today)) {
+          el.classList.add('future');
+          el.disabled = true;
+        }
+        if (key === fmt(today)) el.classList.add('today');
+        if (inPlan(key)) el.classList.add('plan');
+        if (data[key]) el.classList.add('on');
+
+        el.setAttribute('aria-pressed', data[key] ? 'true' : 'false');
+        el.setAttribute('aria-label', key + (data[key] ? ' 已打卡' : ' 未打卡'));
+
+        el.addEventListener('click', function () {
+          if (data[key]) delete data[key]; else data[key] = 1;
+          save(); render(); stats();
+        });
+
+        g.appendChild(el);
+      })(d);
+    }
+    stats();
+    todayState();
+  }
+
+  function stats() {
+    var keys = Object.keys(data);
+    document.getElementById('sTotal').textContent = keys.length;
+
+    // 连续天数：从今天（或昨天）往前数
+    var streak = 0;
+    var cur = new Date(today);
+    if (!data[fmt(cur)]) cur.setDate(cur.getDate() - 1);
+    while (data[fmt(cur)]) { streak++; cur.setDate(cur.getDate() - 1); }
+    document.getElementById('sStreak').textContent = streak;
+
+    var y = today.getFullYear(), m = ('0' + (today.getMonth() + 1)).slice(-2);
+    var prefix = y + '-' + m;
+    document.getElementById('sMonth').textContent =
+      keys.filter(function (k) { return k.indexOf(prefix) === 0; }).length;
+  }
+
+  function todayState() {
+    var k = fmt(today);
+    var btn = document.getElementById('hit');
+    var t = document.getElementById('todayText');
+    var s = document.getElementById('todaySub');
+    if (data[k]) {
+      btn.classList.add('done');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 今天已完成';
+      t.textContent = '今天已打卡';
+      s.textContent = ' · 明天见';
+    } else {
+      btn.classList.remove('done');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 今日打卡';
+      t.textContent = '今天还没打卡';
+      s.textContent = ' · 学完再来点';
+    }
+  }
+
+  document.getElementById('hit').addEventListener('click', function () {
+    var k = fmt(today);
+    if (data[k]) delete data[k]; else data[k] = 1;
+    save(); render();
+  });
+
+  document.getElementById('prev').addEventListener('click', function () {
+    view.setMonth(view.getMonth() - 1); render();
+  });
+  document.getElementById('next').addEventListener('click', function () {
+    view.setMonth(view.getMonth() + 1); render();
+  });
+  document.getElementById('goToday').addEventListener('click', function () {
+    view = new Date(today.getFullYear(), today.getMonth(), 1); render();
+  });
+
+  render();
+})();
+</script>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+/* ============================================================
+   theme.css — 嵌入式学习站统一视觉层
+   由 impeccable 设计规则约束：去掉眉毛标签、彩色左侧条、
+   零偏移光晕、emoji 图标；统一字体/深度/动效/浏览器表面。
+   ============================================================ */
+
+:root{
+  /* 色板：深海军蓝 + 电蓝 + 仪器青 */
+  --ink:#0b1220;
+  --ink-2:#2b3648;  --ink2:#2b3648;
+  --ink-3:#5b6b85;  --ink3:#5b6b85;
+  --ink-4:#8b9ab3;  --ink4:#8b9ab3;
+
+  --line:#dfe6f5;
+  --line2:#edf1fa;
+
+  --blue:#2563eb;
+  --blue-deep:#1e40af;
+  --blue-soft:#eef3ff;
+
+  --teal:#0d9488;
+  --teal-soft:#e8faf7;
+
+  --green:#047857;
+  --green-soft:#e8f7f1;
+  --green-line:#c9ecdd;
+
+  --amber:#b45309;
+  --amber-soft:#fff7ea;
+
+  --red:#b91c1c;
+  --red-soft:#fef3f2;
+
+  --bg:#f3f6fc;
+  --card:#ffffff;
+
+  --radius:14px;
+  --shadow-1:0 1px 2px rgba(11,18,32,.04), 0 8px 20px -12px rgba(11,18,32,.18);
+  --shadow-2:0 2px 4px rgba(11,18,32,.05), 0 18px 40px -18px rgba(11,18,32,.22);
+  --shadow-3:0 4px 8px rgba(11,18,32,.06), 0 28px 56px -22px rgba(11,18,32,.28);
+
+  --font-sans:-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+              "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono:ui-monospace, "SF Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+
+/* ---------- 基础排版 ---------- */
+html{ -webkit-text-size-adjust:100%; }
+
+body{
+  font-family:var(--font-sans);
+  color:var(--ink);
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(1100px 560px at 6% -10%, #e6eeff 0%, transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, #e2f8f4 0%, transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 340px);
+  background-attachment:fixed;
+  font-feature-settings:"kern" 1, "liga" 1;
+  letter-spacing:.002em;
+}
+
+h1,h2,h3,h4{
+  text-wrap:balance;
+  letter-spacing:-.012em;
+}
+h1{ letter-spacing:-.022em; }
+
+p{ text-wrap:pretty; }
+
+code, kbd, samp, pre, .mono{
+  font-family:var(--font-mono);
+  font-feature-settings:"zero" 1;
+}
+
+/* 数字一律等宽，表格对齐 */
+[class*="count"], [class*="num"], .cnt, .pct, td.num, .price, .meta,
+time, .date b, .wki b, .fact b, .stats b{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+
+/* ---------- 浏览器表面 ---------- */
+::selection{ background:#c3d7ff; color:#08111f; }
+
+::-webkit-scrollbar{ width:11px; height:11px; }
+::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-thumb{
+  background:#c6d2e6; border-radius:99px; border:3px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover{ background:#a9bad6; }
+
+:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+  border-radius:4px;
+}
+
+a{ text-underline-offset:3px; text-decoration-thickness:.06em; }
+
+/* ---------- 深度：统一阴影 ---------- */
+.card,.mod,.week,.term,.proj,.fld,.blk,.day,.wki,.adv,.cp,.pr,.fl,
+.pillars .pillar,.ms,.check,.tpl,.std,.hero,.now,.cp .row{
+  box-shadow:var(--shadow-1);
+}
+
+.card:hover,.wki:hover,.proj:hover,.adv:hover{
+  box-shadow:var(--shadow-2);
+}
+
+/* ---------- 移除设计禁令里的装饰 ---------- */
+/* 眉毛标签 */
+.eyebrow{ display:none !important; }
+
+/* 彩色左/右边条（>1px）改为无条 + 底色 */
+.mod::before,
+.card::before,
+.pillar::before{
+  content:none !important;
+  display:none !important;
+}
+
+.position,
+.ans .core{
+  border-left:0 !important;
+  border-radius:9px !important;
+  padding-left:12px !important;
+}
+
+/* 零偏移彩色光晕 */
+.now .dot{
+  box-shadow:none !important;
+  animation:none !important;
+  background:#34d399 !important;
+  position:relative;
+}
+.now .dot::after{
+  content:"";
+  position:absolute; inset:-6px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(52,211,153,.35), transparent 70%);
+  animation:breathe 2.8s var(--ease-out) infinite;
+}
+
+@keyframes breathe{
+  0%,100%{ transform:scale(.85); opacity:.55; }
+  50%    { transform:scale(1.15); opacity:.15; }
+}
+
+/* ---------- 唯一的主演出：首屏信号入场 ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .hero > *{
+    animation:signal-in .72s var(--ease-out) both;
+  }
+  .hero > *:nth-child(1){ animation-delay:.04s; }
+  .hero > *:nth-child(2){ animation-delay:.10s; }
+  .hero > *:nth-child(3){ animation-delay:.17s; }
+  .hero > *:nth-child(4){ animation-delay:.24s; }
+  .hero > *:nth-child(5){ animation-delay:.31s; }
+
+  @keyframes signal-in{
+    from{ opacity:0; transform:translateY(10px); filter:blur(7px); }
+    to  { opacity:1; transform:none; filter:blur(0); }
+  }
+
+  /* 卡片悬停：只动一点点，不做弹跳 */
+  .card,.proj,.adv,.wki,.day,.week{
+    transition:transform .22s var(--ease-out), box-shadow .22s var(--ease-out),
+               border-color .22s var(--ease-out);
+  }
+  .card:hover,.proj:hover,.adv:hover{ transform:translateY(-2px); }
+
+  /* 按钮的按下反馈 */
+  .btn:active,.tab:active,.back:active,.cta:active{ transform:translateY(1px) scale(.995); }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* ---------- 组件微调 ---------- */
+.btn,.tab,.back,.cta{
+  transition:background-color .18s var(--ease-out),
+             border-color .18s var(--ease-out),
+             color .18s var(--ease-out),
+             transform .18s var(--ease-out),
+             box-shadow .18s var(--ease-out);
+}
+
+.hero{
+  box-shadow:var(--shadow-3);
+  position:relative;
+  isolation:isolate;
+}
+
+/* 示波器栅格：浅浅一层，作为视觉母题 */
+.hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+  background-size:34px 34px;
+  mask-image:radial-gradient(120% 100% at 78% 0%, #000 0%, transparent 72%);
+  -webkit-mask-image:radial-gradient(120% 100% at 78% 0%, #000 0%, transparent 72%);
+  z-index:-1;
+  pointer-events:none;
+}
+
+/* 正文行宽 */
+p.lead, .lead{ max-width:68ch; }
+
+/* 细节：分隔线更轻 */
+hr{ border:0; border-top:1px solid var(--line); }
+
+/* 链接色统一 */
+a{ color:var(--blue); }
+a:hover{ color:var(--blue-deep); }
+
+/* 小标签 */
+.tag,.pill,.lvl{
+  letter-spacing:.01em;
+}
+
+/* ---------- 数据条：允许 5 项在窄屏也排成一行 ---------- */
+.facts{ grid-template-columns:repeat(auto-fit, minmax(128px, 1fr)) !important; }
+
+/* ---------- 小屏：卡片列表更紧凑 ---------- */
+@media (max-width:560px){
+  .facts{ grid-template-columns:repeat(2, 1fr) !important; }
+}
+
+/* ---------- 首屏线条插画（各页可复用） ---------- */
+.hero{ position:relative; }
+.hero-art{
+  position:absolute; right:-26px; top:-34px;
+  width:210px; height:210px; opacity:.12;
+  pointer-events:none; z-index:-1;
+}
+@media (max-width:900px){ .hero-art{ display:none; } }

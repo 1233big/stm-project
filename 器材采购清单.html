@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>器材采购清单 · 两年装备</title>
+<style>
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b; --ink4:#94a3b8;
+    --line:#dde5f4; --line2:#eef2fa;
+    --blue:#1d4ed8; --blue-soft:#eef3ff;
+    --teal:#0f766e; --teal-soft:#e9faf6;
+    --green:#0b7a5a; --green-soft:#e9f9f2;
+    --amber:#b45309; --amber-soft:#fff8e8;
+    --bg:#f5f7fc;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:70px}
+  body{margin:0;color:var(--ink);line-height:1.7;
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(900px 460px at 4% -8%,#e4edff 0%,transparent 58%),
+               radial-gradient(800px 400px at 100% 1%,#e5f7f3 0%,transparent 52%),var(--bg);
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:30px 20px 90px}
+
+  .hero{background:linear-gradient(125deg,#0b1e3f 0%,#1d4ed8 58%,#0f766e 132%);
+    border-radius:20px;padding:30px 32px 26px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 24px 54px -30px rgba(9,30,74,.7)}
+  .hero::after{content:"";position:absolute;right:-70px;top:-100px;width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.17),transparent 62%)}
+  .eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.32em;opacity:.66}
+  .hero h1{margin:0;font-size:clamp(21px,3vw,29px);font-weight:800}
+  .hero .lead{margin:10px 0 0;max-width:620px;font-size:13.5px;opacity:.92}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px;margin-top:20px}
+  .fact{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 12px}
+  .fact b{display:block;font-size:17px;font-weight:800;line-height:1.2}
+  .fact span{font-size:11px;opacity:.8}
+
+  section{margin-top:30px}
+  .sec{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .sec .no{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#fff;background:var(--blue);
+    border-radius:6px;padding:2px 8px}
+  .sec h2{margin:0;font-size:16.5px;font-weight:800}
+  .sec p{margin:0;font-size:12.3px;color:var(--ink4)}
+
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);
+    border-radius:13px;overflow:hidden;font-size:12.9px}
+  th{background:#fbfcff;text-align:left;padding:10px 14px;font-size:11.5px;letter-spacing:.08em;
+    color:var(--ink3);font-weight:700;border-bottom:1px solid var(--line)}
+  td{padding:11px 14px;border-bottom:1px solid var(--line2);color:var(--ink2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td:first-child{color:var(--ink);font-weight:700;white-space:nowrap}
+  td.price{white-space:nowrap;color:var(--blue);font-weight:700;font-variant-numeric:tabular-nums}
+  td .note{display:block;font-size:11.6px;color:var(--ink4);font-weight:400;margin-top:2px}
+  .tag{display:inline-block;font-size:10px;border-radius:999px;padding:1px 7px;margin-left:6px;
+    background:var(--green-soft);color:var(--green);font-weight:700;vertical-align:1px}
+  .tag.opt{background:#f5f8fd;color:var(--ink4)}
+  .tag.have{background:var(--blue-soft);color:var(--blue)}
+  tfoot td{background:#fbfcff;font-weight:800;color:var(--ink)}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px 17px;
+    box-shadow:0 8px 22px -26px rgba(15,23,42,.55)}
+  .card h3{margin:0 0 6px;font-size:13.5px;font-weight:800}
+  .card p{margin:0;font-size:12.6px;color:var(--ink2);line-height:1.6}
+  .card p + p{margin-top:6px}
+
+  .warn{margin-top:14px;background:var(--amber-soft);border:1px solid #f6e2bd;border-radius:11px;
+    padding:12px 15px;font-size:12.6px;color:#8a5a2b;line-height:1.65}
+  .warn b{color:#7c4a03}
+
+  .foot{margin-top:30px;text-align:center;font-size:11.5px;color:var(--ink4)}
+  .back{display:inline-block;margin-bottom:12px;font-size:12px;color:var(--blue);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+  .back:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  @media (max-width:760px){.cards{grid-template-columns:1fr}}
+  @media (max-width:540px){
+    .wrap{padding:18px 13px 70px}
+    .hero{padding:22px 18px}
+    th,td{padding:9px 10px}
+    td:first-child{white-space:normal}
+  }
+  @media print{body{background:#fff}table{break-inside:avoid}}
+</style>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="学习总控台.html">← 返回总控台</a>
+
+  <header class="hero">
+    <h1>器材采购清单</h1>
+    <p class="lead">按阶段买，不要一次买齐。先用最少的钱把第一块板点亮，再决定要不要升级。</p>
+    <div class="facts">
+      <div class="fact"><b>≈260</b><span>第一阶段（元）</span></div>
+      <div class="fact"><b>≈200</b><span>第二阶段（元）</span></div>
+      <div class="fact"><b>≈180</b><span>打板阶段（元）</span></div>
+      <div class="fact"><b>≈640</b><span>全程总预算</span></div>
+    </div>
+  </header>
+
+  <!-- 阶段一 -->
+  <section>
+    <div class="sec"><span class="no">01</span><h2>第一阶段：现在就要有的</h2><p>对应 W1–W8｜已有哪些、缺哪些</p></div>
+    <table>
+      <thead><tr><th>器材</th><th>说明</th><th>参考价</th></tr></thead>
+      <tbody>
+        <tr><td>STM32 开发板</td><td><span class="tag have">已有</span><span class="note">选资料多的型号：F103C8T6 / F407 系列</span></td><td class="price">—</td></tr>
+        <tr><td>万用表</td><td><span class="tag have">已有</span><span class="note">能测电压、电阻、通断、二极管档即可</span></td><td class="price">—</td></tr>
+        <tr><td>烙铁套装</td><td><span class="tag have">已有</span><span class="note">加焊锡丝、助焊剂、吸锡带、镊子</span></td><td class="price">—</td></tr>
+        <tr><td>USB 逻辑分析仪</td><td>8 通道 24MHz，配 PulseView<span class="tag">最该先买</span><span class="note">I2C/SPI/UART 问题 90% 靠它定位，比示波器更实用</span></td><td class="price">¥40–60</td></tr>
+        <tr><td>杜邦线</td><td>公对公 / 母对母 / 公对母 各一扎<span class="note">劣质线是"玄学故障"的头号来源，买线径粗一点的</span></td><td class="price">¥20</td></tr>
+        <tr><td>面包板</td><td>830 孔一块 + 400 孔一块</td><td class="price">¥15</td></tr>
+        <tr><td>USB 电流表</td><td>测功耗、判断是否短路<span class="note">配合限流电源用，第一次上电必备</span></td><td class="price">¥25</td></tr>
+        <tr><td>元件补充包</td><td>0603 电阻电容常用值、LED、二极管、MOSFET<span class="note">按 10 倍冗余买，比按个数买省心</span></td><td class="price">¥50</td></tr>
+        <tr><td>焊接耗材</td><td>焊锡丝 0.8mm、助焊剂、吸锡带、尖头镊子</td><td class="price">¥50</td></tr>
+        <tr><td>海绵/吸锡器</td><td>烙铁头清洁与拆焊</td><td class="price">¥15</td></tr>
+      </tbody>
+      <tfoot><tr><td>小计</td><td>在已有基础上需补</td><td class="price">≈¥215–235</td></tr></tfoot>
+    </table>
+  </section>
+
+  <!-- 阶段二 -->
+  <section>
+    <div class="sec"><span class="no">02</span><h2>第二阶段：外设与项目</h2><p>对应 W5–W10｜按项目需要买，不用囤</p></div>
+    <table>
+      <thead><tr><th>器材</th><th>说明</th><th>参考价</th></tr></thead>
+      <tbody>
+        <tr><td>OLED 屏 0.96"</td><td>I2C 接口，做显示最省事</td><td class="price">¥12</td></tr>
+        <tr><td>AHT20 温湿度</td><td>I2C 传感器，练总线最合适</td><td class="price">¥10</td></tr>
+        <tr><td>BMP280 气压</td><td>备选，SPI/I2C 双接口</td><td class="price">¥8</td></tr>
+        <tr><td>SPI 屏 1.8" / 2.4"</td><td>练 SPI 模式与刷屏速度</td><td class="price">¥35</td></tr>
+        <tr><td>电位器 + 按键模块</td><td>练 ADC 与消抖</td><td class="price">¥10</td></tr>
+        <tr><td>舵机 SG90</td><td>练 PWM 与角度控制</td><td class="price">¥12</td></tr>
+        <tr><td>带编码器直流电机</td><td>M11 电机控制用（可选）<span class="tag opt">可选</span></td><td class="price">¥60</td></tr>
+        <tr><td>驱动模块 L298N / TB6612</td><td>配合电机（可选）<span class="tag opt">可选</span></td><td class="price">¥15</td></tr>
+        <tr><td>ESP8266 / ESP32 模块</td><td>M8 联网用</td><td class="price">¥15</td></tr>
+        <tr><td>第二块核心板</td><td>做对比实验时不用拆线（可选）<span class="tag opt">可选</span></td><td class="price">¥30</td></tr>
+      </tbody>
+      <tfoot><tr><td>小计</td><td>不含可选项</td><td class="price">≈¥117</td></tr></tfoot>
+    </table>
+  </section>
+
+  <!-- 阶段三 -->
+  <section>
+    <div class="sec"><span class="no">03</span><h2>第三阶段：画板</h2><p>对应 W12–W15｜第一次打板</p></div>
+    <table>
+      <thead><tr><th>项目</th><th>说明</th><th>参考价</th></tr></thead>
+      <tbody>
+        <tr><td>PCB 打样</td><td>5 片，双面，常规工艺<span class="note">新用户常有优惠，实际可能更低</span></td><td class="price">¥5–50</td></tr>
+        <tr><td>贴片元件</td><td>MCU、LDO、晶振、阻容、连接器</td><td class="price">¥80–120</td></tr>
+        <tr><td>钢网</td><td>要上锡膏才需要（可选）<span class="tag opt">可选</span></td><td class="price">¥20</td></tr>
+        <tr><td>热风枪</td><td>拆焊 QFN/QFP（可选）<span class="tag opt">可选</span></td><td class="price">¥150–300</td></tr>
+        <tr><td>锡膏 + 助焊膏</td><td>如果做回流焊</td><td class="price">¥30</td></tr>
+      </tbody>
+      <tfoot><tr><td>小计</td><td>手工焊，不用钢网</td><td class="price">≈¥115–200</td></tr></tfoot>
+    </table>
+  </section>
+
+  <!-- 选购原则 -->
+  <section>
+    <div class="sec"><span class="no">04</span><h2>四条选购原则</h2><p>能省下一半冤枉钱</p></div>
+    <div class="cards">
+      <article class="card">
+        <h3>先逻辑分析仪，后示波器</h3>
+        <p>逻辑分析仪 ¥50，能看时序、能解码协议，解决 90% 的数字问题。示波器主要看模拟波形（电源纹波、上升沿），属于第二阶段需求。</p>
+        <p>示波器不用急着自己买——实验室、学长、创客空间都能借到。</p>
+      </article>
+      <article class="card">
+        <h3>别买"全家桶"套餐</h3>
+        <p>几百块的"入门大礼包"里，一半是你用不上的模块。按项目买，缺什么补什么。</p>
+        <p>唯一值得一次买多的是<b>阻容元件</b>，按 10 倍冗余买，省得为了一颗 10k 电阻等三天快递。</p>
+      </article>
+      <article class="card">
+        <h3>板子选主流型号</h3>
+        <p>STM32F103C8T6 资料最多、坑最少、社区问题都有答案。别一上来就选冷门型号，出了问题没人能帮你。</p>
+        <p>板上要带 ST-Link 或至少留出 SWD 接口。</p>
+      </article>
+      <article class="card">
+        <h3>耗材别省</h3>
+        <p>劣质杜邦线、劣质焊锡、劣质烙铁头，会让你把大量时间浪费在"排查玄学故障"上。</p>
+        <p>一根好线和一根坏线，看起来一样，用起来差十倍。</p>
+      </article>
+    </div>
+    <div class="warn">
+      <b>关于示波器：</b>如果预算有限，先别买。前 15 周的所有实验用逻辑分析仪 + 万用表都能完成。
+      等你开始做电源、电机、FOC 时再考虑，那时候你也更知道自己需要什么参数。
+    </div>
+  </section>
+
+  <p class="foot">器材采购清单 · 价格为 2026 年参考区间，随市场波动</p>
+</div>
+  <script src="assets/pointer.js" defer></script>
+  <script src="assets/reveal.js" defer></script>
+</body>
+</html>

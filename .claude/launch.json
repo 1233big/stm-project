@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "study-site",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8130", "--bind", "127.0.0.1"],
+      "port": 8130
+    }
+  ]
+}
