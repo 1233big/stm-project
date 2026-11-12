@@ -114,6 +114,8 @@ code,kbd,samp,pre,.mono{ font-family:var(--font-mono); }
   max-width:none !important;
   margin:0 !important;
   padding:34px clamp(18px,3.2vw,68px) 96px !important;
+  /* 没有这行时 width:100% + 左右 padding 会把页面撑出横向滚动条 */
+  box-sizing:border-box !important;
 }
 .app{
   width:100% !important;
