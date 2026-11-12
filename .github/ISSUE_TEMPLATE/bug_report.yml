@@ -1,0 +1,46 @@
+name: 报告内容问题
+description: 页面写错了、链接失效、排版异常
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请尽量写清楚是哪个页面、哪个位置，方便定位。
+  - type: input
+    id: page
+    attributes:
+      label: 页面
+      description: 页面文件名或在线地址
+      placeholder: 例如 打卡日历.html 或 https://1233big.github.io/stm-project/打卡日历.html
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: 问题是什么
+      description: 具体哪里不对，看到的是什么
+    validations:
+      required: true
+  - type: textarea
+    id: expect
+    attributes:
+      label: 期望是什么
+      description: 你认为正确的样子
+    validations:
+      required: false
+  - type: input
+    id: env
+    attributes:
+      label: 环境
+      description: 浏览器与设备，移动端问题请注明
+      placeholder: Chrome 131 / Windows 11 / 1440×900
+    validations:
+      required: false
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 截图
+      description: 直接拖进来即可
+    validations:
+      required: false

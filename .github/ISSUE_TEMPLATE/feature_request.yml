@@ -1,0 +1,37 @@
+name: 建议与资源
+description: 推荐课程、书单、工具，或提出内容改进建议
+title: "[建议] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 类型
+      options:
+        - 学习资源（书 / 课程 / 文档 / 工具）
+        - 学习路线或顺序
+        - 项目与面试
+        - 页面与交互
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: 建议内容
+      description: 推荐什么、为什么值得加，最好说明适合哪个阶段
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: 链接
+      placeholder: https://
+    validations:
+      required: false
+  - type: textarea
+    id: note
+    attributes:
+      label: 补充说明
+    validations:
+      required: false

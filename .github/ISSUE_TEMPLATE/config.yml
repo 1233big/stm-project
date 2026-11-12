@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全问题
+    url: https://github.com/1233big/stm-project/security/advisories/new
+    about: 发现漏洞请走私密渠道，不要开公开 Issue
+  - name: 在线站点
+    url: https://1233big.github.io/stm-project/
+    about: 先看看线上版本是否也有同样问题
